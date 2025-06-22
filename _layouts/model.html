@@ -1,4 +1,0 @@
-{% assign model_articles = site.articles | where_exp: "item", "item.models contains page.title" %}
-{% for article in model_articles %}
-  <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
-{% endfor %}

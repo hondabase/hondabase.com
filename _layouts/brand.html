@@ -1,9 +1,0 @@
-<h2>Models</h2>
-{% for model in site[page.brand] %}
-  <h3><a href="{{ model.url }}">{{ model.title }}</a></h3>
-{% endfor %}
-
-<h2>Categories</h2>
-{% for category in site.articles %}
-  <h3><a href="/{{ category.name }}">{{ category.name | capitalize }}</a></h3>
-{% endfor %}

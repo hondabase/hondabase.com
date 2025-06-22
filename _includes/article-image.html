@@ -1,5 +1,0 @@
-{% assign image_path = "/images/articles/" | append: page.slug | append: "/" %}
-<figure class="article-inline-image">
-  <img src="{{ image_path | append: include.filename | relative_url }}" alt="{{ include.caption }}">
-  <figcaption>{{ include.caption }}</figcaption>
-</figure>
