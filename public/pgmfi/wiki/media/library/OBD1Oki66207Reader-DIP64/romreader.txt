@@ -1,0 +1,109 @@
+
+	org	0000
+
+	dw	0100		; reset vector to 0100
+
+
+
+	org	0100
+
+	mov	X1,#f000	; init delay loop
+loop1
+	nop
+	nop
+	nop
+	nop
+	dec	X1		; decrease ER0
+	jne	loop1		; not zero, then back to loop1
+	nop
+	nop
+	nop
+	j	8000		; now jump over the internal rom boundary
+
+
+
+	org	8000
+
+	nop
+	nop
+	nop
+	nop
+
+; **** INIT IO PORTS ****
+
+	movb	2A,#03		; Port 3.0 & 3.1 are serial I/O
+
+	movb	26,#00		; set all lines on Port 2 as I/O Ports
+	movb	24,#00		; set all lines on Port 2 to 0
+	movb	25,#04		; set Port 2.2 to output
+
+; **** INIT SERIAL PORT ****
+
+	MOVB 	50, #1C		; STCON=0x1C = 00011100 (will be later loaded to SFR 0x50)
+				;              ------00 UART Mode (A)
+				; 	       ----11-- 8 bits
+				;              ---1---- 1 stop bit
+				;              --0----- no parity
+				;              xx------ not used
+	
+	MOVB 	51, #8C		; SRCON=0x8C = 10001100 (will be later loaded to SFR 0x54)
+				;	       ------00 UART Mode (A)
+				; 	       ----11-- 8 bits
+				;	       ---x---- not used
+				;              --0----- no parity
+				; 	       -x------ not used
+				;	       1------- Receiving allowed
+
+	LB 	A, #F8		; Reload Value for Serial Timer = 38400 bps @ 10 MHz
+
+	STB 	A, 48		; STTM Serial port transmission baud rate generator counter
+	STB 	A, 49		; SSTMR Serial port transmission baud rate generator register
+
+	MOVB 	4A, #12		; SSTMC=0x12 = 00010010 (Serial port trans. baud rate gen. control register)
+				;	       ------1x Transmission / receive baud rate generator
+				; 	       ----xx-- not used
+				;	       ---1---- Baud rate generator operating (RUN)
+				;	       000----- 1/2 CLK
+	nop
+	nop
+	nop
+	nop
+
+	sb	24.2		; now disable the -EA line (pull it up)
+
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+
+	mov	DP,#0000	; set DP to 0000
+loop2
+	mov	X1,#0100	; init delay loop
+
+loop3
+	nop
+	nop
+	nop
+	dec	X1		; decrement X1
+	jne	loop3	
+
+	lcb	A,[DP]		; load byte indirect via DP
+	nop
+	nop
+	nop
+	movb	51,A		; send byte to serial port
+	nop
+	nop
+	nop
+	inc	DP		; increase DP
+	cmp	DP,#8000	; compare with maximum (8000)
+	jne	loop2		; not reached, the read next byte
+
+endless
+	nop
+	j	endless		; the work is done - stay in the endless loop
+	

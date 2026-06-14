@@ -1,0 +1,317 @@
+[
+	{
+		"code": [ "0", "11" ],
+		"function": {
+			"short": "ECU",
+			"long": {
+				"en": "Engine Control Unit, the vehicle's main computer that controls engine and transmission functions."
+			}
+		}
+	},
+	{
+		"code": [ "1" ],
+		"function": {
+			"short": "O2S11",
+			"long": {
+				"en": "Upstream oxygen sensor on bank 1, measures exhaust oxygen content to determine fuel mixture."
+			}
+		}
+	},
+	{
+		"code": [ "2" ],
+		"function": {
+			"short": "O2S12",
+			"long": {
+				"en": "Downstream oxygen sensor on bank 1 after catalytic converter, monitors converter efficiency."
+			}
+		}
+	},
+	{
+		"code": [ "3", "5" ],
+		"function": {
+			"short": "MAP",
+			"long": {
+				"en": "Manifold Absolute Pressure sensor, measures intake manifold air pressure to determine engine load."
+			}
+		}
+	},
+	{
+		"code": [ "4" ],
+		"function": {
+			"short": "CKP",
+			"long": {
+				"en": "Crankshaft position sensor, monitors crankshaft position and rotational speed."
+			}
+		}
+	},
+	{
+		"code": [ "6" ],
+		"function": {
+			"short": "ECT",
+			"long": {
+				"en": "Engine coolant temperature sensor, measures the temperature of the engine coolant."
+			}
+		}
+	},
+	{
+		"code": [ "7" ],
+		"function": {
+			"short": "TPS",
+			"long": {
+				"en": "Throttle position sensor, monitors throttle valve position."
+			}
+		}
+	},
+	{
+		"code": [ "8" ],
+		"function": {
+			"short": "CMP",
+			"long": {
+				"en": "Camshaft position sensor, monitors camshaft position."
+			}
+		}
+	},
+	{
+		"code": [ "9" ],
+		"function": {
+			"short": "CYP1",
+			"long": {
+				"en": "Cylinder 1 position sensor, tracks piston position in cylinder 1."
+			}
+		}
+	},
+	{
+		"code": [ "10" ],
+		"function": {
+			"short": "IAT",
+			"long": {
+				"en": "Intake air temperature sensor, measures the temperature of the air entering the engine."
+			}
+		}
+	},
+	{
+		"code": [ "12" ],
+		"function": {
+			"short": "EGR",
+			"long": {
+				"en": "Exhaust Gas Recirculation system, recirculates exhaust gases to engine intake to reduce emissions."
+			}
+		}
+	},
+	{
+		"code": [ "13" ],
+		"function": {
+			"short": "BPS",
+			"long": {
+				"en": "Barometric pressure sensor, measures atmospheric pressure."
+			}
+		}
+	},
+	{
+		"code": [ "14" ],
+		"function": {
+			"short": "IAC",
+			"long": {
+				"en": "Idle Air Control valve, controls engine idle speed. Code may also indicate faulty ECU."
+			}
+		}
+	},
+	{
+		"code": [ "15" ],
+		"function": {
+			"short": "IGN",
+			"long": {
+				"en": "Ignition system malfunction detected."
+			}
+		}
+	},
+	{
+		"code": [ "16" ],
+		"function": {
+			"short": "FINJ",
+			"long": {
+				"en": "Fuel injector circuit malfunction."
+			}
+		}
+	},
+	{
+		"code": [ "17" ],
+		"function": {
+			"short": "VSS",
+			"long": {
+				"en": "Vehicle speed sensor, measures vehicle speed."
+			}
+		}
+	},
+	{
+		"code": [ "19" ],
+		"function": {
+			"short": "TCC",
+			"long": {
+				"en": "Torque converter clutch solenoid malfunction in automatic transmission."
+			}
+		}
+	},
+	{
+		"code": [ "20" ],
+		"function": {
+			"short": "ELD",
+			"long": {
+				"en": "Electrical load detector, monitors vehicle electrical system voltage."
+			}
+		}
+	},
+	{
+		"code": [ "21" ],
+		"function": {
+			"short": "VTEC",
+			"long": {
+				"en": "Variable Valve Timing and Lift Electronic Control (VTEC) system solenoid valve malfunction."
+			}
+		}
+	},
+	{
+		"code": [ "22" ],
+		"function": {
+			"short": "VTEC",
+			"long": {
+				"en": "VTEC pressure switch malfunction."
+			}
+		}
+	},
+	{
+		"code": [ "23" ],
+		"function": {
+			"short": "KS",
+			"long": {
+				"en": "Knock sensor, detects engine knocking or pre-ignition."
+			}
+		}
+	},
+	{
+		"code": [ "30" ],
+		"function": {
+			"short": "ATISS",
+			"long": {
+				"en": "Automatic transmission input speed sensors A and B malfunction."
+			}
+		}
+	},
+	{
+		"code": [ "41" ],
+		"function": {
+			"short": "O2S11H",
+			"long": {
+				"en": "Upstream oxygen sensor heater circuit malfunction on bank 1."
+			}
+		}
+	},
+	{
+		"code": [ "43" ],
+		"function": {
+			"short": "EVAP",
+			"long": {
+				"en": "Evaporative emissions (EVAP) system malfunction, prevents fuel vapor from escaping to atmosphere."
+			}
+		}
+	},
+	{
+		"code": [ "45" ],
+		"function": {
+			"short": "FINJ",
+			"long": {
+				"en": "Fuel injection system malfunction."
+			}
+		}
+	},
+	{
+		"code": [ "48" ],
+		"function": {
+			"short": "O2S21",
+			"long": {
+				"en": "Downstream oxygen sensor malfunction on bank 2 after catalytic converter."
+			}
+		}
+	},
+	{
+		"code": [ "61" ],
+		"function": {
+			"short": "O2S21",
+			"long": {
+				"en": "Upstream oxygen sensor malfunction on bank 2."
+			}
+		}
+	},
+	{
+		"code": [ "63" ],
+		"function": {
+			"short": "O2S22",
+			"long": {
+				"en": "Downstream oxygen sensor malfunction on bank 2 after catalytic converter."
+			}
+		}
+	},
+	{
+		"code": [ "65" ],
+		"function": {
+			"short": "O2S22H",
+			"long": {
+				"en": "Downstream oxygen sensor heater malfunction on bank 2."
+			}
+		}
+	},
+	{
+		"code": [ "67" ],
+		"function": {
+			"short": "CAT",
+			"long": {
+				"en": "Catalytic converter system efficiency below threshold."
+			}
+		}
+	},
+	{
+		"code": [ "70" ],
+		"function": {
+			"short": "AT",
+			"long": {
+				"en": "Automatic transmission system malfunction."
+			}
+		}
+	},
+	{
+		"code": [ "71", "72", "73", "74", "75", "76" ],
+		"function": {
+			"short": "MIS",
+			"long": {
+				"en": "Misfire detected on specified engine cylinder (1-6)."
+			}
+		}
+	},
+	{
+		"code": [ "80" ],
+		"function": {
+			"short": "EGR",
+			"long": {
+				"en": "Exhaust Gas Recirculation (EGR) system malfunction."
+			}
+		}
+	},
+	{
+		"code": [ "86" ],
+		"function": {
+			"short": "ECT",
+			"long": {
+				"en": "Engine coolant temperature sensor malfunction."
+			}
+		}
+	},
+	{
+		"code": [ "92" ],
+		"function": {
+			"short": "EVAP",
+			"long": {
+				"en": "Evaporative emissions (EVAP) system malfunction, fuel vapor leaking/venting issue."
+			}
+		}
+	}
+]

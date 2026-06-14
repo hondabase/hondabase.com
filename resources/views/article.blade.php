@@ -1,0 +1,261 @@
+@extends('layouts.app')
+
+@section('title', $art['title'])
+
+@push('head')
+<link rel="stylesheet" href="/assets/article.css">
+@endpush
+
+@section('content')
+    <nav class="crumbs">
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+        <a href="/{{ $art['type'] }}/{{ $art['category'] }}">{{ $art['category_label'] }}</a>
+        <span class="sep">/</span>
+        <span class="current">{{ $art['title'] }}</span>
+    </nav>
+
+    @php $at = $art['applies_to'] ?? []; @endphp
+    <article class="article"
+        data-ga-article="{{ $art['slug'] }}"
+        data-ga-category="{{ $art['category'] }}"
+        data-ga-type="{{ $art['type'] }}"
+        data-ga-complexity="{{ $art['complexity'] }}"
+        data-ga-obd="{{ implode(',', (array) ($at['obd'] ?? [])) }}"
+        data-ga-engine="{{ implode(',', (array) ($at['engines'] ?? [])) }}"
+        data-ga-tags="{{ implode(',', $art['tags']) }}">
+        <header class="article-head">
+            <div class="kicker">{{ $art['type_label'] }} &middot; {{ $art['category_label'] }}</div>
+            <h1>{{ $art['title'] }}</h1>
+            @if (!empty($art['summary']))
+                <p class="summary">{{ $art['summary'] }}</p>
+            @endif
+            <p class="meta">
+                @if ($art['updated'])
+                    <span>Updated {{ \Illuminate\Support\Carbon::parse($art['updated'])->format('M j, Y') }}</span>
+                @endif
+                @if (!empty($art['complexity']))
+                    <span class="badge badge-{{ $art['complexity'] }}">{{ ucfirst($art['complexity']) }}</span>
+                @endif
+            </p>
+            @if (!empty($art['sources']))
+                <p class="source-note">Adapted from <a href="{{ $art['sources'][0]['url'] }}">{{ $art['sources'][0]['name'] }}</a></p>
+            @endif
+        </header>
+
+        @include('partials.facts', ['art' => $art])
+
+        {{-- Context-aware search, article scope: find-in-this-article. Pure client-side
+             (Alpine, re-inits on wire:navigate), highlights matches in the prose below. --}}
+        <div class="article-find" x-data="articleFind()" x-cloak>
+            <button type="button" class="find-toggle" @click="toggle()" :aria-expanded="open.toString()">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>Find in this article</span>
+            </button>
+            <div class="find-panel" x-show="open" x-transition>
+                <input type="search" x-ref="input" x-model="q" @input.debounce.200ms="run()"
+                    @keydown.enter.prevent="$event.shiftKey ? prev() : next()" @keydown.escape="close()"
+                    placeholder="Type to search this page…" aria-label="Find in this article">
+                <span class="find-count" x-text="label()"></span>
+                <button type="button" class="find-nav" @click="prev()" :disabled="!count" aria-label="Previous match">&#8249;</button>
+                <button type="button" class="find-nav" @click="next()" :disabled="!count" aria-label="Next match">&#8250;</button>
+                <button type="button" class="find-nav" @click="close()" aria-label="Close find">&#10005;</button>
+            </div>
+        </div>
+
+        <div class="prose-article">
+            {!! $art['html'] !!}
+        </div>
+
+        @if ($art['authors']->isNotEmpty() || !empty($art['sources']))
+            <section class="article-attribution" aria-labelledby="article-attribution-heading">
+                <h2 id="article-attribution-heading">Credits and source</h2>
+                @if ($art['authors']->isNotEmpty())
+                    <p><span class="attribution-label">Authors</span> {{ $art['authors']->map(fn ($credit) => $credit->user->displayName())->join(', ') }}</p>
+                @endif
+                @foreach ($art['sources'] as $source)
+                    <p>
+                        <span class="attribution-label">Source</span>
+                        @if (!empty($source['adapted'])) Adapted from @endif<a href="{{ $source['url'] }}">{{ $source['title'] ?? $source['name'] }}</a> on {{ $source['name'] }}.
+                        @if (!empty($source['license']) && !empty($source['license_url']))
+                            Licensed under <a href="{{ $source['license_url'] }}" rel="license">{{ $source['license'] }}</a>.
+                        @endif
+                    </p>
+                @endforeach
+            </section>
+        @endif
+
+        @if (!empty($art['attachments']))
+            <section class="article-attachments">
+                <h2>Attachments & Downloads</h2>
+                <div class="attachments-grid">
+                    @foreach ($art['attachments'] as $attachment)
+                        <div class="attachment-card">
+                            <div class="attachment-header">
+                                <span class="attachment-badge">{{ $attachment['ext'] }}</span>
+                                <a href="{{ $attachment['url'] }}" class="attachment-name" title="Download {{ $attachment['name'] }}" download>{{ $attachment['name'] }}</a>
+                            </div>
+                            <div class="attachment-meta">
+                                <span>Size: {{ number_format($attachment['size'] / 1024, 1) }} KB</span>
+                            </div>
+                            <div class="attachment-hash" data-hash="{{ $attachment['hash'] }}">
+                                <span>SHA-256: {{ substr($attachment['hash'], 0, 8) }}...{{ substr($attachment['hash'], -8) }}</span>
+                                <button class="copy-hash-btn" title="Copy full SHA-256 hash" aria-label="Copy hash">
+                                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        <footer class="article-foot">
+            @auth
+                <a class="btn edit-cta" href="/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>Edit this article</a>
+                @can('manage-articles')
+                    <a class="edit-history-link" href="/admin/history/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}">View edit history</a>
+                @endcan
+                <p class="contribute">Spotted an error or have something to add? Suggest an edit
+                    right here.
+                    @cannot('manage-articles') Every change is reviewed before it goes live. @endcannot</p>
+            @else
+                <a class="btn edit-cta" href="/auth/login?return={{ urlencode('https://www.hondabase.com/edit/' . $art['type'] . '/' . $art['category'] . '/' . $art['slug']) }}">Sign in to suggest an edit</a>
+                <p class="contribute">Spotted an error or have something to add? Sign in with
+                    Discord to suggest an edit. Every change is reviewed before it goes live.</p>
+            @endauth
+        </footer>
+    </article>
+@endsection
+
+@push('scripts')
+<script>
+// Find-in-this-article (Alpine). Registered on alpine:init so it survives wire:navigate.
+document.addEventListener('alpine:init', () => {
+    Alpine.data('articleFind', () => ({
+        open: false,
+        q: '',
+        count: 0,
+        current: -1,
+        hits: [],
+        prose: null,
+        init() {
+            this.prose = this.$root.closest('article')?.querySelector('.prose-article') || null;
+        },
+        destroy() { this.clear(); },
+        toggle() {
+            this.open = !this.open;
+            if (this.open) this.$nextTick(() => this.$refs.input && this.$refs.input.focus());
+            else this.close();
+        },
+        close() { this.open = false; this.q = ''; this.clear(); this.count = 0; this.current = -1; },
+        clear() {
+            if (!this.prose) return;
+            this.prose.querySelectorAll('mark.find-hit').forEach((m) => m.replaceWith(document.createTextNode(m.textContent)));
+            this.prose.normalize();
+            this.hits = [];
+        },
+        run() {
+            this.clear();
+            this.current = -1;
+            const term = this.q.trim();
+            if (term.length < 2 || !this.prose) { this.count = 0; return; }
+            const esc = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const walker = document.createTreeWalker(this.prose, NodeFilter.SHOW_TEXT, {
+                acceptNode: (n) => n.nodeValue.trim() && !(n.parentElement && n.parentElement.closest('script,style'))
+                    ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT,
+            });
+            const nodes = [];
+            let n;
+            while ((n = walker.nextNode())) nodes.push(n);
+            nodes.forEach((node) => {
+                const text = node.nodeValue;
+                const rx = new RegExp(esc, 'gi');
+                if (!rx.test(text)) return;
+                rx.lastIndex = 0;
+                const frag = document.createDocumentFragment();
+                let last = 0, m;
+                while ((m = rx.exec(text))) {
+                    if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+                    const mark = document.createElement('mark');
+                    mark.className = 'find-hit';
+                    mark.textContent = m[0];
+                    frag.appendChild(mark);
+                    last = m.index + m[0].length;
+                }
+                if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+                node.replaceWith(frag);
+            });
+            this.hits = Array.from(this.prose.querySelectorAll('mark.find-hit'));
+            this.count = this.hits.length;
+            if (this.count) { this.current = 0; this.activate(0); }
+        },
+        activate(i) {
+            this.hits.forEach((h) => h.classList.remove('is-active'));
+            const h = this.hits[i];
+            if (h) { h.classList.add('is-active'); h.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+        },
+        next() { if (!this.count) return; this.current = (this.current + 1) % this.count; this.activate(this.current); },
+        prev() { if (!this.count) return; this.current = (this.current - 1 + this.count) % this.count; this.activate(this.current); },
+        label() { return this.count ? (this.current + 1) + '/' + this.count : (this.q.trim().length >= 2 ? 'No matches' : ''); },
+    }));
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const copyText = (text) => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(text);
+        } else {
+            return new Promise((resolve, reject) => {
+                try {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    textArea.style.top = "0";
+                    textArea.style.left = "0";
+                    textArea.style.position = "fixed";
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    const successful = document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    if (successful) {
+                        resolve();
+                    } else {
+                        reject(new Error('execCommand returned false'));
+                    }
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+    };
+
+    document.querySelectorAll('.copy-hash-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const container = btn.closest('.attachment-hash');
+            const hash = container.getAttribute('data-hash');
+            
+            copyText(hash).then(() => {
+                const originalSvg = btn.innerHTML;
+                btn.classList.add('copied');
+                btn.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>`;
+                
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = originalSvg;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        });
+    });
+});
+</script>
+@endpush

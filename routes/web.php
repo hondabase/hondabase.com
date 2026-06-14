@@ -1,0 +1,74 @@
+<?php
+
+use App\Http\Controllers\ArticleController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', fn () => view('home'))->name('home');
+
+// Auth (Discord OAuth, shared application with the files app).
+Route::get('/auth/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
+Route::get('/auth/callback', [\App\Http\Controllers\AuthController::class, 'callback']);
+Route::post('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+
+// New-article creation (auth-gated). `new` is not a content type, so it never collides with
+// the knowledgebase routes below.
+Route::get('/new', fn () => view('new'))->middleware('auth')->name('article.new');
+
+// In-browser editor (auth-gated). `edit` is not a content type, so it never collides with
+// the knowledgebase routes below. The Livewire component re-checks existence + auth too.
+Route::get('/edit/{type}/{category}/{slug}', fn (string $type, string $category, string $slug) => view('edit', compact('type', 'category', 'slug')))
+    ->middleware('auth')
+    ->where(['type' => 'cars|motorcycles|aircraft|common', 'category' => '[A-Za-z0-9._-]+', 'slug' => '[A-Za-z0-9._-]+'])
+    ->name('article.edit');
+
+// Staff-only article management: the pending-edit review queue, and per-article history with
+// revert. `manage-articles` = staff or owner (see AppServiceProvider).
+Route::middleware(['auth', 'can:manage-articles'])->group(function () {
+    Route::get('/admin/reviews', fn () => view('admin.reviews'))->name('admin.reviews');
+
+    Route::get('/admin/history', fn () => view('admin.history', ['type' => null, 'category' => null, 'slug' => null]))
+        ->name('admin.history');
+
+    // Granting/revoking staff is owner-only (the UI form of `php artisan hondabase:staff`).
+    Route::get('/admin/staff', fn () => view('admin.staff'))
+        ->middleware('can:manage-staff')
+        ->name('admin.staff');
+
+    Route::get('/admin/history/{type}/{category}/{slug}', fn (string $type, string $category, string $slug) => view('admin.history', compact('type', 'category', 'slug')))
+        ->where(['type' => 'cars|motorcycles|aircraft|common', 'category' => '[A-Za-z0-9._-]+', 'slug' => '[A-Za-z0-9._-]+'])
+        ->name('admin.history.article');
+});
+
+Route::get('/sitemap.xml', function () {
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n"
+        . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n"
+        . '  <url><loc>https://www.hondabase.com/</loc></url>' . "\n";
+    foreach (\App\Models\Article::orderBy('type')->orderBy('category')->orderBy('slug')->get(['type', 'category', 'slug', 'updated_at']) as $a) {
+        $loc = 'https://www.hondabase.com/' . $a->type . '/' . $a->category . '/' . $a->slug;
+        $xml .= '  <url><loc>' . htmlspecialchars($loc) . '</loc>'
+            . ($a->updated_at ? '<lastmod>' . $a->updated_at->toDateString() . '</lastmod>' : '')
+            . '</url>' . "\n";
+    }
+    $xml .= '</urlset>' . "\n";
+
+    return response($xml, 200, ['Content-Type' => 'application/xml']);
+})->name('sitemap');
+
+// Knowledgebase. Types are constrained to the content top-level folders so these
+// patterns never shadow other app routes or the legacy /pgmfi, /guides, /reference paths.
+$types = 'cars|motorcycles|aircraft|common';
+$seg   = '[A-Za-z0-9._-]+';
+
+// Co-located article asset (filename must have an extension) - registered before the
+// 3-segment article route so it wins for 4-segment paths.
+Route::get('/{type}/{category}/{slug}/{file}', [ArticleController::class, 'asset'])
+    ->where(['type' => $types, 'category' => $seg, 'slug' => $seg, 'file' => $seg . '\.[A-Za-z0-9]+'])
+    ->name('article.asset');
+
+Route::get('/{type}/{category}/{slug}', [ArticleController::class, 'show'])
+    ->where(['type' => $types, 'category' => $seg, 'slug' => $seg])
+    ->name('article.show');
+
+Route::get('/{type}/{category}', [ArticleController::class, 'category'])
+    ->where(['type' => $types, 'category' => $seg])
+    ->name('article.category');

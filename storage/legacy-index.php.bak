@@ -1,0 +1,207 @@
+<?php
+require_once('/var/www/tracker.php');
+track_page_view('Hondabase Index');
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hondabase - A future community-driven knowledgebase for Honda enthusiasts">
+    <title>Hondabase - Community-Driven Honda Knowledgebase</title>
+
+    <link rel="stylesheet" href="base-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .tool-card {
+        background: var(--card-bg);
+        padding: 1.25rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--border);
+        transition: transform 0.2s, box-shadow 0.2s, background 0.3s, border-color 0.3s;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .tool-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .tool-card .material-icons {
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+
+    .tool-card-content { flex: 1; }
+
+    .tool-card h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .tool-card p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text);
+    }
+
+
+    @media (max-width: 768px) {
+        .tools-grid { grid-template-columns: 1fr; }
+    }
+    </style>
+    <script>
+        // Function to set theme and update checkbox
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            document.getElementById('theme-toggle').checked = theme === 'dark';
+            localStorage.setItem('theme', theme);
+        }
+
+        // Initialize theme
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check localStorage first
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                // If no saved theme, check system preference
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark ? 'dark' : 'light');
+            }
+
+            // Listen for system theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (!localStorage.getItem('theme')) // Only auto-switch if user hasn't manually set a theme
+                    setTheme(e.matches ? 'dark' : 'light');
+            });
+
+            // Handle toggle clicks
+            document.getElementById('theme-toggle').addEventListener('change', function() {
+                setTheme(this.checked ? 'dark' : 'light');
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="theme-toggle">
+            <input type="checkbox" id="theme-toggle" class="theme-toggle__input">
+            <label for="theme-toggle" class="theme-toggle__label">
+                <span class="material-icons">light_mode</span>
+                <span class="material-icons">dark_mode</span>
+            </label>
+        </div>
+        <h1>Welcome to Hondabase</h1>
+        <h2>Your Future Honda Technical Knowledge Hub!</h2>
+        <p>Hondabase will be a community-driven, open-source project aiming to become the most reliable and user-friendly knowledgebase for Honda enthusiasts worldwide. Our main website is currently under development, and while some tools are already available below, we're working on setting up our GitHub repositories and documentation to enable community contributions.</p>
+    </header>
+
+    <main>
+        <article>
+            <h2><span class="material-icons">info</span>About Hondabase</h2>
+            <p>We're laying the foundation for a comprehensive resource that will cover everything from routine maintenance to performance modifications for all Honda vehicles. Our goal is to create a platform where both seasoned mechanics and curious owners can find and share valuable information about their Honda vehicles.</p>
+            <p>Taking inspiration from the detailed technical guides that once populated Honda forums, we're reimagining how this knowledge should be preserved and shared. Our articles will maintain the same depth and technical accuracy that made those forum guides invaluable, but presented in a modern, well-organized format. By hosting all content and images on GitHub, we ensure nothing gets lost to time – no more broken image links or lost content when forums or image hosting goes offline.</p>
+        </article>
+
+        <article>
+            <h2><span class="material-icons">stars</span>Planned Features</h2>
+            <ul>
+                <li><span class="material-icons">group</span>Community Support: Hondabase will thrive on contributions from passionate Honda enthusiasts like you.</li>
+                <li><span class="material-icons">phone_android</span>Mobile-First Design: Access resources on-the-go, right at your fingertips.</li>
+                <li><span class="material-icons">verified</span>Transparent and Ad-Free: We're committed to providing a user-friendly experience without intrusive advertisements.</li>
+                <li><span class="material-icons">code</span>GitHub-Based Collaboration: All content will be managed through our GitHub organization at github.com/Hondabase, making it easy to contribute, track changes, and maintain quality.</li>
+            </ul>
+        </article>
+
+        <article>
+            <h2><span class="material-icons">construction</span>Future Contribution Guidelines</h2>
+            <p>While we're still setting up our contribution infrastructure at <a href="https://github.com/Hondabase">github.com/Hondabase</a>, here's what you can expect:</p>
+            <ol>
+                <li>Public repositories for projects and documentation</li>
+                <li>Detailed contribution guidelines to ensure consistency</li>
+                <li>Pull request system through GitHub for submitting content and improvements</li>
+                <li>GitHub Issues and Discussions for feature requests and community engagement</li>
+            </ol>
+        </article>
+
+        <article>
+            <h2><span class="material-icons">build</span>Currently Available Tools</h2>
+            <div class="tools-grid">
+                <a href="https://files.hondabase.com" class="tool-card">
+                    <span class="material-icons">folder</span>
+                    <div class="tool-card-content">
+                        <h3>Files Archive</h3>
+                        <p>Access our collection of legacy Honda-related files and documents</p>
+                    </div>
+                </a>
+                <a href="https://ecu-pinouts.hondabase.com" class="tool-card">
+                    <span class="material-icons">memory</span>
+                    <div class="tool-card-content">
+                        <h3>ECU Pinouts</h3>
+                        <p>Comprehensive OBD0, OBD1, and OBD2 ECU pinout diagrams (only OBD1 currently available)</p>
+                    </div>
+                </a>
+                <a href="https://ecu-components.hondabase.com" class="tool-card">
+                    <span class="material-icons">developer_board</span>
+                    <div class="tool-card-content">
+                        <h3>ECU Component List</h3>
+                        <p>Detailed OBD0 and OBD1 ECU component reference guide</p>
+                    </div>
+                </a>
+                <a href="https://vin.hondabase.com" class="tool-card">
+                    <span class="material-icons">search</span>
+                    <div class="tool-card-content">
+                        <h3>VIN Decoder</h3>
+                        <p>Decode Honda Vehicle Identification and Chassis numbers</p>
+                    </div>
+                </a>
+                <a href="./reference/error-codes/" class="tool-card">
+                    <span class="material-icons">error</span>
+                    <div class="tool-card-content">
+                        <h3>Error Code Reference</h3>
+                        <p>Lookup and understand Honda OBD0, OBD1, and OBD2 error codes</p>
+                    </div>
+                </a>
+                <a href="./guides/how-to-wire-wideband/obd1/" class="tool-card">
+                    <span class="material-icons">settings</span>
+                    <div class="tool-card-content">
+                        <h3>How to Wire a Wideband</h3>
+                        <p>Step-by-step guide to wiring a wideband O2 sensor to your Honda OBD1 ECU</p>
+                    </div>
+                </a>
+            </div>
+        </article>
+
+        <article>
+            <h2><span class="material-icons">forum</span>Join Our Discord Community</h2>
+            <p>While GitHub will handle our codebase and documentation, our Discord server will be the hub for:</p>
+            <ul>
+                <li><span class="material-icons">chat</span>Real-time technical discussions and troubleshooting help</li>
+                <li><span class="material-icons">campaign</span>Project announcements and development updates</li>
+                <li><span class="material-icons">event</span>Community events and feature brainstorming sessions</li>
+                <li><span class="material-icons">people</span>Connecting with fellow Honda enthusiasts in a more casual setting</li>
+            </ul>
+            <p>Join us at: <a href="http://discord.hondabase.com">http://discord.hondabase.com</a></p>
+        </article>
+    </main>
+
+    <footer>
+        <p>Hondabase - Community-Driven Honda Knowledgebase</p>
+    </footer>
+</body>
+</html>
