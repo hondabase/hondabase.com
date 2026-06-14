@@ -1207,15 +1207,18 @@
   display: inline-flex;
   align-items: center;
   gap: .45rem;
-  padding: .5rem .8rem;
-  font: 500 .85rem/1 "IBM Plex Sans", sans-serif;
+  padding: .35rem .7rem;
+  font-family: var(--font-mono);
+  font-size: .76rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
   color: var(--color-dim);
   background: var(--color-panel);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border: 1px solid var(--color-border-2);
   cursor: pointer;
+  transition: color .15s, border-color .15s;
 }
-.find-toggle:hover { color: var(--color-txt); border-color: var(--color-border-2); }
+.find-toggle:hover { color: var(--color-amber); border-color: rgba(251,191,36,.5); }
 .find-panel {
   display: flex;
   align-items: center;
@@ -1223,18 +1226,17 @@
   padding: .4rem .5rem;
   background: var(--color-bg-2);
   border: 1px solid var(--color-border-2);
-  border-radius: 8px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
 }
 .find-panel input[type="search"] {
   flex: 1 1 auto;
   min-width: 0;
   padding: .45rem .55rem;
-  font: 400 .9rem/1.2 "IBM Plex Sans", sans-serif;
+  font-family: var(--font-mono);
+  font-size: .8rem;
   color: var(--color-txt);
   background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border: 1px solid var(--color-border-2);
 }
 .find-panel input[type="search"]:focus { outline: none; border-color: var(--color-amber); }
 .find-count {
@@ -1254,11 +1256,11 @@
   font-size: 1rem;
   color: var(--color-dim);
   background: var(--color-panel);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border: 1px solid var(--color-border-2);
   cursor: pointer;
+  transition: color .15s, border-color .15s;
 }
-.find-nav:hover:not(:disabled) { color: var(--color-txt); border-color: var(--color-border-2); }
+.find-nav:hover:not(:disabled) { color: var(--color-amber); border-color: rgba(251,191,36,.5); }
 .find-nav:disabled { opacity: .4; cursor: default; }
 .prose-article mark.find-hit {
   background: rgba(251, 191, 36, .28);

@@ -119,7 +119,7 @@
                 <input type="search" x-ref="input" x-model="q" @input.debounce.200ms="run()"
                     @keydown.enter.prevent="$event.shiftKey ? prev() : next()" @keydown.escape="close()"
                     placeholder="Type to search this page…" aria-label="Find in this article">
-                <span class="find-count" x-text="label()"></span>
+                <span class="find-count" x-text="label()" x-show="q.trim().length >= 2"></span>
                 <button type="button" class="find-nav" @click="prev()" :disabled="!count" aria-label="Previous match">&#8249;</button>
                 <button type="button" class="find-nav" @click="next()" :disabled="!count" aria-label="Next match">&#8250;</button>
                 <button type="button" class="find-nav" @click="close()" aria-label="Close find">&#10005;</button>
