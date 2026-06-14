@@ -92,6 +92,9 @@
             @if (!empty($art['sources']))
                 <p class="source-note">Adapted from <a href="{{ $art['sources'][0]['url'] }}">{{ $art['sources'][0]['name'] }}</a></p>
             @endif
+            <div class="article-actions">
+                <livewire:favorite-button :type="$art['type']" :category="$art['category']" :slug="$art['slug']" />
+            </div>
         </header>
 
         @include('partials.facts', ['art' => $art])

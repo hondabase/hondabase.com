@@ -38,6 +38,7 @@
                 <a href="https://discord.hondabase.com">Discord</a>
                 <a href="https://github.com/Hondabase">GitHub</a>
                 @auth
+                    <a href="/me" class="nav-signin">My&nbsp;Hondabase</a>
                     <a href="/new" class="nav-signin">New&nbsp;article</a>
                     @can('manage-articles')
                         <a href="/admin/reviews" class="nav-signin">Reviews</a>

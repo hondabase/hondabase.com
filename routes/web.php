@@ -10,6 +10,13 @@ Route::get('/auth/login', [\App\Http\Controllers\AuthController::class, 'login']
 Route::get('/auth/callback', [\App\Http\Controllers\AuthController::class, 'callback']);
 Route::post('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
+// Personalization (auth-gated): "My Hondabase" dashboard + garage CRUD. `me` is not a
+// content type, so it never collides with the knowledgebase routes below.
+Route::middleware('auth')->group(function () {
+    Route::get('/me', fn () => view('me'))->name('me');
+    Route::get('/me/garage', fn () => view('garage'))->name('me.garage');
+});
+
 // New-article creation (auth-gated). `new` is not a content type, so it never collides with
 // the knowledgebase routes below.
 Route::get('/new', fn () => view('new'))->middleware('auth')->name('article.new');

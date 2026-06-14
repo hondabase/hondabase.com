@@ -160,7 +160,29 @@ Living log of the Hondabase rebuild. Plan of record:
   grants a member, anon 302).
   TODO: TipTap in P7 (planned deviation; needs the Vite build); run a queue worker (jobs sit on
   the `database` queue).
-- [ ] **P5 - Community & personalization**
+- [~] **P5 - Community & personalization** *(core personalization done; notifications + web-push deferred)*:
+  **Favorites, garage CRUD, "My Hondabase" dashboard + onboarding** built on the no-build
+  Livewire+Alpine stack (2026-06-14). New instance-local tables (`2026_06_14_150000_create_community_tables`):
+  `favorites` (user↔article bookmark, unique, cascades with the derived index), `user_vehicles`
+  (year/make/model/chassis/engine/nickname/notes, free-form by design since the catalog is
+  facet-derived), `user_equipment` (ecu/wideband/software/tool). Models `Favorite`,
+  `UserVehicle` (`label()` + `impliedFollows()`), `UserEquipment` (`KINDS`); `User` gained
+  `favorites()`/`vehicles()`/`equipment()`. **`FavoriteButton`** Livewire (article header
+  Save/Saved star; resolves the `articles` row from type/cat/slug so the file-rendered page
+  needs no controller change; anon click redirects to login with `return`). **`Garage`**
+  (`/me/garage`): add/edit/delete vehicles + equipment, mobile-first forms, engine `<datalist>`
+  from facet labels; **saving a vehicle seeds facet follows** (engine family + chassis,
+  skipping dupes) so the feed self-populates. **`Dashboard`** = "My Hondabase" (`/me`):
+  onboarding card when the account is empty, else garage summary + a **Following feed** (recent
+  articles matching any followed facet, the `forYou` query reused) + removable follow chips +
+  saved-articles list (unsave inline). Nav gained "My Hondabase"; `me.css` added; favorite
+  styles appended to `article.css`. **Verified end-to-end** (Livewire test user): empty
+  dashboard shows onboarding; adding a B-Series/DC2 vehicle created 2 follows + the populated
+  dashboard renders garage/feed/saved; favorite toggles; test data cleaned up. HTTP: `/me` +
+  `/me/garage` 302 anon, article page 200 with the Save button. **Deferred to a later P5 pass:**
+  polymorphic favorites over catalog entities (served today by follows), notifications
+  (ArticlePublished/Updated → database channel) and **web-push** (VAPID + service worker +
+  subscribe UI; needs a VAPID keypair).
 - [~] **P6 - Analytics & nightly dump**: **Google Analytics 4** live (G-63JRK5RNJM,
   env-driven via `GA_MEASUREMENT_ID`; reuses the files-app property). Article-aware events in
   `public/assets/ga.js`: `article_view` carries category/vehicle_type/complexity/obd/engine/
@@ -222,6 +244,14 @@ Living log of the Hondabase rebuild. Plan of record:
   pgmfi tokens; full Tailwind/Vite migration in P7.
 
 ## Changelog
+- **2026-06-14** - **P5 core personalization** (chosen slice; web-push deferred). Instance-local
+  `favorites`/`user_vehicles`/`user_equipment` tables + models; `FavoriteButton` (article Save),
+  `Garage` CRUD at `/me/garage` (vehicle save seeds engine/chassis follows), and the
+  `Dashboard` "My Hondabase" at `/me` (onboarding when empty; else garage + Following feed +
+  removable follow chips + saved list). Nav link + `me.css` + `article.css` Save styles.
+  Verified end-to-end (Livewire test user create→follow-seed→favorite→cleanup) and over HTTP
+  (`/me` 302 anon, article 200 with Save). Deferred: catalog-entity favorites (follows cover it),
+  notifications + web-push (needs VAPID).
 - **2026-06-14** - **closed the remaining P2/P3/P4 partials.** **P2 done:** `{{> partial }}`
   includes (`content/_partials/`, recursion-guarded, unknown left verbatim), internal
   cross-linking (relative `.md` links → clean article routes; absolute links pass through),

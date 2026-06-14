@@ -1,0 +1,69 @@
+/* Hondabase - "My Hondabase" dashboard + garage (hand-written; Tailwind/Vite migration in P7).
+   Mobile-first: single column, thumb-reachable controls; widens on larger screens. */
+
+.page-head { padding: 1.5rem 0 .5rem; }
+.page-sub { color: var(--txt-dim); margin: .25rem 0 0; max-width: 70ch; }
+
+.dash-section, .garage-section { padding: 1.25rem 0; border-top: 1px solid var(--border); }
+.dash-section:first-of-type, .garage-section:first-of-type { border-top: 0; }
+
+.garage-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.garage-head .section-head { margin: 0; }
+
+.btn-sm { font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; padding: .35rem .7rem; border: 1px solid var(--amber); color: var(--amber); cursor: pointer; background: none; transition: background .15s, color .15s; white-space: nowrap; }
+.btn-sm:hover { background: var(--amber); color: #1a1a1a; }
+
+.btn-link { font-family: var(--font-mono); font-size: .74rem; color: var(--txt-dim); background: none; border: 0; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: .04em; }
+.btn-link:hover { color: var(--amber); }
+.btn-link.danger:hover { color: var(--red); }
+
+.empty { color: var(--muted); font-style: italic; }
+.hint { color: var(--muted); font-size: .82rem; margin: .4rem 0; }
+.opt { color: var(--muted); font-weight: 400; font-size: .85em; }
+
+/* ---------- chips ---------- */
+.chip { font-family: var(--font-mono); font-size: .72rem; color: var(--txt-dim); background: var(--panel); border: 1px solid var(--border-2); padding: .15rem .5rem; display: inline-flex; align-items: center; gap: .35rem; line-height: 1.4; }
+.chip-kind { color: var(--amber); border-color: rgba(251,191,36,.4); }
+
+.follow-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.1rem; }
+.chip-follow { font-family: var(--font-mono); font-size: .74rem; color: var(--amber); background: var(--panel); border: 1px solid rgba(251,191,36,.4); padding: .18rem .2rem .18rem .55rem; display: inline-flex; align-items: center; gap: .3rem; }
+.chip-follow button { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0 .3rem; }
+.chip-follow button:hover { color: var(--red); }
+
+/* ---------- garage cards ---------- */
+.garage-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: .9rem 1.1rem; background: var(--panel); border: 1px solid var(--border); margin-bottom: .7rem; }
+.garage-card-main { min-width: 0; }
+.garage-card h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--head); margin: 0 0 .35rem; }
+.garage-meta { display: flex; flex-wrap: wrap; gap: .35rem; margin: 0; }
+.garage-notes { color: var(--txt-dim); font-size: .88rem; margin: .4rem 0 0; }
+.garage-card-actions { display: flex; flex-direction: column; gap: .4rem; align-items: flex-end; flex-shrink: 0; }
+
+.dash-vehicles { display: grid; grid-template-columns: 1fr; gap: .7rem; }
+@media (min-width: 620px) { .dash-vehicles { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); } }
+
+/* ---------- forms ---------- */
+.garage-form { background: var(--bg-2); border: 1px solid var(--border); padding: 1.1rem; margin-bottom: 1.2rem; }
+.form-grid { display: grid; grid-template-columns: 1fr; gap: .8rem; }
+@media (min-width: 560px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+.garage-form label { display: flex; flex-direction: column; gap: .25rem; font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--txt-dim); }
+.garage-form label.full, .form-grid label.full { grid-column: 1 / -1; }
+.garage-form input, .garage-form select, .garage-form textarea { font-family: var(--font-sans); font-size: .95rem; text-transform: none; letter-spacing: 0; color: var(--txt); background: var(--bg); border: 1px solid var(--border-2); padding: .5rem .6rem; }
+.garage-form input:focus, .garage-form select:focus, .garage-form textarea:focus { outline: none; border-color: var(--amber); }
+.form-actions { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; }
+.form-actions .btn { margin-top: 0; }
+.field-err { color: var(--red); font-size: .82rem; margin: .5rem 0 0; }
+
+/* ---------- onboarding ---------- */
+.onboarding { background: var(--panel); border: 1px solid var(--border); padding: 1.6rem; }
+.onboarding h2 { font-family: var(--font-display); font-size: 1.4rem; text-transform: uppercase; color: var(--head); margin: 0 0 .6rem; }
+.onboarding p { color: var(--txt-dim); max-width: 65ch; }
+
+/* ---------- feed cards / saved list ---------- */
+.card-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--head); margin: 0 0 .35rem; }
+.card-sum { color: var(--txt-dim); font-size: .88rem; margin: 0 0 .5rem; }
+.card-meta { font-family: var(--font-mono); font-size: .7rem; color: var(--muted); }
+
+.saved-list { display: flex; flex-direction: column; }
+.saved-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--border); }
+.saved-row a { color: var(--txt); }
+.saved-row a:hover { color: var(--amber); }

@@ -460,3 +460,14 @@
   background: var(--amber);
   color: #1a1300;
 }
+
+/* ---------- favorite (save) button - P5 ---------- */
+.article-actions { margin-top: .6rem; }
+.fav-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--font-mono); font-size: .76rem; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--txt-dim); background: var(--panel); border: 1px solid var(--border-2);
+  padding: .35rem .7rem; cursor: pointer; transition: color .15s, border-color .15s;
+}
+.fav-btn:hover { color: var(--amber); border-color: rgba(251,191,36,.5); }
+.fav-btn.is-saved { color: var(--amber); border-color: rgba(251,191,36,.6); }
