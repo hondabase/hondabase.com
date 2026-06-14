@@ -24,13 +24,13 @@
     @livewireStyles
 </head>
 <body>
-    <header class="site-header">
-        <div class="wrap">
+    <header class="site-header" x-data="{ mobileMenuOpen: false }">
+        <div class="wrap header-wrap">
             <a href="/" class="brand" style="color:inherit">
                 <h1>Honda<b>base</b></h1>
                 <p>Community-Driven Honda Knowledgebase</p>
             </a>
-            <nav class="nav">
+            <nav class="nav" :class="{ 'is-active': mobileMenuOpen }" x-cloak>
                 <a href="/pgmfi/">pgmfi.org</a>
                 <a href="https://files.hondabase.com">Files</a>
                 @auth
@@ -42,13 +42,22 @@
                     @can('manage-staff')
                         <a href="/admin/staff" class="nav-signin">Staff</a>
                     @endcan
-                    <livewire:notification-bell />
                     <span class="nav-user">{{ auth()->user()->displayName() }}</span>
                     <form method="POST" action="/auth/logout" class="nav-form">@csrf<button type="submit">Sign&nbsp;out</button></form>
                 @else
                     <a href="/auth/login" class="nav-signin">Sign&nbsp;in</a>
                 @endauth
             </nav>
+            <div class="header-right">
+                @auth
+                    <livewire:notification-bell />
+                @endauth
+                <button type="button" class="burger-btn" @click="mobileMenuOpen = !mobileMenuOpen" :class="{ 'is-active': mobileMenuOpen }" aria-label="Toggle navigation" :aria-expanded="mobileMenuOpen.toString()">
+                    <span class="burger-line"></span>
+                    <span class="burger-line"></span>
+                    <span class="burger-line"></span>
+                </button>
+            </div>
         </div>
     </header>
 
