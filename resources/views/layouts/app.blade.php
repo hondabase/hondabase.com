@@ -46,6 +46,7 @@
                     @can('manage-staff')
                         <a href="/admin/staff" class="nav-signin">Staff</a>
                     @endcan
+                    <livewire:notification-bell />
                     <span class="nav-user">{{ auth()->user()->displayName() }}</span>
                     <form method="POST" action="/auth/logout" class="nav-form">@csrf<button type="submit">Sign&nbsp;out</button></form>
                 @else

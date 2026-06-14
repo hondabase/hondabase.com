@@ -107,3 +107,19 @@ section { padding: 2.25rem 0; }
   .site-header .wrap { min-height: 0; padding-top: .8rem; padding-bottom: .8rem; }
   .nav { width: 100%; margin-left: 0; }
 }
+
+/* ---------- notification bell (P5) ---------- */
+.notif { position: relative; display: inline-flex; }
+.notif-btn { position: relative; background: none; border: 0; color: var(--txt-dim); cursor: pointer; padding: .2rem; display: inline-flex; }
+.notif-btn:hover { color: var(--amber); }
+.notif-badge { position: absolute; top: -4px; right: -5px; min-width: 15px; height: 15px; padding: 0 3px; font-family: var(--font-mono); font-size: .58rem; line-height: 15px; text-align: center; color: #1a1a1a; background: var(--red); color: #fff; border-radius: 8px; }
+.notif-panel { position: absolute; top: calc(100% + .5rem); right: 0; width: min(20rem, 88vw); max-height: 70vh; overflow-y: auto; background: var(--bg-2); border: 1px solid var(--border-2); z-index: 20; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+.notif-head { display: flex; align-items: center; justify-content: space-between; padding: .6rem .8rem; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--txt-dim); }
+.notif-item { display: flex; flex-direction: column; gap: .15rem; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--border); padding: .65rem .8rem; cursor: pointer; color: var(--txt-dim); }
+.notif-item:hover { background: var(--panel-hover); }
+.notif-item.is-unread { border-left: 2px solid var(--amber); }
+.notif-title { color: var(--head); font-size: .85rem; font-weight: 500; }
+.notif-item.is-unread .notif-title { color: var(--amber-2); }
+.notif-reason { font-size: .76rem; color: var(--txt-dim); }
+.notif-time { font-family: var(--font-mono); font-size: .66rem; color: var(--muted); }
+.notif-empty { padding: 1rem .8rem; font-size: .82rem; color: var(--muted); margin: 0; }

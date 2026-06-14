@@ -3,8 +3,10 @@
 namespace App\Jobs;
 
 use App\Models\ArticleRevision;
+use App\Models\Article;
 use App\Services\ArticleAuthorService;
 use App\Services\ArticleIndexer;
+use App\Services\FollowerNotifier;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -42,7 +44,7 @@ class CommitArticle implements ShouldQueue
         return [10, 30, 60, 120];
     }
 
-    public function handle(ArticleIndexer $indexer, ArticleAuthorService $authors): void
+    public function handle(ArticleIndexer $indexer, ArticleAuthorService $authors, FollowerNotifier $notifier): void
     {
         $rev = ArticleRevision::find($this->revisionId);
         if ($rev === null || $rev->status !== 'approved') {
@@ -60,6 +62,20 @@ class CommitArticle implements ShouldQueue
             }
             // Make the change visible on the live site immediately, push or not.
             $indexer->indexOne($rev->type, $rev->category, $rev->slug);
+
+            // Notify followers of a matching facet. A revert isn't an authored "publish/update",
+            // so it doesn't notify. Failures here must never break the commit/push, so guard it.
+            if ($rev->reverts_revision_id === null) {
+                $article = Article::where('type', $rev->type)->where('category', $rev->category)
+                    ->where('slug', $rev->slug)->first();
+                if ($article) {
+                    try {
+                        $notifier->notify($article, $rev->original_body === '', optional($rev->author)->id);
+                    } catch (\Throwable $e) {
+                        Log::warning('CommitArticle notify failed', ['revision' => $rev->id, 'error' => $e->getMessage()]);
+                    }
+                }
+            }
         }
 
         if ($rev->reverts_revision_id === null && $rev->author !== null) {
