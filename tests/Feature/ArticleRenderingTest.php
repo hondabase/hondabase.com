@@ -68,6 +68,7 @@ MD
             ->assertOk()
             ->assertSee('class="markdown-alert markdown-alert-caution"', false)
             ->assertSee('class="markdown-alert-title"', false)
+            ->assertSee('<svg class="octicon octicon-stop"', false)
             ->assertSee('class="table-scroll"', false)
             ->assertSee('<th>Component</th>', false)
             ->assertSee('<td>R1</td>', false)

@@ -41,6 +41,7 @@ class GithubAlertProcessor
 
             $title = new Paragraph;
             $title->data->set('attributes/class', 'markdown-alert-title');
+            $title->appendChild(new AlertIconInline($type));
             $title->appendChild(new Text(ucfirst($type)));
             $quote->prependChild($title);
 
