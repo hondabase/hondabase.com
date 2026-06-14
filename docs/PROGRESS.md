@@ -168,7 +168,7 @@ Living log of the Hondabase rebuild. Plan of record:
   grants a member, anon 302).
   TODO: TipTap in P7 (planned deviation; needs the Vite build); run a queue worker (jobs sit on
   the `database` queue).
-- [~] **P5 - Community & personalization** *(core personalization done; notifications + web-push deferred)*:
+- [x] **P5 - Community & personalization** *(done)*:
   **Favorites, garage CRUD, "My Hondabase" dashboard + onboarding** built on the no-build
   Livewire+Alpine stack (2026-06-14). New instance-local tables (`2026_06_14_150000_create_community_tables`):
   `favorites` (user↔article bookmark, unique, cascades with the derived index), `user_vehicles`
@@ -187,10 +187,22 @@ Living log of the Hondabase rebuild. Plan of record:
   styles appended to `article.css`. **Verified end-to-end** (Livewire test user): empty
   dashboard shows onboarding; adding a B-Series/DC2 vehicle created 2 follows + the populated
   dashboard renders garage/feed/saved; favorite toggles; test data cleaned up. HTTP: `/me` +
-  `/me/garage` 302 anon, article page 200 with the Save button. **Deferred to a later P5 pass:**
-  polymorphic favorites over catalog entities (served today by follows), notifications
-  (ArticlePublished/Updated → database channel) and **web-push** (VAPID + service worker +
-  subscribe UI; needs a VAPID keypair).
+  `/me/garage` 302 anon, article page 200 with the Save button.
+  **Notifications (2026-06-14):** `CommitArticle` now notifies followers after the article is
+  committed + indexed (first apply only; reverts/conflicts don't notify, the editor is excluded,
+  failures are caught so they never break the commit). `FollowerNotifier` resolves users
+  following any of the article's facets with a per-user reason ("Matches your B-Series");
+  `ArticleChanged` notification + Laravel `notifications` table (database channel); `NotificationBell`
+  Livewire bell in the nav (unread badge, dropdown, open-marks-read + go-to-article, mark-all-read).
+  **Web-push (2026-06-14):** `laravel-notification-channels/webpush` installed, local VAPID
+  keypair generated into `.env` (documented in `.env.example`; no external account), `push_subscriptions`
+  table + `HasPushSubscriptions` on `User`. `ArticleChanged::via()` adds the web-push channel only
+  for users with a subscription; `toWebPush()` sends the headline. Service worker `public/sw.js`
+  (push + notificationclick → open/focus article); subscribe toggle on `/me` (Alpine: registers SW,
+  requests permission, subscribes with the VAPID key, POSTs to `/me/push`); `PushSubscriptionController`
+  (store/destroy). **Verified:** follower notified + editor excluded + payload correct + bell renders
+  + mark-all-read clears; web-push `via()` gates on subscription, `toWebPush` builds; `/sw.js` 200,
+  push routes auth-gated, all blades compile, vendor re-chowned to www-data.
 - [~] **P6 - Analytics & nightly dump**: **Google Analytics 4** live (G-63JRK5RNJM,
   env-driven via `GA_MEASUREMENT_ID`; reuses the files-app property). Article-aware events in
   `public/assets/ga.js`: `article_view` carries category/vehicle_type/complexity/obd/engine/

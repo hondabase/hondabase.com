@@ -52,7 +52,7 @@ class ArticleChanged extends Notification
         return (new \NotificationChannels\WebPush\WebPushMessage)
             ->title("{$verb}: {$this->article->title}")
             ->body($this->reason ?: 'On something you follow at Hondabase')
-            ->icon('/assets/icon-192.png')
+            ->icon('/favicon.ico')
             ->action('Read it', 'open')
             ->data(['url' => $this->article->url()]);
     }

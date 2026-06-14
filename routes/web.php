@@ -15,6 +15,10 @@ Route::post('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logou
 Route::middleware('auth')->group(function () {
     Route::get('/me', fn () => view('me'))->name('me');
     Route::get('/me/garage', fn () => view('garage'))->name('me.garage');
+
+    // Web Push subscription lifecycle (called by the service-worker subscribe toggle).
+    Route::post('/me/push', [\App\Http\Controllers\PushSubscriptionController::class, 'store'])->name('push.store');
+    Route::delete('/me/push', [\App\Http\Controllers\PushSubscriptionController::class, 'destroy'])->name('push.destroy');
 });
 
 // New-article creation (auth-gated). `new` is not a content type, so it never collides with

@@ -67,3 +67,10 @@
 .saved-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--border); }
 .saved-row a { color: var(--txt); }
 .saved-row a:hover { color: var(--amber); }
+
+/* ---------- push notifications toggle (P5) ---------- */
+[x-cloak] { display: none !important; }
+.push-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: .6rem; }
+.push-row .btn { margin-top: 0; }
+.push-state { font-family: var(--font-mono); font-size: .76rem; color: var(--green); }
+.push-state.push-denied { color: var(--red); }
