@@ -9,6 +9,7 @@ return [
 
     // Electronics articles added independently rather than adapted from the PGMFI archive.
     'pgmfi_non_ports' => [
+        'cars/electronics/how-to-wire-wideband/how-to-wire-wideband.md',
         'cars/electronics/iacv-circuit-fix-r58-r59/iacv-circuit-fix-r58-r59.md',
     ],
 

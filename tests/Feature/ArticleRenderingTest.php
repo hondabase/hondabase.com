@@ -34,6 +34,12 @@ Use this guide to diagnose the ECU.
 > Disconnect the battery first.
 
 | Component | Value | | --- | --- | | R1 | 10k ohm |
+
+[https://example.com/reference?part=ecu&format=html]()
+
+[Archived reference](http://web.archive.org/web/20200101000000/http://web.archive.org/web/20200101000000/http://example.com/reference)
+
+[Missing reference]()
 MD
         );
 
@@ -61,6 +67,10 @@ MD
             ->assertSee('<meta name="description" content="Diagnose and repair a Honda ECU safely with correctly rendered warnings and specifications.">', false)
             ->assertSee('<link rel="canonical" href="https://www.hondabase.com/cars/electronics/render-test">', false)
             ->assertSee('"@type":"TechArticle"', false)
-            ->assertSee('<meta property="og:type" content="article">', false);
+            ->assertSee('<meta property="og:type" content="article">', false)
+            ->assertSee('href="https://example.com/reference?part=ecu&amp;format=html"', false)
+            ->assertSee('href="https://web.archive.org/web/20200101000000/http://example.com/reference"', false)
+            ->assertSee('<p>Missing reference</p>', false)
+            ->assertDontSee('<a href="">Missing reference</a>', false);
     }
 }

@@ -21,7 +21,6 @@ class ImportPgmfiAuthors extends Command
     private const MANUAL_TOPICS = [
         'honda-acura-trouble-codes' => 'HondaErrorCodes',
         'how-to-check-obd1-ecu-codes' => 'CheckingErrorCodes',
-        'how-to-wire-wideband' => 'WideBandO2',
     ];
 
     public function handle(): int

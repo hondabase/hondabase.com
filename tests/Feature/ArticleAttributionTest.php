@@ -7,6 +7,7 @@ use App\Models\AuthorAlias;
 use App\Models\User;
 use App\Services\ArticleAuthorService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
@@ -99,5 +100,16 @@ MD);
         $this->assertSame(0, $credit->sort_order);
         $this->assertSame($modern->id, AuthorAlias::sole()->user_id);
         $this->assertDatabaseMissing('users', ['id' => $legacy->id]);
+    }
+
+    public function test_independent_wideband_guide_is_excluded_from_pgmfi_import(): void
+    {
+        File::deleteDirectory($this->contentPath);
+        $path = $this->contentPath . '/cars/electronics/how-to-wire-wideband/how-to-wire-wideband.md';
+        File::ensureDirectoryExists(dirname($path));
+        File::put($path, "---\ntitle: Independent Wideband Guide\n---\n\nArticle body.\n");
+
+        $this->assertSame(0, Artisan::call('hondabase:import-pgmfi-authors', ['--check' => true]));
+        $this->assertStringNotContainsString('pgmfi.org wiki', File::get($path));
     }
 }

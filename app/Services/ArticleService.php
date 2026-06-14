@@ -384,6 +384,8 @@ class ArticleService
         foreach ($widgets as $tok => $whtml) {
             $html = str_replace(["<p>{$tok}</p>", $tok], $whtml, $html);
         }
+        $html = $this->repairEmptyLinks($html);
+        $html = $this->rewriteMalformedArchiveLinks($html);
         if ($assetBase !== '') {
             $html = $this->rewriteAssets($html, $assetBase);
             $html = $this->rewriteArticleLinks($html, $assetBase);
@@ -391,6 +393,46 @@ class ArticleService
         }
 
         return $html;
+    }
+
+    /** Repair URL-labelled empty links and render ambiguous empty links as plain text. */
+    private function repairEmptyLinks(string $html): string
+    {
+        return preg_replace_callback('/<a\b([^>]*)\bhref=""([^>]*)>([^<]+)<\/a>/i', function ($m) {
+            $url = html_entity_decode(trim($m[3]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            if (! preg_match('#^(?:https?|ftp)://\S+$#i', $url)) {
+                return $m[3];
+            }
+
+            $escaped = htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+
+            return '<a'.$m[1].'href="'.$escaped.'"'.$m[2].'>'.$m[3].'</a>';
+        }, $html);
+    }
+
+    /** Collapse duplicated Wayback wrappers produced by legacy URL migration. */
+    private function rewriteMalformedArchiveLinks(string $html): string
+    {
+        return preg_replace_callback('/<a\b[^>]*\bhref="([^"]+)"/i', function ($m) {
+            $url = $m[1];
+            if (! preg_match('#^https?://web\.archive\.org/web/(\d{14}/)(.+)$#i', $url, $outer)) {
+                return $m[0];
+            }
+
+            $original = $outer[2];
+            $changed = false;
+            while (preg_match('#^https?://web\.archive\.org/web/(?:\d{14}/)?(https?://.+)$#i', $original, $nested)) {
+                $original = $nested[1];
+                $changed = true;
+            }
+            if (! $changed) {
+                return $m[0];
+            }
+
+            $normalized = 'https://web.archive.org/web/'.$outer[1].$original;
+
+            return str_replace('href="'.$url.'"', 'href="'.$normalized.'"', $m[0]);
+        }, $html);
     }
 
     /**

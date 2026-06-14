@@ -195,6 +195,18 @@ class LintArticles extends Command
                         $warnings[] = "[{$type}/{$category}/{$slug}] Contains a collapsed one-line Markdown table; split each table row onto its own line";
                     }
 
+                    if (preg_match('/(?<!!)\[[^\]\r\n]+\]\(\s*\)/', $body)) {
+                        $warnings[] = "[{$type}/{$category}/{$slug}] Contains a Markdown link with an empty destination";
+                    }
+
+                    if (preg_match('/\]\([^)\r\n]*\)\[/', $body)) {
+                        $warnings[] = "[{$type}/{$category}/{$slug}] Contains adjacent Markdown links without separating whitespace";
+                    }
+
+                    if (preg_match('#web\.archive\.org/web/(?:\d{14}/)?https?://web\.archive\.org/web/#i', $body)) {
+                        $warnings[] = "[{$type}/{$category}/{$slug}] Contains a malformed nested Internet Archive URL";
+                    }
+
                     $repoPath = "{$type}/{$category}/{$slug}/".basename($mainFile);
                     $isPgmfiPort = ! in_array($repoPath, (array) config('hondabase.pgmfi_non_ports', []), true);
                     if ($type === 'cars' && $category === 'electronics' && $isPgmfiPort && empty($fm['sources'])) {
