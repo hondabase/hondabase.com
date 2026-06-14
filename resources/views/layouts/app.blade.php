@@ -33,10 +33,6 @@
             <nav class="nav">
                 <a href="/pgmfi/wiki/">Wiki</a>
                 <a href="https://files.hondabase.com">Files</a>
-                <a href="/cars/engine/injector-offsets">Injector&nbsp;Offsets</a>
-                <a href="/reference/error-codes/">Error&nbsp;Codes</a>
-                <a href="https://discord.hondabase.com">Discord</a>
-                <a href="https://github.com/Hondabase">GitHub</a>
                 @auth
                     <a href="/me" class="nav-signin">My&nbsp;Hondabase</a>
                     <a href="/new" class="nav-signin">New&nbsp;article</a>
