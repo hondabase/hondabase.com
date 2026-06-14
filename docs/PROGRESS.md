@@ -348,12 +348,20 @@ Living log of the Hondabase rebuild. Plan of record:
 - **Attribution:** commits authored as bot; editor via `Co-Authored-By:` (real GitHub
   no-reply email if linked, else synthetic) + `Reviewed-By:` approver; pushed via deploy key.
 - **Security model:** all article edits are approval-gated (draft→review→publish).
-- **Styling:** the established pgmfi look currently lives in hand-written
-  `public/assets/hondabase.css` (+ `article.css`/`me.css`/`editor.css`). P7 brings in Vite for the
-  TipTap WYSIWYG editor, so the styling will be **migrated to Tailwind (latest, v4)** at the same
-  time (CSS-first `@theme` tokens) - preserving the existing visual design, not redesigning it.
+- **Styling:** the established pgmfi look is now **fully migrated to Tailwind v4** (CSS-first
+  `@theme` tokens) in a single Vite bundle `resources/css/app.css` - base/components layers on
+  canonical `--color-*`/`--font-*` tokens, the old hand-written sheets (`hondabase`/`article`/
+  `explorer`/`me`/`editor`.css) all ported in and deleted, no per-page `<link>`s, no var aliases.
+  Visual design preserved, not redesigned.
 
 ## Changelog
+- **2026-06-14** - **P7 Tailwind CSS migration complete.** Ported the last three legacy sheets
+  (`article`/`explorer`/`me`.css) into `app.css` `@layer components` on the canonical `@theme`
+  tokens (ordered short-var → `--color-*` rename, `[x-cloak]` deduped into `@layer base`), deleted
+  `resources/css/legacy/`, and removed the transitional var-alias block - `app.css` is now a single
+  token-native sheet (no legacy `@import`s, no short aliases; grep-verified). One bundle site-wide
+  (85.5 kB / 17.6 kB gz). Build green, www-data restored; HTTP verified (home/category/article 200,
+  `/me` 302) and all ported classes present in the built bundle. Remaining P7: STYLE_GUIDE, AGENTS, CI.
 - **2026-06-14** - **P7 TipTap editor built + wired in; editor.css converted.** Replaced the
   raw-Markdown textarea in `ArticleEditor` + `ArticleCreator` with a TipTap rich-text canvas
   (code-split `resources/js/editor.js`, loaded only on `/new`+`/edit`; Alpine `tiptapEditor` on
@@ -368,7 +376,17 @@ Living log of the Hondabase rebuild. Plan of record:
   data-preserved). Verified via Livewire test (mount/hydrate/edit→correct `proposed_body`, rolled
   back) + HTTP (article/home 200, editor routes 302 anon); build green; www-data ownership restored.
   Accepted one-time cost: first edit of each not-yet-normalized article reflows body+frontmatter
-  (idempotent after). Remaining P7: convert `article`/`explorer`/`me`.css, STYLE_GUIDE, AGENTS, CI.
+  (idempotent after).
+  **Tailwind CSS migration COMPLETE (2026-06-14):** the last three legacy sheets
+  (`article`/`explorer`/`me`.css) were ported into `app.css` `@layer components` on the canonical
+  `--color-*`/`--font-*` `@theme` tokens (ordered token rename, the duplicate `[x-cloak]` rule
+  deduped into `@layer base`), the `resources/css/legacy/` dir deleted, and the **transitional
+  short-var-alias block removed** - so `app.css` is now a single, fully token-native sheet with
+  **zero legacy `@import`s and zero short var aliases** (grep-verified). One bundle ships site-wide
+  (85.5 kB → 17.6 kB gz). Build green; www-data ownership restored. Verified over HTTP (home +
+  category + article 200, `/me` 302 anon) and that every ported class (`prose-article`, `ex-card`,
+  `garage-card`, `fav-btn`, `markdown-alert`, `chip-follow`, `find-panel`) is present in the built
+  bundle and the homepage references the new hashed `app-*.css`. Remaining P7: STYLE_GUIDE, AGENTS, CI.
 - **2026-06-14** - **P5 core personalization** (chosen slice; web-push deferred). Instance-local
   `favorites`/`user_vehicles`/`user_equipment` tables + models; `FavoriteButton` (article Save),
   `Garage` CRUD at `/me/garage` (vehicle save seeds engine/chassis follows), and the
