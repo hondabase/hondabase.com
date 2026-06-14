@@ -38,17 +38,19 @@ class StaffManager extends Component
         $user = User::find($id);
         if ($user === null) {
             $this->message = "User #{$id} no longer exists.";
+
             return;
         }
 
         if ($user->isOwner()) {
             $this->message = 'The instance owner is always staff and cannot be changed here.';
+
             return;
         }
 
-        $grant = !$user->is_staff;
+        $grant = ! $user->is_staff;
         $user->forceFill(['is_staff' => $grant])->save();
-        $this->message = ($grant ? 'Granted' : 'Revoked') . " staff for {$user->displayName()}.";
+        $this->message = ($grant ? 'Granted' : 'Revoked')." staff for {$user->displayName()}.";
     }
 
     public function render(): View
@@ -58,12 +60,12 @@ class StaffManager extends Component
         $term = trim($this->q);
         $users = User::query()
             ->when($term !== '', function ($w) use ($term) {
-                $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $term) . '%';
+                $like = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $term).'%';
                 $w->where(function ($s) use ($like) {
                     $s->where('discord_username', 'like', $like)
-                      ->orWhere('discord_global_name', 'like', $like)
-                      ->orWhere('name', 'like', $like)
-                      ->orWhere('github_login', 'like', $like);
+                        ->orWhere('discord_global_name', 'like', $like)
+                        ->orWhere('name', 'like', $like)
+                        ->orWhere('github_login', 'like', $like);
                 });
             })
             ->orderByDesc('is_staff')
@@ -71,7 +73,7 @@ class StaffManager extends Component
             ->paginate(20);
 
         return view('livewire.staff-manager', [
-            'users'      => $users,
+            'users' => $users,
             'staffCount' => User::where('is_staff', true)->count(),
         ]);
     }

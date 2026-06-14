@@ -16,6 +16,7 @@ class ArticleAttributionTest extends TestCase
     use RefreshDatabase;
 
     private string $contentPath;
+
     private string $repoPath = 'cars/electronics/test-credit/test-credit.md';
 
     protected function setUp(): void
@@ -24,8 +25,8 @@ class ArticleAttributionTest extends TestCase
 
         $this->contentPath = storage_path('framework/testing-article-attribution');
         File::deleteDirectory($this->contentPath);
-        File::ensureDirectoryExists(dirname($this->contentPath . '/' . $this->repoPath));
-        File::put($this->contentPath . '/' . $this->repoPath, <<<'MD'
+        File::ensureDirectoryExists(dirname($this->contentPath.'/'.$this->repoPath));
+        File::put($this->contentPath.'/'.$this->repoPath, <<<'MD'
 ---
 sources:
   - name: pgmfi.org wiki
@@ -105,7 +106,7 @@ MD);
     public function test_independent_wideband_guide_is_excluded_from_pgmfi_import(): void
     {
         File::deleteDirectory($this->contentPath);
-        $path = $this->contentPath . '/cars/electronics/how-to-wire-wideband/how-to-wire-wideband.md';
+        $path = $this->contentPath.'/cars/electronics/how-to-wire-wideband/how-to-wire-wideband.md';
         File::ensureDirectoryExists(dirname($path));
         File::put($path, "---\ntitle: Independent Wideband Guide\n---\n\nArticle body.\n");
 

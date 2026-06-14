@@ -18,12 +18,12 @@ class ArticleAttachmentTest extends TestCase
 
         $this->contentPath = storage_path('framework/testing-article-attachments');
         File::deleteDirectory($this->contentPath);
-        File::ensureDirectoryExists($this->contentPath . '/cars/electronics/test-download');
+        File::ensureDirectoryExists($this->contentPath.'/cars/electronics/test-download');
         File::put(
-            $this->contentPath . '/cars/electronics/test-download/test-download.md',
+            $this->contentPath.'/cars/electronics/test-download/test-download.md',
             "# Test download\n\n[Download archive](archive.zip)\n"
         );
-        File::put($this->contentPath . '/cars/electronics/test-download/archive.zip', 'archive');
+        File::put($this->contentPath.'/cars/electronics/test-download/archive.zip', 'archive');
 
         config(['hondabase.content_path' => $this->contentPath]);
     }

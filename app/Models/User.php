@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use NotificationChannels\WebPush\HasPushSubscriptions;
 
 #[Fillable([
@@ -84,17 +85,17 @@ class User extends Authenticatable
     {
         if ($this->github_login && $this->github_id) {
             return [
-                'name'  => $this->github_login,
-                'email' => "{$this->github_id}+{$this->github_login}@" . config('hondabase.git.noreply_domain'),
+                'name' => $this->github_login,
+                'email' => "{$this->github_id}+{$this->github_login}@".config('hondabase.git.noreply_domain'),
             ];
         }
 
-        $handle = $this->discord_username ?: ($this->name ?: 'user' . $this->id);
-        $local  = ($this->discord_id ?: $this->id) . '+' . \Illuminate\Support\Str::slug($handle);
+        $handle = $this->discord_username ?: ($this->name ?: 'user'.$this->id);
+        $local = ($this->discord_id ?: $this->id).'+'.Str::slug($handle);
 
         return [
-            'name'  => $handle,
-            'email' => $local . '@' . config('hondabase.git.synthetic_domain'),
+            'name' => $handle,
+            'email' => $local.'@'.config('hondabase.git.synthetic_domain'),
         ];
     }
 
@@ -106,13 +107,14 @@ class User extends Authenticatable
         }
 
         if ($this->discord_username) {
-            $username = '@' . ltrim($this->discord_username, '@');
+            $username = '@'.ltrim($this->discord_username, '@');
+
             return $this->discord_global_name
                 ? "{$this->discord_global_name} ({$username})"
                 : $username;
         }
 
-        return $this->name ?: ($this->github_login ?: 'user' . $this->id);
+        return $this->name ?: ($this->github_login ?: 'user'.$this->id);
     }
 
     public function avatarUrl(): string
@@ -123,6 +125,7 @@ class User extends Authenticatable
         if ($this->avatar) {
             return "https://cdn.discordapp.com/avatars/{$this->discord_id}/{$this->avatar}.png?size=64";
         }
+
         return 'https://cdn.discordapp.com/embed/avatars/0.png';
     }
 }

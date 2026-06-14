@@ -15,13 +15,14 @@ class WidgetRenderer
 
     public function render(string $name, array $attrs = []): ?string
     {
-        if (!in_array($name, $this->allowed, true)) {
+        if (! in_array($name, $this->allowed, true)) {
             return null;
         }
         $view = "widgets.{$name}";
-        if (!view()->exists($view)) {
+        if (! view()->exists($view)) {
             return null;
         }
+
         return view($view, $this->data($name, $attrs) + ['attrs' => $attrs])->render();
     }
 
@@ -29,7 +30,7 @@ class WidgetRenderer
     {
         return match ($name) {
             'error-codes' => ['codes' => $this->errorCodes()],
-            default       => [],
+            default => [],
         };
     }
 
@@ -37,15 +38,16 @@ class WidgetRenderer
     private function errorCodes(): array
     {
         $path = public_path('reference/error-codes/error-codes.json');
-        $raw  = is_file($path) ? json_decode((string) file_get_contents($path), true) : [];
-        $out  = [];
+        $raw = is_file($path) ? json_decode((string) file_get_contents($path), true) : [];
+        $out = [];
         foreach ((array) $raw as $e) {
             $out[] = [
-                'code'  => array_map('strval', (array) ($e['code'] ?? [])),
+                'code' => array_map('strval', (array) ($e['code'] ?? [])),
                 'short' => (string) ($e['function']['short'] ?? ''),
-                'long'  => (string) ($e['function']['long']['en'] ?? ''),
+                'long' => (string) ($e['function']['long']['en'] ?? ''),
             ];
         }
+
         return $out;
     }
 }

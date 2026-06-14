@@ -14,7 +14,8 @@ use Symfony\Component\Process\Process;
  */
 class Dump extends Command
 {
-    protected $signature   = 'hondabase:dump {--force : Dump even if nothing changed today}';
+    protected $signature = 'hondabase:dump {--force : Dump even if nothing changed today}';
+
     protected $description = 'Back up the database to database/dumps and commit it with the site repo';
 
     private const SKIP_TABLES = [
@@ -23,29 +24,30 @@ class Dump extends Command
 
     public function handle(): int
     {
-        if (!$this->option('force') && !$this->changedToday()) {
+        if (! $this->option('force') && ! $this->changedToday()) {
             $this->info('No changes today; skipping dump.');
+
             return self::SUCCESS;
         }
 
-        $db   = config('database.connections.' . config('database.default'));
-        $dir  = base_path('database/dumps');
-        $file = $dir . '/hondabase.sql';
-        if (!is_dir($dir)) {
+        $db = config('database.connections.'.config('database.default'));
+        $dir = base_path('database/dumps');
+        $file = $dir.'/hondabase.sql';
+        if (! is_dir($dir)) {
             mkdir($dir, 0775, true);
         }
 
         $args = [
             'mariadb-dump', '--no-tablespaces', '--single-transaction', '--skip-lock-tables',
             '--host', (string) $db['host'], '--port', (string) $db['port'],
-            '--user', (string) $db['username'], '--password=' . (string) $db['password'],
+            '--user', (string) $db['username'], '--password='.(string) $db['password'],
         ];
         foreach (self::SKIP_TABLES as $t) {
-            $args[] = '--ignore-table=' . $db['database'] . '.' . $t;
+            $args[] = '--ignore-table='.$db['database'].'.'.$t;
         }
         $args[] = $db['database'];
 
-        $handle  = fopen($file, 'w');
+        $handle = fopen($file, 'w');
         $process = new Process($args);
         $process->setTimeout(600);
         $process->run(function ($type, $buffer) use ($handle) {
@@ -55,12 +57,13 @@ class Dump extends Command
         });
         fclose($handle);
 
-        if (!$process->isSuccessful()) {
-            $this->error('mariadb-dump failed: ' . trim($process->getErrorOutput()));
+        if (! $process->isSuccessful()) {
+            $this->error('mariadb-dump failed: '.trim($process->getErrorOutput()));
+
             return self::FAILURE;
         }
 
-        $this->info('Wrote ' . $file . ' (' . number_format(filesize($file)) . ' bytes)');
+        $this->info('Wrote '.$file.' ('.number_format(filesize($file)).' bytes)');
         $this->commitWithSite($file);
 
         return self::SUCCESS;
@@ -80,24 +83,26 @@ class Dump extends Command
             }
         }
         $content = (string) config('hondabase.content_path');
-        if (is_dir($content . '/.git')) {
+        if (is_dir($content.'/.git')) {
             $p = new Process(['git', '-C', $content, 'log', '-1', '--since=midnight', '--format=%H']);
             $p->run();
             if (trim($p->getOutput()) !== '') {
                 return true;
             }
         }
+
         return false;
     }
 
     private function commitWithSite(string $file): void
     {
         $root = base_path();
-        if (!is_dir($root . '/.git')) {
-            $this->warn('Site repo not initialised; dump kept locally at ' . $file);
+        if (! is_dir($root.'/.git')) {
+            $this->warn('Site repo not initialised; dump kept locally at '.$file);
+
             return;
         }
-        foreach ([['add', $file], ['commit', '-m', 'Nightly DB backup ' . date('Y-m-d')], ['push']] as $cmd) {
+        foreach ([['add', $file], ['commit', '-m', 'Nightly DB backup '.date('Y-m-d')], ['push']] as $cmd) {
             (new Process(array_merge(['git', '-C', $root], $cmd)))->run();
         }
         $this->info('Committed the dump with the site repo.');

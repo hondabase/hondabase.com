@@ -37,10 +37,11 @@ class NotificationBell extends Component
     public function go(string $id)
     {
         $n = auth()->user()->notifications()->whereKey($id)->first();
-        if (!$n) {
+        if (! $n) {
             return null;
         }
         $n->markAsRead();
+
         return redirect(data_get($n->data, 'url', '/'));
     }
 

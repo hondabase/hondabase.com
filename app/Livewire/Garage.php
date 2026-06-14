@@ -17,32 +17,44 @@ class Garage extends Component
 {
     // Vehicle form
     public ?int $vehicleId = null;
+
     public string $nickname = '';
+
     public string $year = '';
+
     public string $make = 'Honda';
+
     public string $model = '';
+
     public string $chassis = '';
+
     public string $engine = '';
+
     public string $notes = '';
+
     public bool $showVehicleForm = false;
 
     // Equipment form
     public ?int $equipmentId = null;
+
     public string $eqKind = 'ecu';
+
     public string $eqName = '';
+
     public string $eqDetail = '';
+
     public bool $showEquipmentForm = false;
 
     protected function rules(): array
     {
         return [
             'nickname' => 'nullable|string|max:80',
-            'year'     => 'nullable|integer|min:1970|max:2030',
-            'make'     => 'nullable|string|max:40',
-            'model'    => 'nullable|string|max:60',
-            'chassis'  => 'nullable|string|max:20',
-            'engine'   => 'nullable|string|max:40',
-            'notes'    => 'nullable|string|max:1000',
+            'year' => 'nullable|integer|min:1970|max:2030',
+            'make' => 'nullable|string|max:40',
+            'model' => 'nullable|string|max:60',
+            'chassis' => 'nullable|string|max:20',
+            'engine' => 'nullable|string|max:40',
+            'notes' => 'nullable|string|max:1000',
         ];
     }
 
@@ -73,12 +85,12 @@ class Garage extends Component
 
         $attrs = [
             'nickname' => $this->nickname ?: null,
-            'year'     => $this->year !== '' ? (int) $this->year : null,
-            'make'     => $this->make ?: 'Honda',
-            'model'    => $this->model ?: null,
-            'chassis'  => $this->chassis ?: null,
-            'engine'   => $this->engine ?: null,
-            'notes'    => $this->notes ?: null,
+            'year' => $this->year !== '' ? (int) $this->year : null,
+            'make' => $this->make ?: 'Honda',
+            'model' => $this->model ?: null,
+            'chassis' => $this->chassis ?: null,
+            'engine' => $this->engine ?: null,
+            'notes' => $this->notes ?: null,
         ];
 
         $vehicle = $this->vehicleId
@@ -102,7 +114,7 @@ class Garage extends Component
         $user = $vehicle->user;
         foreach ($vehicle->impliedFollows() as $f) {
             $exists = $user->follows()->where('kind', $f['kind'])->where('value', $f['value'])->exists();
-            if (!$exists) {
+            if (! $exists) {
                 $label = ArticleFacet::where('kind', $f['kind'])->where('value', $f['value'])->value('label') ?: $f['label'];
                 $user->follows()->create(['kind' => $f['kind'], 'value' => $f['value'], 'label' => $label]);
             }
@@ -128,8 +140,8 @@ class Garage extends Component
     public function saveEquipment(): void
     {
         $this->validate([
-            'eqKind'   => 'required|in:' . implode(',', array_keys(UserEquipment::KINDS)),
-            'eqName'   => 'required|string|max:80',
+            'eqKind' => 'required|in:'.implode(',', array_keys(UserEquipment::KINDS)),
+            'eqName' => 'required|string|max:80',
             'eqDetail' => 'nullable|string|max:200',
         ]);
         $user = auth()->user();
@@ -166,11 +178,12 @@ class Garage extends Component
     public function render(): View
     {
         $user = auth()->user();
+
         return view('livewire.garage', [
-            'vehicles'    => $user->vehicles()->latest()->get(),
-            'equipment'   => $user->equipment()->orderBy('kind')->orderBy('name')->get(),
-            'engineList'  => ArticleFacet::where('kind', 'engine')->distinct()->orderBy('label')->pluck('label')->all(),
-            'kinds'       => UserEquipment::KINDS,
+            'vehicles' => $user->vehicles()->latest()->get(),
+            'equipment' => $user->equipment()->orderBy('kind')->orderBy('name')->get(),
+            'engineList' => ArticleFacet::where('kind', 'engine')->distinct()->orderBy('label')->pluck('label')->all(),
+            'kinds' => UserEquipment::KINDS,
         ]);
     }
 }

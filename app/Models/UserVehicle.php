@@ -32,6 +32,7 @@ class UserVehicle extends Model
         if ($this->chassis) {
             $label = $label !== '' ? "{$label} ({$this->chassis})" : strtoupper($this->chassis);
         }
+
         return $label !== '' ? $label : 'Vehicle';
     }
 
@@ -48,6 +49,7 @@ class UserVehicle extends Model
         if ($this->chassis) {
             $out[] = ['kind' => 'chassis', 'value' => Str::slug($this->chassis), 'label' => strtoupper($this->chassis)];
         }
+
         return $out;
     }
 }

@@ -14,9 +14,7 @@ use Illuminate\Support\Facades\DB;
  */
 class ArticleIndexer
 {
-    public function __construct(private ArticleService $articles)
-    {
-    }
+    public function __construct(private ArticleService $articles) {}
 
     /** Rebuild the entire index. Returns ['articles' => n, 'facets' => n]. */
     public function indexAll(): array
@@ -58,14 +56,14 @@ class ArticleIndexer
     private function persist(array $r): void
     {
         $article = Article::create([
-            'type'       => $r['type'],
-            'category'   => $r['category'],
-            'slug'       => $r['slug'],
-            'title'      => $r['title'],
-            'summary'    => $r['summary'],
+            'type' => $r['type'],
+            'category' => $r['category'],
+            'slug' => $r['slug'],
+            'title' => $r['title'],
+            'summary' => $r['summary'],
             'complexity' => $r['complexity'],
-            'body_text'  => $r['body_text'],
-            'repo_path'  => $r['repo_path'],
+            'body_text' => $r['body_text'],
+            'repo_path' => $r['repo_path'],
             'updated_at' => $r['updated'],
         ]);
 
@@ -73,9 +71,9 @@ class ArticleIndexer
         foreach ($r['facets'] as [$kind, $value, $label]) {
             $facets[] = [
                 'article_id' => $article->id,
-                'kind'       => $kind,
-                'value'      => $value,
-                'label'      => $label,
+                'kind' => $kind,
+                'value' => $value,
+                'label' => $label,
             ];
         }
         if ($facets) {

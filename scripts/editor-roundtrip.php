@@ -6,16 +6,18 @@
 // ArticleDocument::compose. Verifies that path is idempotent and preserves every frontmatter
 // key/value, so opening an article in the editor and saving it back never corrupts or drops data.
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
+use App\Livewire\Concerns\EditsFrontmatter;
 use App\Support\ArticleDocument;
 use Symfony\Component\Yaml\Yaml;
 
 // Anonymous component standing in for ArticleEditor/ArticleCreator: same trait, same data flow.
 function makeEditor(): object
 {
-    return new class {
-        use \App\Livewire\Concerns\EditsFrontmatter;
+    return new class
+    {
+        use EditsFrontmatter;
 
         public string $bodyMarkdown = '';
 
@@ -61,10 +63,11 @@ function walk(string $dir): array
             $out[] = $p;
         }
     }
+
     return $out;
 }
 
-$files = walk(__DIR__ . '/../content');
+$files = walk(__DIR__.'/../content');
 $tot = 0;
 $idem = 0;
 $dataKept = 0;
@@ -92,7 +95,7 @@ foreach ($files as $f) {
     if ($out1 === $out2) {
         $idem++;
     } else {
-        $drift[] = basename($f) . '  (editor not idempotent)';
+        $drift[] = basename($f).'  (editor not idempotent)';
     }
 
     // Frontmatter keys/values preserved from the original file through the structured fields.
@@ -103,7 +106,7 @@ foreach ($files as $f) {
     if (Yaml::dump($orig, 8) === Yaml::dump($after, 8)) {
         $dataKept++;
     } else {
-        $drift[] = basename($f) . '  (frontmatter changed)';
+        $drift[] = basename($f).'  (frontmatter changed)';
     }
 }
 
@@ -111,5 +114,5 @@ printf("Total: %d\n", $tot);
 printf("Editor round-trip idempotent:            %d (%.1f%%)\n", $idem, $idem / $tot * 100);
 printf("Frontmatter preserved through the fields: %d (%.1f%%)\n", $dataKept, $dataKept / $tot * 100);
 if ($drift) {
-    echo "\nDrift (" . count($drift) . "):\n  " . implode("\n  ", array_slice($drift, 0, 25)) . "\n";
+    echo "\nDrift (".count($drift)."):\n  ".implode("\n  ", array_slice($drift, 0, 25))."\n";
 }

@@ -35,7 +35,7 @@ class FollowerNotifier
         }
 
         $reasons = $rows->pluck('reason_label', 'user_id');
-        $users   = User::whereIn('id', $rows->pluck('user_id'))->get();
+        $users = User::whereIn('id', $rows->pluck('user_id'))->get();
 
         foreach ($users as $user) {
             $label = $reasons[$user->id] ?? '';

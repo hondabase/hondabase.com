@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Schema;
  * Favorites bookmark concrete articles; the garage holds a user's vehicles + equipment.
  * Facet interest is handled separately by the existing `follows` table.
  */
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         // Saved articles. References the derived `articles` index by id; if a reindex drops an

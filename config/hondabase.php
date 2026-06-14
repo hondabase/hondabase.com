@@ -28,11 +28,11 @@ return [
     // (deploy key via core.sshCommand); when that is absent the commit lands locally and is
     // counted as "unpushed" until a key is configured.
     'git' => [
-        'bot_name'         => env('HONDABASE_GIT_BOT_NAME', 'Hondabase Bot'),
-        'bot_email'        => env('HONDABASE_GIT_BOT_EMAIL', 'bot@hondabase.com'),
-        'branch'           => env('HONDABASE_GIT_BRANCH', 'main'),
-        'push'             => env('HONDABASE_GIT_PUSH', false), // off until a deploy key exists
-        'noreply_domain'   => 'users.noreply.github.com',       // GitHub Co-Authored-By format
+        'bot_name' => env('HONDABASE_GIT_BOT_NAME', 'Hondabase Bot'),
+        'bot_email' => env('HONDABASE_GIT_BOT_EMAIL', 'bot@hondabase.com'),
+        'branch' => env('HONDABASE_GIT_BRANCH', 'main'),
+        'push' => env('HONDABASE_GIT_PUSH', false), // off until a deploy key exists
+        'noreply_domain' => 'users.noreply.github.com',       // GitHub Co-Authored-By format
         'synthetic_domain' => 'discord.hondabase.com',          // for editors without GitHub
     ],
 ];

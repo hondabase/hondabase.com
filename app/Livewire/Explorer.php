@@ -26,7 +26,9 @@ class Explorer extends Component
 
     // Page scope (set on category pages); $scopeAll widens back to everything.
     public ?string $scopeType = null;
+
     public ?string $scopeCategory = null;
+
     public bool $scopeAll = false;
 
     private const KIND_LABELS = [
@@ -58,37 +60,39 @@ class Explorer extends Component
     public function toggleFollow(string $kv)
     {
         $user = auth()->user();
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login');
         }
         [$kind, $value] = array_pad(explode(':', $kv, 2), 2, '');
         $existing = $user->follows()->where('kind', $kind)->where('value', $value)->first();
         if ($existing) {
             $existing->delete();
+
             return null;
         }
         $label = ArticleFacet::where('kind', $kind)->where('value', $value)->value('label') ?: $value;
         $user->follows()->create(['kind' => $kind, 'value' => $value, 'label' => $label]);
+
         return null;
     }
 
     public function render(): View
     {
-        $ids         = $this->matchingIds();
-        $followed    = $this->followedSet();
-        $personalize = $followed && trim($this->q) === '' && empty($this->filters) && !$this->scopeType;
+        $ids = $this->matchingIds();
+        $followed = $this->followedSet();
+        $personalize = $followed && trim($this->q) === '' && empty($this->filters) && ! $this->scopeType;
 
         return view('livewire.explorer', [
-            'articles'     => $this->articles($ids, $followed, $personalize),
-            'groups'       => $this->facetGroups($ids),
+            'articles' => $this->articles($ids, $followed, $personalize),
+            'groups' => $this->facetGroups($ids),
             'activeLabels' => $this->activeLabels(),
-            'total'        => count($ids),
-            'followed'     => $followed,
-            'isAuthed'     => (bool) auth()->user(),
-            'forYou'       => $personalize ? $this->forYou($followed) : collect(),
-            'scoped'       => $this->scopeType !== null,
-            'scopeAll'     => $this->scopeAll,
-            'scopeLabel'   => $this->scopeCategory
+            'total' => count($ids),
+            'followed' => $followed,
+            'isAuthed' => (bool) auth()->user(),
+            'forYou' => $personalize ? $this->forYou($followed) : collect(),
+            'scoped' => $this->scopeType !== null,
+            'scopeAll' => $this->scopeAll,
+            'scopeLabel' => $this->scopeCategory
                 ? ucwords(str_replace('-', ' ', $this->scopeCategory))
                 : ($this->scopeType ? ucfirst($this->scopeType) : ''),
         ]);
@@ -98,11 +102,12 @@ class Explorer extends Component
     private function followedSet(): array
     {
         $user = auth()->user();
-        if (!$user) {
+        if (! $user) {
             return [];
         }
+
         return $user->follows()->get(['kind', 'value'])
-            ->map(fn ($f) => $f->kind . ':' . $f->value)->all();
+            ->map(fn ($f) => $f->kind.':'.$f->value)->all();
     }
 
     private function matchingIds(): array
@@ -114,7 +119,7 @@ class Explorer extends Component
     {
         $query = Article::query();
 
-        if ($this->scopeType && !$this->scopeAll) {
+        if ($this->scopeType && ! $this->scopeAll) {
             $query->where('type', $this->scopeType);
             if ($this->scopeCategory) {
                 $query->where('category', $this->scopeCategory);
@@ -123,11 +128,11 @@ class Explorer extends Component
 
         $term = trim($this->q);
         if ($term !== '') {
-            $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $term) . '%';
+            $like = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $term).'%';
             $query->where(function ($w) use ($like) {
                 $w->where('title', 'like', $like)
-                  ->orWhere('summary', 'like', $like)
-                  ->orWhere('body_text', 'like', $like);
+                    ->orWhere('summary', 'like', $like)
+                    ->orWhere('body_text', 'like', $like);
             });
         }
 
@@ -174,6 +179,7 @@ class Explorer extends Component
             return collect();
         }
         $place = implode(',', array_fill(0, count($followed), '?'));
+
         return Article::query()
             ->whereRaw(
                 "EXISTS (SELECT 1 FROM article_facets af WHERE af.article_id = articles.id AND CONCAT(af.kind, ':', af.value) IN ($place))",
@@ -204,11 +210,11 @@ class Explorer extends Component
         }
 
         // On a scoped (single category) page, the category facet is redundant.
-        if ($this->scopeCategory && !$this->scopeAll) {
+        if ($this->scopeCategory && ! $this->scopeAll) {
             unset($byKind['category']);
         }
 
-        $order  = ['category', 'engine', 'obd', 'tag', 'chassis', 'ecu', 'model', 'brand', 'scope', 'system', 'year'];
+        $order = ['category', 'engine', 'obd', 'tag', 'chassis', 'ecu', 'model', 'brand', 'scope', 'system', 'year'];
         $limits = ['tag' => 18];
         $groups = [];
         foreach ([...$order, ...array_diff(array_keys($byKind), $order)] as $kind) {
@@ -220,6 +226,7 @@ class Explorer extends Component
                 'items' => array_slice($byKind[$kind], 0, $limits[$kind] ?? 12),
             ];
         }
+
         return $groups;
     }
 
@@ -231,6 +238,7 @@ class Explorer extends Component
             $label = ArticleFacet::where('kind', $kind)->where('value', $value)->value('label');
             $out[$kv] = $label ?: $value;
         }
+
         return $out;
     }
 }

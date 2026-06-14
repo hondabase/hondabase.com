@@ -12,10 +12,10 @@ class UserEquipment extends Model
     protected $guarded = [];
 
     public const KINDS = [
-        'ecu'      => 'ECU',
+        'ecu' => 'ECU',
         'wideband' => 'Wideband',
         'software' => 'Software',
-        'tool'     => 'Tool',
+        'tool' => 'Tool',
     ];
 
     public function user(): BelongsTo

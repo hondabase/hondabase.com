@@ -27,9 +27,9 @@ class Dashboard extends Component
 
     public function render(): View
     {
-        $user     = auth()->user();
-        $follows  = $user->follows()->orderBy('kind')->orderBy('label')->get();
-        $followed = $follows->map(fn ($f) => $f->kind . ':' . $f->value)->all();
+        $user = auth()->user();
+        $follows = $user->follows()->orderBy('kind')->orderBy('label')->get();
+        $followed = $follows->map(fn ($f) => $f->kind.':'.$f->value)->all();
         $vehicles = $user->vehicles()->latest()->get();
 
         $favorites = Favorite::where('user_id', $user->id)
@@ -40,11 +40,11 @@ class Dashboard extends Component
         $isEmpty = $vehicles->isEmpty() && $follows->isEmpty() && $favorites->isEmpty();
 
         return view('livewire.dashboard', [
-            'vehicles'  => $vehicles,
-            'follows'   => $follows,
+            'vehicles' => $vehicles,
+            'follows' => $follows,
             'favorites' => $favorites,
-            'feed'      => $this->feed($followed),
-            'isEmpty'   => $isEmpty,
+            'feed' => $this->feed($followed),
+            'isEmpty' => $isEmpty,
         ]);
     }
 
@@ -55,6 +55,7 @@ class Dashboard extends Component
             return collect();
         }
         $place = implode(',', array_fill(0, count($followed), '?'));
+
         return Article::query()
             ->whereRaw(
                 "EXISTS (SELECT 1 FROM article_facets af WHERE af.article_id = articles.id AND CONCAT(af.kind, ':', af.value) IN ($place))",

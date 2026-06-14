@@ -27,11 +27,11 @@ class IdentityCookie
         $ttl = (int) config('session.lifetime', 43200);
 
         $payload = [
-            'v'    => 1,
-            'sub'  => (string) $user->discord_id,
+            'v' => 1,
+            'sub' => (string) $user->discord_id,
             'name' => $user->displayName(),
-            'av'   => $user->avatar,
-            'exp'  => time() + $ttl * 60,
+            'av' => $user->avatar,
+            'exp' => time() + $ttl * 60,
         ];
 
         return self::cookie(self::encode($payload), $ttl);
@@ -67,9 +67,9 @@ class IdentityCookie
     private static function encode(array $payload): string
     {
         $json = json_encode($payload, JSON_UNESCAPED_SLASHES);
-        $sig  = hash_hmac('sha256', $json, self::secret(), true);
+        $sig = hash_hmac('sha256', $json, self::secret(), true);
 
-        return self::b64url($json) . '.' . self::b64url($sig);
+        return self::b64url($json).'.'.self::b64url($sig);
     }
 
     private static function secret(): string

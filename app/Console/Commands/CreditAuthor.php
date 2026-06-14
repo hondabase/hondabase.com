@@ -9,14 +9,16 @@ use Illuminate\Console\Command;
 class CreditAuthor extends Command
 {
     protected $signature = 'hondabase:credit-author {repo_path : Content-repo article path} {user : Discord id, username, or user id}';
+
     protected $description = 'Manually credit a known legacy HondaBase contributor';
 
     public function handle(ArticleAuthorService $authors): int
     {
         $repoPath = ltrim((string) $this->argument('repo_path'), '/');
         $contentRoot = rtrim((string) config('hondabase.content_path'), '/');
-        if (str_contains($repoPath, '..') || !is_file("{$contentRoot}/{$repoPath}")) {
+        if (str_contains($repoPath, '..') || ! is_file("{$contentRoot}/{$repoPath}")) {
             $this->error('The article repo path does not exist.');
+
             return self::FAILURE;
         }
 
@@ -31,11 +33,13 @@ class CreditAuthor extends Command
 
         if ($user === null) {
             $this->error('No non-legacy Discord user matched that identity.');
+
             return self::FAILURE;
         }
 
         $authors->creditContributor($repoPath, $user);
         $this->info("Credited {$user->displayName()} on {$repoPath}.");
+
         return self::SUCCESS;
     }
 }

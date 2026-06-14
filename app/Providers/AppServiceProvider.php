@@ -2,7 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use SocialiteProviders\Discord\Provider;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,16 +24,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Illuminate\Support\Facades\Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
-            $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
+        Event::listen(function (SocialiteWasCalled $event) {
+            $event->extendSocialite('discord', Provider::class);
         });
 
         // Staff (and the owner) manage articles: review/approve edits, apply their own without
         // a separate approver, and revert applied changes. The approval gate for everyone else.
-        \Illuminate\Support\Facades\Gate::define('manage-articles', fn (\App\Models\User $user) => $user->isStaff());
+        Gate::define('manage-articles', fn (User $user) => $user->isStaff());
 
         // Granting/revoking the staff role is owner-only: staff manage articles, but only the
         // instance owner decides who is staff (mirrors the hondabase:staff artisan command).
-        \Illuminate\Support\Facades\Gate::define('manage-staff', fn (\App\Models\User $user) => $user->isOwner());
+        Gate::define('manage-staff', fn (User $user) => $user->isOwner());
     }
 }

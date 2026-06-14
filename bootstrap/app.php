@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\IdentityCookie;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // The cross-stack SSO cookie is HMAC-signed (not Laravel-encrypted) so the sibling
         // non-Laravel files/ app can verify it. Keep it out of cookie encryption.
-        $middleware->encryptCookies(except: [\App\Support\IdentityCookie::NAME]);
+        $middleware->encryptCookies(except: [IdentityCookie::NAME]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

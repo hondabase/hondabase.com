@@ -43,12 +43,12 @@ trait EditsFrontmatter
     /** Map a parsed frontmatter array into the structured fields. */
     protected function hydrateFrontmatter(array $fm): void
     {
-        $this->fmSummary    = is_scalar($fm['summary'] ?? null) ? (string) $fm['summary'] : '';
+        $this->fmSummary = is_scalar($fm['summary'] ?? null) ? (string) $fm['summary'] : '';
         $this->fmComplexity = is_scalar($fm['complexity'] ?? null) ? (string) $fm['complexity'] : '';
-        $this->fmTags       = implode(', ', $this->csvList($fm['tags'] ?? []));
-        $this->fmAppliesTo  = $this->appliesToRows($fm['applies_to'] ?? []);
-        $this->fmSources    = $this->sourceRows($fm['sources'] ?? []);
-        $this->fmExtra      = array_diff_key($fm, array_flip(self::MODELED_KEYS));
+        $this->fmTags = implode(', ', $this->csvList($fm['tags'] ?? []));
+        $this->fmAppliesTo = $this->appliesToRows($fm['applies_to'] ?? []);
+        $this->fmSources = $this->sourceRows($fm['sources'] ?? []);
+        $this->fmExtra = array_diff_key($fm, array_flip(self::MODELED_KEYS));
     }
 
     /** Rebuild the frontmatter array from the structured fields (with untouched extras preserved). */
@@ -104,9 +104,9 @@ trait EditsFrontmatter
             $isList = is_array($v);
             $vals = $isList ? $v : [$v];
             $rows[] = [
-                'key'   => (string) $key,
+                'key' => (string) $key,
                 'value' => implode(', ', array_map('strval', $vals)),
-                'list'  => $isList,
+                'list' => $isList,
             ];
         }
 

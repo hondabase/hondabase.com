@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ArticleFacet extends Model
 {
     public $timestamps = false;
+
     protected $guarded = [];
 
     public function article(): BelongsTo

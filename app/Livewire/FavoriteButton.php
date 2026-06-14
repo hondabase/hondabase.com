@@ -14,10 +14,13 @@ use Livewire\Component;
 class FavoriteButton extends Component
 {
     public string $type;
+
     public string $category;
+
     public string $slug;
 
     public ?int $articleId = null;
+
     public bool $saved = false;
 
     public function mount(): void
@@ -35,10 +38,10 @@ class FavoriteButton extends Component
     public function toggle()
     {
         $user = auth()->user();
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login', ['return' => url()->current()]);
         }
-        if (!$this->articleId) {
+        if (! $this->articleId) {
             return null;
         }
 
@@ -50,6 +53,7 @@ class FavoriteButton extends Component
             Favorite::firstOrCreate(['user_id' => $user->id, 'article_id' => $this->articleId]);
             $this->saved = true;
         }
+
         return null;
     }
 

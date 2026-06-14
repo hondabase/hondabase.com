@@ -5,12 +5,12 @@
 // byte-identical) and preserves every frontmatter key/value. Mirrors scripts/tiptap-roundtrip.mjs
 // for the body. Usage: php scripts/frontmatter-roundtrip.php [--show <slug>]
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 use App\Support\ArticleDocument;
 use Symfony\Component\Yaml\Yaml;
 
-const ROOT = __DIR__ . '/../content';
+const ROOT = __DIR__.'/../content';
 
 function walk(string $dir): array
 {
@@ -45,8 +45,8 @@ if ($showArg !== false) {
     $raw = file_get_contents($file);
     $doc = ArticleDocument::parse($raw);
     $once = ArticleDocument::compose($doc['fm'], $doc['body']);
-    echo "=== ORIGINAL ===\n" . substr($raw, 0, 1200) . "\n";
-    echo "=== AFTER 1 COMPOSE ===\n" . substr($once, 0, 1200) . "\n";
+    echo "=== ORIGINAL ===\n".substr($raw, 0, 1200)."\n";
+    echo "=== AFTER 1 COMPOSE ===\n".substr($once, 0, 1200)."\n";
     exit(0);
 }
 
@@ -71,7 +71,7 @@ foreach ($files as $f) {
     if ($c1 === $c2) {
         $idem++;
     } else {
-        $drift[] = basename($f) . '  (not idempotent)';
+        $drift[] = basename($f).'  (not idempotent)';
     }
 
     if (rtrim($c1) === rtrim($raw)) {
@@ -87,7 +87,7 @@ foreach ($files as $f) {
     if (Yaml::dump($a, 6) === Yaml::dump($b, 6) && trim($d1['body']) === trim($d2['body'])) {
         $dataKept++;
     } else {
-        $drift[] = basename($f) . '  (data changed)';
+        $drift[] = basename($f).'  (data changed)';
     }
 }
 
@@ -106,5 +106,5 @@ printf("Idempotent (compose#2 == compose#1):       %d (%.1f%%)\n", $idem, $idem 
 printf("Already byte-identical (no first-save churn): %d (%.1f%%)\n", $identical, $identical / $tot * 100);
 printf("Frontmatter data preserved across cycle:    %d (%.1f%%)\n", $dataKept, $dataKept / $tot * 100);
 if ($drift) {
-    echo "\nDrift (" . count($drift) . "):\n  " . implode("\n  ", array_slice($drift, 0, 25)) . "\n";
+    echo "\nDrift (".count($drift)."):\n  ".implode("\n  ", array_slice($drift, 0, 25))."\n";
 }

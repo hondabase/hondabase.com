@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 class MergeAuthor extends Command
 {
     protected $signature = 'hondabase:merge-author {legacy : Legacy user id, key, or handle} {user : Discord id, username, or user id}';
+
     protected $description = 'Merge a verified legacy ghost author into a Discord user';
 
     public function handle(ArticleAuthorService $authors): int
@@ -33,12 +34,14 @@ class MergeAuthor extends Command
 
         if ($legacy === null || $user === null) {
             $this->error('Both a legacy ghost and a non-legacy Discord user must exist.');
+
             return self::FAILURE;
         }
 
         $label = $legacy->displayName();
         $authors->mergeLegacyAuthor($legacy, $user);
         $this->info("Merged {$label} into {$user->displayName()}.");
+
         return self::SUCCESS;
     }
 }

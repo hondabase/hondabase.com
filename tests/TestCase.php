@@ -8,7 +8,7 @@ abstract class TestCase extends BaseTestCase
 {
     protected function setUp(): void
     {
-        if (is_file(dirname(__DIR__) . '/bootstrap/cache/config.php')) {
+        if (is_file(dirname(__DIR__).'/bootstrap/cache/config.php')) {
             throw new \RuntimeException('Refusing to run tests while Laravel configuration is cached.');
         }
 

@@ -46,13 +46,13 @@ class ArticleDocument
     public static function compose(array $fm, string $body): string
     {
         $fm = self::prune($fm);
-        $body = rtrim(ltrim(str_replace("\r\n", "\n", $body), "\n")) . "\n";
+        $body = rtrim(ltrim(str_replace("\r\n", "\n", $body), "\n"))."\n";
 
         if ($fm === []) {
             return $body;
         }
 
-        return "---\n" . self::dumpFrontmatter($fm) . "---\n\n" . $body;
+        return "---\n".self::dumpFrontmatter($fm)."---\n\n".$body;
     }
 
     /** Emit the frontmatter key-by-key so leaf lists stay inline while maps stay block. */

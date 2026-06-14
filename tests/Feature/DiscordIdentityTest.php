@@ -27,7 +27,7 @@ class DiscordIdentityTest extends TestCase
             'discord_global_name' => 'Old Display',
         ]);
 
-        $discord = (new SocialiteUser())
+        $discord = (new SocialiteUser)
             ->setRaw(['id' => '1234', 'username' => 'stable_username', 'global_name' => 'Current Display'])
             ->map(['id' => '1234', 'name' => 'stable_username', 'avatar' => 'https://example.test/avatar.png'])
             ->setToken('token');

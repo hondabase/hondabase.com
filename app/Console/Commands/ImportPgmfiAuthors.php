@@ -11,6 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 class ImportPgmfiAuthors extends Command
 {
     protected $signature = 'hondabase:import-pgmfi-authors {--check : Verify without changing files or the database}';
+
     protected $description = 'Backfill PGMFI source metadata and original article authors';
 
     private const AUTHOR_LABELS = [
@@ -40,13 +41,15 @@ class ImportPgmfiAuthors extends Command
             $slug = strtolower(basename(dirname($file)));
             $topic = self::MANUAL_TOPICS[$slug] ?? ($topicMap[$slug] ?? null);
             if ($topic === null) {
-                $errors[] = basename(dirname($file)) . ': no PGMFI topic mapping';
+                $errors[] = basename(dirname($file)).': no PGMFI topic mapping';
+
                 continue;
             }
 
             $authors = $this->authors($sourceRoot, $topic);
             if ($authors === []) {
-                $errors[] = basename(dirname($file)) . ": no authors recovered from {$topic}";
+                $errors[] = basename(dirname($file)).": no authors recovered from {$topic}";
+
                 continue;
             }
 
@@ -62,6 +65,7 @@ class ImportPgmfiAuthors extends Command
             foreach ($errors as $error) {
                 $this->error($error);
             }
+
             return self::FAILURE;
         }
 
@@ -73,11 +77,12 @@ class ImportPgmfiAuthors extends Command
 
             if ($this->option('check')) {
                 if ($desired !== $raw) {
-                    $errors[] = $record['repo_path'] . ': source metadata is missing or stale';
+                    $errors[] = $record['repo_path'].': source metadata is missing or stale';
                 }
-                if (!$this->authorsAreCurrent($record['repo_path'], $record['authors'])) {
-                    $errors[] = $record['repo_path'] . ': database original authors are missing or stale';
+                if (! $this->authorsAreCurrent($record['repo_path'], $record['authors'])) {
+                    $errors[] = $record['repo_path'].': database original authors are missing or stale';
                 }
+
                 continue;
             }
 
@@ -92,18 +97,19 @@ class ImportPgmfiAuthors extends Command
             foreach ($errors as $error) {
                 $this->error($error);
             }
+
             return self::FAILURE;
         }
 
         if ($this->option('check')) {
-            $this->info('PGMFI attribution is complete for ' . count($records) . ' electronics articles.');
+            $this->info('PGMFI attribution is complete for '.count($records).' electronics articles.');
         } else {
             $orphanLegacyIds = User::where('is_legacy_author', true)
                 ->whereDoesntHave('articleAuthorships')
                 ->pluck('id');
             AuthorAlias::whereIn('user_id', $orphanLegacyIds)->delete();
             User::whereIn('id', $orphanLegacyIds)->delete();
-            $this->info("Imported PGMFI attribution for " . count($records) . " articles ({$changed} files updated, {$creditCount} author links synced).");
+            $this->info('Imported PGMFI attribution for '.count($records)." articles ({$changed} files updated, {$creditCount} author links synced).");
         }
 
         return self::SUCCESS;
@@ -115,10 +121,11 @@ class ImportPgmfiAuthors extends Command
         foreach (glob("{$sourceRoot}/bin/view/Library/*.html") ?: [] as $file) {
             $topic = basename($file, '.html');
             $key = $this->kebab($topic);
-            if (!isset($map[$key]) || (str_contains($map[$key], ' ') && !str_contains($topic, ' '))) {
+            if (! isset($map[$key]) || (str_contains($map[$key], ' ') && ! str_contains($topic, ' '))) {
                 $map[$key] = $topic;
             }
         }
+
         return $map;
     }
 
@@ -129,7 +136,7 @@ class ImportPgmfiAuthors extends Command
             "{$sourceRoot}/bin/rdiff/Library/{$topic}.html",
             "{$sourceRoot}/bin/view/Library/{$topic}.html",
         ] as $file) {
-            if (!is_file($file)) {
+            if (! is_file($file)) {
                 continue;
             }
             $raw = mb_convert_encoding((string) file_get_contents($file), 'UTF-8', 'ISO-8859-1');
@@ -157,11 +164,12 @@ class ImportPgmfiAuthors extends Command
         $authors = [];
         foreach ($revisions as $author) {
             $key = mb_strtolower($author, 'UTF-8');
-            if (!isset($seen[$key])) {
+            if (! isset($seen[$key])) {
                 $seen[$key] = true;
                 $authors[] = $author;
             }
         }
+
         return $authors;
     }
 
@@ -181,7 +189,7 @@ class ImportPgmfiAuthors extends Command
         return [
             'name' => 'pgmfi.org wiki',
             'title' => $this->spacedTitle($topic),
-            'url' => '/pgmfi/wiki/library/' . $this->kebab($topic),
+            'url' => '/pgmfi/wiki/library/'.$this->kebab($topic),
             'license' => 'CC BY-NC-SA 1.0',
             'license_url' => 'https://creativecommons.org/licenses/by-nc-sa/1.0/',
             'adapted' => true,
@@ -191,8 +199,8 @@ class ImportPgmfiAuthors extends Command
     private function withSource(string $raw, array $source): string
     {
         $sources = [$source];
-        if (!preg_match('/^---\s*?\r?\n(.*?)\r?\n---\s*?\r?\n(.*)$/s', $raw, $match)) {
-            return "---\n" . Yaml::dump(['sources' => $sources], 4, 2) . "---\n\n" . ltrim($raw);
+        if (! preg_match('/^---\s*?\r?\n(.*?)\r?\n---\s*?\r?\n(.*)$/s', $raw, $match)) {
+            return "---\n".Yaml::dump(['sources' => $sources], 4, 2)."---\n\n".ltrim($raw);
         }
 
         $frontmatter = Yaml::parse($match[1]);
@@ -201,13 +209,15 @@ class ImportPgmfiAuthors extends Command
             return $raw;
         }
 
-        if (!array_key_exists('sources', $frontmatter)) {
+        if (! array_key_exists('sources', $frontmatter)) {
             $sourceYaml = rtrim(Yaml::dump(['sources' => $sources], 4, 2));
-            return "---\n" . rtrim($match[1]) . "\n" . $sourceYaml . "\n---\n" . $match[2];
+
+            return "---\n".rtrim($match[1])."\n".$sourceYaml."\n---\n".$match[2];
         }
 
         $frontmatter['sources'] = $sources;
-        return "---\n" . Yaml::dump($frontmatter, 4, 2) . "---\n" . $match[2];
+
+        return "---\n".Yaml::dump($frontmatter, 4, 2)."---\n".$match[2];
     }
 
     private function syncAuthors(string $repoPath, array $handles): int
@@ -215,7 +225,7 @@ class ImportPgmfiAuthors extends Command
         $userIds = [];
         foreach ($handles as $handle) {
             $user = $this->resolveAlias('pgmfi', $handle);
-            if (!isset($userIds[$user->id])) {
+            if (! isset($userIds[$user->id])) {
                 $userIds[$user->id] = count($userIds);
             }
         }
@@ -242,7 +252,7 @@ class ImportPgmfiAuthors extends Command
 
     private function resolveAlias(string $source, string $handle): User
     {
-        $aliasKey = $source . ':' . mb_strtolower($handle, 'UTF-8');
+        $aliasKey = $source.':'.mb_strtolower($handle, 'UTF-8');
         $alias = AuthorAlias::with('user')->where('alias_key', $aliasKey)->first();
         if ($alias?->user) {
             return $alias->user;
@@ -261,6 +271,7 @@ class ImportPgmfiAuthors extends Command
             'handle' => $handle,
             'alias_key' => $aliasKey,
         ]);
+
         return $user;
     }
 
@@ -268,7 +279,7 @@ class ImportPgmfiAuthors extends Command
     {
         $desired = [];
         foreach ($handles as $handle) {
-            $key = 'pgmfi:' . mb_strtolower($handle, 'UTF-8');
+            $key = 'pgmfi:'.mb_strtolower($handle, 'UTF-8');
             $alias = AuthorAlias::where('alias_key', $key)->first();
             if ($alias === null) {
                 return false;
@@ -294,12 +305,14 @@ class ImportPgmfiAuthors extends Command
     {
         $name = preg_replace('/(?<=[a-z])(?=[A-Z])|(?<=[A-Z0-9])(?=[A-Z][a-z])/', '-', $name);
         $name = preg_replace('/[^A-Za-z0-9]+/', '-', $name);
+
         return strtolower(trim(preg_replace('/-+/', '-', $name), '-'));
     }
 
     private function spacedTitle(string $name): string
     {
         $name = preg_replace('/(?<=[a-z])(?=[A-Z])|(?<=[A-Z0-9])(?=[A-Z][a-z])/', ' ', $name);
+
         return trim(preg_replace('/[_\s]+/', ' ', $name));
     }
 }

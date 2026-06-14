@@ -36,7 +36,7 @@ class AuthController extends Controller
     private static function isSafeReturn(string $url): bool
     {
         $parts = parse_url($url);
-        if (($parts['scheme'] ?? '') !== 'https' || !isset($parts['host'])) {
+        if (($parts['scheme'] ?? '') !== 'https' || ! isset($parts['host'])) {
             return false;
         }
         $host = strtolower($parts['host']);
@@ -50,10 +50,11 @@ class AuthController extends Controller
             $discord = Socialite::driver('discord')->user();
         } catch (\Throwable $e) {
             report($e);
+
             return redirect('/')->with('flash', 'Discord login failed. Please try again.');
         }
 
-        if (!$this->ensureGuildMember($discord->getId(), $discord->token)) {
+        if (! $this->ensureGuildMember($discord->getId(), $discord->token)) {
             return response()->view('auth.guild-required', [], 403);
         }
 
@@ -64,10 +65,10 @@ class AuthController extends Controller
         $user = User::updateOrCreate(
             ['discord_id' => $discord->getId()],
             [
-                'name'                => $globalName ?: ($username ?: ('user' . $discord->getId())),
-                'discord_username'    => $username ?: null,
+                'name' => $globalName ?: ($username ?: ('user'.$discord->getId())),
+                'discord_username' => $username ?: null,
                 'discord_global_name' => $globalName,
-                'avatar'              => $discord->getAvatar(),
+                'avatar' => $discord->getAvatar(),
             ],
         );
 
@@ -101,7 +102,7 @@ class AuthController extends Controller
     private function ensureGuildMember(string $discordId, string $token): bool
     {
         $guild = config('services.discord.guild_id');
-        if (!$guild) {
+        if (! $guild) {
             return true;
         }
 
@@ -112,10 +113,10 @@ class AuthController extends Controller
         }
 
         $bot = config('services.discord.bot_token');
-        if (!$bot) {
+        if (! $bot) {
             return false;
         }
-        $resp = Http::withHeaders(['Authorization' => 'Bot ' . $bot])
+        $resp = Http::withHeaders(['Authorization' => 'Bot '.$bot])
             ->put("https://discord.com/api/guilds/{$guild}/members/{$discordId}", ['access_token' => $token]);
 
         return in_array($resp->status(), [201, 204], true);

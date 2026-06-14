@@ -12,7 +12,8 @@ use Illuminate\Console\Command;
  */
 class Reindex extends Command
 {
-    protected $signature   = 'hondabase:reindex';
+    protected $signature = 'hondabase:reindex';
+
     protected $description = 'Rebuild the article index and facets from the content repo';
 
     public function handle(ArticleIndexer $indexer): int

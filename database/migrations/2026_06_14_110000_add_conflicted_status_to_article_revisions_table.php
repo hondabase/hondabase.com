@@ -21,8 +21,8 @@ return new class extends Migration
         }
 
         DB::statement(
-            "ALTER TABLE article_revisions MODIFY status "
-            . "ENUM('pending', 'approved', 'rejected', 'conflicted') NOT NULL DEFAULT 'pending'"
+            'ALTER TABLE article_revisions MODIFY status '
+            ."ENUM('pending', 'approved', 'rejected', 'conflicted') NOT NULL DEFAULT 'pending'"
         );
     }
 
@@ -34,8 +34,8 @@ return new class extends Migration
         }
 
         DB::statement(
-            "ALTER TABLE article_revisions MODIFY status "
-            . "ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending'"
+            'ALTER TABLE article_revisions MODIFY status '
+            ."ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending'"
         );
     }
 };

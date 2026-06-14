@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Article extends Model
 {
     public $timestamps = false;
+
     protected $guarded = [];
+
     protected $casts = ['updated_at' => 'datetime', 'view_count' => 'int'];
 
     public function facets(): HasMany

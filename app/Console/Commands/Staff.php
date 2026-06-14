@@ -27,9 +27,11 @@ class Staff extends Command
             $staff = User::where('is_staff', true)->get(['id', 'discord_username', 'name']);
             if ($staff->isEmpty()) {
                 $this->info('No users have the staff flag set (the owner is staff implicitly).');
+
                 return self::SUCCESS;
             }
             $this->table(['ID', 'Discord', 'Name'], $staff->map(fn ($u) => [$u->id, $u->discord_username, $u->name])->all());
+
             return self::SUCCESS;
         }
 
@@ -41,15 +43,16 @@ class Staff extends Command
 
         if ($user === null) {
             $this->error("No user matched \"{$needle}\" (they must have signed in at least once).");
+
             return self::FAILURE;
         }
 
-        $grant = !$this->option('revoke');
+        $grant = ! $this->option('revoke');
         $user->forceFill(['is_staff' => $grant])->save();
 
         $verb = $grant ? 'granted' : 'revoked';
         $this->info("Staff role {$verb} for {$user->discord_username} (#{$user->id}).");
-        if (!$grant && $user->isOwner()) {
+        if (! $grant && $user->isOwner()) {
             $this->warn('Note: this user is the instance owner, so they remain staff regardless.');
         }
 

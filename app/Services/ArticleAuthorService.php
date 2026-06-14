@@ -14,7 +14,7 @@ class ArticleAuthorService
     /** Ordered public author records for an article. */
     public function forArticle(string $repoPath): Collection
     {
-        if (!Schema::hasTable('article_authors')) {
+        if (! Schema::hasTable('article_authors')) {
             return collect();
         }
 
@@ -36,7 +36,7 @@ class ArticleAuthorService
                 'user_id' => $user->id,
             ]);
 
-            if (!$credit->exists) {
+            if (! $credit->exists) {
                 $credit->sort_order = ((int) ArticleAuthor::where('repo_path', $repoPath)->max('sort_order')) + 1;
             }
             $credit->is_contributor = true;
@@ -49,7 +49,7 @@ class ArticleAuthorService
     /** Move every credit from a verified ghost identity to a real Discord user. */
     public function mergeLegacyAuthor(User $legacy, User $target): void
     {
-        if (!$legacy->is_legacy_author || $target->is_legacy_author || $legacy->is($target)) {
+        if (! $legacy->is_legacy_author || $target->is_legacy_author || $legacy->is($target)) {
             throw new \InvalidArgumentException('A legacy author must be merged into a different non-legacy user.');
         }
 
