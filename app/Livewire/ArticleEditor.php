@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Jobs\CommitArticle;
+use App\Livewire\Concerns\EditsFrontmatter;
 use App\Models\ArticleRevision;
 use App\Services\ArticleService;
+use App\Support\ArticleDocument;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -12,18 +14,21 @@ use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 /**
- * In-browser article editor. A signed-in (guild-gated) user edits the article's markdown and
- * sees a live, content-shifting preview rendered by the very same pipeline as a published page.
+ * In-browser article editor. A signed-in (guild-gated) user edits the article's body in a TipTap
+ * rich-text canvas and its metadata via structured frontmatter fields, with a live, content-shifting
+ * preview rendered by the very same pipeline as a published page. The body + frontmatter are
+ * recomposed into raw Markdown on save, so an approved edit still commits a plain Markdown file.
  *
  * A member's submission records a *pending* App\Models\ArticleRevision for staff review (no git
  * yet). A staff member (manage-articles) self-approves: the revision is committed immediately.
  * Either way the change is tracked as a revision + git commit, and is revertible from history.
  *
- * Editing is mobile-first: the editor and preview are tabs on a phone so neither crowds the
- * other, and the whole flow works thumb-first.
+ * Mobile-first: editor and preview are tabs on a phone, side-by-side on a wide screen.
  */
 class ArticleEditor extends Component
 {
+    use EditsFrontmatter;
+
     public string $type;
     public string $category;
     public string $slug;
@@ -32,12 +37,14 @@ class ArticleEditor extends Component
     public ?string $baseSha = null;
     public string $articleTitle = '';
 
-    /** The on-disk markdown at load time (frontmatter + body); used to detect real changes. */
+    /** The on-disk file at load time (frontmatter + body); used to detect a real change (no-op guard). */
     public string $original = '';
 
-    /** The editable markdown (whole file) and the editor's reason for the change. */
-    public string $body = '';
-    public string $summary = '';
+    /** The TipTap-edited body Markdown (no frontmatter); recombined with the structured fields on save. */
+    public string $bodyMarkdown = '';
+
+    /** The editor's reason for the change, stored as the revision's changelog note. */
+    public string $note = '';
 
     /** UI only (button/copy). The authoritative auto-apply decision is re-checked in submit(). */
     public bool $canManage = false;
@@ -56,7 +63,11 @@ class ArticleEditor extends Component
         $this->baseSha  = $raw['sha'];
         $this->articleTitle = $raw['title'];
         $this->original = $raw['content'];
-        $this->body     = $raw['content'];
+
+        $doc = ArticleDocument::parse($raw['content']);
+        $this->bodyMarkdown = $doc['body'];
+        $this->hydrateFrontmatter($doc['fm']);
+
         $this->canManage = Gate::allows('manage-articles');
     }
 
@@ -64,15 +75,15 @@ class ArticleEditor extends Component
     #[Computed]
     public function preview(): array
     {
-        return app(ArticleService::class)->preview($this->body, $this->type, $this->category, $this->slug);
+        return app(ArticleService::class)->preview($this->composedDocument(), $this->type, $this->category, $this->slug);
     }
 
     public function submit()
     {
         $this->validate([
-            'body'    => ['required', 'string', 'min:20'],
-            'summary' => ['nullable', 'string', 'max:500'],
-        ], [], ['body' => 'article', 'summary' => 'summary']);
+            'bodyMarkdown' => ['required', 'string', 'min:20'],
+            'note'         => ['nullable', 'string', 'max:500'],
+        ], [], ['bodyMarkdown' => 'article', 'note' => 'note']);
 
         // Never trust the client-held repo_path / base_sha / original: re-derive them on the
         // server from the (path-validated) type/category/slug, so a tampered Livewire payload
@@ -82,8 +93,10 @@ class ArticleEditor extends Component
         $raw = $svc->rawMarkdown($this->type, $this->category, $this->slug);
         abort_if($raw === null, 404);
 
-        if ($this->normalize($this->body) === $this->normalize($raw['content'])) {
-            $this->addError('body', 'No changes to submit. Edit the article first.');
+        $composed = $this->composedDocument();
+
+        if ($this->normalize($composed) === $this->normalize($raw['content'])) {
+            $this->addError('bodyMarkdown', 'No changes to submit. Edit the article first.');
             return null;
         }
 
@@ -95,12 +108,12 @@ class ArticleEditor extends Component
             'type'          => $this->type,
             'category'      => $this->category,
             'slug'          => $this->slug,
-            'title'         => $svc->preview($this->body, $this->type, $this->category, $this->slug)['title'],
+            'title'         => $svc->preview($composed, $this->type, $this->category, $this->slug)['title'],
             'repo_path'     => $raw['repo_path'],
             'base_sha'      => $raw['sha'],
             'original_body' => $raw['content'],
-            'proposed_body' => $this->body,
-            'summary'       => $this->summary !== '' ? $this->summary : null,
+            'proposed_body' => $composed,
+            'summary'       => $this->note !== '' ? $this->note : null,
             'status'        => $manage ? 'approved' : 'pending',
             'reviewer_id'   => $manage ? Auth::id() : null,
             'reviewed_at'   => $manage ? now() : null,

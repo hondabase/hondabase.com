@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Jobs\CommitArticle;
+use App\Livewire\Concerns\EditsFrontmatter;
 use App\Models\ArticleRevision;
 use App\Services\ArticleService;
 use Illuminate\Contracts\View\View;
@@ -15,24 +16,28 @@ use Livewire\WithFileUploads;
 
 /**
  * Create a brand-new article bundle. A signed-in (guild-gated) user picks the location
- * (type / category / slug), writes the markdown with the same live preview as a published
- * page, and may upload co-located images. Submitting records an App\Models\ArticleRevision
- * exactly like an edit: a member's goes to the review queue, a staff member's auto-applies.
- * On commit the new .md and its uploaded images land together in one path-limited commit.
+ * (type / category / slug), writes the body in the TipTap rich-text canvas, fills in the
+ * structured frontmatter fields, and may upload co-located images, all with the same live preview
+ * as a published page. Submitting records an App\Models\ArticleRevision exactly like an edit: a
+ * member's goes to the review queue, a staff member's auto-applies. On commit the recomposed .md
+ * and its uploaded images land together in one path-limited commit.
  *
- * Mobile-first: the editor and preview are tabs on a phone, side-by-side on a wide screen.
+ * Mobile-first: editor and preview are tabs on a phone, side-by-side on a wide screen.
  */
 class ArticleCreator extends Component
 {
+    use EditsFrontmatter;
     use WithFileUploads;
 
     public string $type = 'cars';
     public string $category = '';
     public string $slug = '';
 
-    /** The whole markdown file (frontmatter optional + body, first H1 = title). */
-    public string $body = "# New article title\n\nWrite the article here. Use **Markdown**.\n";
-    public string $summary = '';
+    /** The TipTap-edited body Markdown (frontmatter optional, first H1 = title). */
+    public string $bodyMarkdown = "# New article title\n\nStart writing your article here.\n";
+
+    /** The note shown to the reviewer (stored as the revision's changelog note). */
+    public string $note = '';
 
     /** Newly uploaded images (Livewire temp files) destined for the article bundle. */
     public array $images = [];
@@ -47,7 +52,7 @@ class ArticleCreator extends Component
     }
 
     /** Keep the slug in sync with the title until the user types their own slug. */
-    public function updatedBody(): void
+    public function updatedBodyMarkdown(): void
     {
         if ($this->slug === '') {
             $title = $this->previewData()['title'] ?? '';
@@ -105,7 +110,7 @@ class ArticleCreator extends Component
 
     private function previewData(): array
     {
-        return app(ArticleService::class)->preview($this->body, $this->type, $this->cleanSlug($this->category), $this->cleanSlug($this->slug));
+        return app(ArticleService::class)->preview($this->composedDocument(), $this->type, $this->cleanSlug($this->category), $this->cleanSlug($this->slug));
     }
 
     public function submit()
@@ -114,13 +119,13 @@ class ArticleCreator extends Component
         $this->slug     = $this->cleanSlug($this->slug);
 
         $this->validate([
-            'type'     => ['required', 'in:' . implode(',', app(ArticleService::class)->types())],
-            'category' => ['required', 'regex:/^[a-z0-9][a-z0-9-]*$/'],
-            'slug'     => ['required', 'regex:/^[a-z0-9][a-z0-9-]*$/'],
-            'body'     => ['required', 'string', 'min:20'],
-            'summary'  => ['nullable', 'string', 'max:500'],
-            'images.*' => ['image', 'mimes:jpg,jpeg,png,gif,webp', 'max:4096'],
-        ], [], ['category' => 'category', 'slug' => 'slug', 'body' => 'article']);
+            'type'         => ['required', 'in:' . implode(',', app(ArticleService::class)->types())],
+            'category'     => ['required', 'regex:/^[a-z0-9][a-z0-9-]*$/'],
+            'slug'         => ['required', 'regex:/^[a-z0-9][a-z0-9-]*$/'],
+            'bodyMarkdown' => ['required', 'string', 'min:20'],
+            'note'         => ['nullable', 'string', 'max:500'],
+            'images.*'     => ['image', 'mimes:jpg,jpeg,png,gif,webp', 'max:4096'],
+        ], [], ['category' => 'category', 'slug' => 'slug', 'bodyMarkdown' => 'article']);
 
         $svc = app(ArticleService::class);
 
@@ -129,6 +134,7 @@ class ArticleCreator extends Component
             return null;
         }
 
+        $composed = $this->composedDocument();
         $repoPath = "{$this->type}/{$this->category}/{$this->slug}/{$this->slug}.md";
         $names    = $this->assetNames();
         $manage   = Gate::allows('manage-articles');
@@ -138,13 +144,13 @@ class ArticleCreator extends Component
             'type'          => $this->type,
             'category'      => $this->category,
             'slug'          => $this->slug,
-            'title'         => $svc->preview($this->body, $this->type, $this->category, $this->slug)['title'],
+            'title'         => $svc->preview($composed, $this->type, $this->category, $this->slug)['title'],
             'repo_path'     => $repoPath,
             'base_sha'      => $svc->currentSha(),
             'original_body' => '', // new file: there is nothing on disk to base on yet
-            'proposed_body' => $this->body,
+            'proposed_body' => $composed,
             'assets'        => $names ?: null,
-            'summary'       => $this->summary !== '' ? $this->summary : null,
+            'summary'       => $this->note !== '' ? $this->note : null,
             'status'        => $manage ? 'approved' : 'pending',
             'reviewer_id'   => $manage ? Auth::id() : null,
             'reviewed_at'   => $manage ? now() : null,

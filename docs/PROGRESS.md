@@ -38,8 +38,8 @@ Living log of the Hondabase rebuild. Plan of record:
         `storage/legacy-index.php.bak`.
   - [x] Discord OAuth login (Socialite + socialiteproviders/discord, reusing the files-app
         Discord application) + guild gating/auto-join + sign-in/out UI; `users` gained
-        discord/github columns. **ACTION NEEDED:** add
-        `https://www.hondabase.com/auth/callback` to that Discord app's OAuth2 redirect URIs.
+        discord/github columns. **Live login confirmed working** (2026-06-14) - the
+        `https://www.hondabase.com/auth/callback` redirect URI is registered on the Discord app.
   - [x] **Signed `.hondabase.com` identity cookie + `files/` verification (cross-stack SSO).**
         `www` (the IdP) issues an HMAC-signed `hb_identity` cookie on Discord login
         (`App\Support\IdentityCookie`), scoped to `.hondabase.com`, NOT Laravel-encrypted
@@ -97,7 +97,7 @@ Living log of the Hondabase rebuild. Plan of record:
   follow-weighted ordering surface their interests (verified with a simulated user).
   Category-scoped search (explorer reused per category with an "Everything" escape),
   `/sitemap.xml`, and (2026-06-14) **article-level find-in-page** are all done; this phase's
-  search scopes are complete. Live login pending the redirect URI.
+  search scopes are complete. Live Discord login confirmed working.
 - [~] **P4 - Editing, approval & git attribution** *(core pipeline live + verified)*:
   end-to-end suggest -> review -> attributed commit is built. `article_revisions` table +
   model (LCS line `diff()` + context-collapsing `compactDiff()`). **In-browser editor**
@@ -211,7 +211,95 @@ Living log of the Hondabase rebuild. Plan of record:
   (change-gated, transient tables excluded, no email PII collected) is scheduled daily at 00:00
   in `routes/console.php` and commits the `.sql` with the site repo. TODO (external/non-code):
   register the article event params as GA4 custom dimensions in the GA admin console.
-- [ ] **P7 - Style (pgmfi → Tailwind/Vite), AGENTS.md, hardening, CI**
+- [~] **P7 - WYSIWYG editor, Tailwind styling, docs, hardening, CI** *(scope revised 2026-06-14; started)*:
+  **Foundation done (2026-06-14):** Vite/Tailwind v4 pipeline wired into the layout
+  (`@vite()` replaces the static `base.css` link; bunny web-fonts dropped so builds stay
+  offline). pgmfi tokens ported into `resources/css/app.css` `@theme` (colors/surfaces/fonts →
+  utilities + `:root` vars); `base.css` component styles moved into `@layer base`/`@layer
+  components` (**hybrid** approach: semantic classes for repeated pgmfi patterns, utilities for
+  one-off layout in Blade). Transitional `:root` aliases map the old short var names so the
+  not-yet-migrated `article`/`explorer`/`me`/`editor`.css keep rendering until each is converted.
+  Build verified; homepage serves the built bundle; article/category/`/me` still correct.
+  **Stylesheet consolidation done (2026-06-14):** the four remaining hand-written sheets
+  (`article`/`explorer`/`me`/`editor`.css) were moved to `resources/css/legacy/` and `@import`ed
+  into the single Vite bundle (unlayered, preserving cascade); the per-page `<link>` tags were
+  removed from all 10 templates and the five static files deleted from `public/assets/` (only
+  `alpine.min.js` + `ga.js` remain there). One bundle now ships site-wide (79.5 kB → 17 kB gz);
+  every page verified loading only `/build/assets/app-*.css` with no legacy links. The article
+  template was found **already semantic** (`<article>/<header>/<h1>/<section>/<footer>`, `<nav>`
+  breadcrumb, `<time>`) and already emits `TechArticle` JSON-LD. **Remaining migration:** convert
+  the legacy `@import`ed CSS to Tailwind utilities/components and drop the var-alias block when the
+  last consumer is gone (cosmetic; no visual change).
+  **Breadcrumb SEO + a11y done (2026-06-14):** `BreadcrumbList` JSON-LD added to the article and
+  category pages (Home → category → article), and the breadcrumb `<nav>`s got `aria-label`
+  + `aria-current="page"`; validated rendering valid JSON-LD over HTTP. Remaining semantic work:
+  finish the home/category listing markup (`<ul>`/`<section>`) as those templates are migrated.
+  **Semantic HTML5 + SEO (added to scope 2026-06-14):** the layout shell already uses
+  `<header>/<nav>/<main>/<footer>`; as each template is migrated, give content real semantics
+  (`<article>` + single `<h1>` + `<section>`s, `<nav aria-label>` breadcrumbs, `<time>` dates,
+  `<ul>` listings) for accessibility + cleaner crawling. Semantic tags are a *weak/indirect* SEO
+  signal on their own, so pair them with the real wins: per-page `<title>`/meta/canonical/OG +
+  **JSON-LD structured data** (`TechArticle`, `BreadcrumbList`) on top of the existing sitemap.
+  a **TipTap WYSIWYG editor** is wanted so non-technical members can contribute without writing
+  Markdown; it **replaces** the current markdown+live-preview editor outright (no point keeping a
+  raw-Markdown editor for "power users" - one editor, lower maintenance). TipTap needs a JS
+  build, so **Vite comes in** - and since Vite is in regardless, the **Tailwind migration is back
+  on**: port the established pgmfi look from the hand-written CSS
+  (`hondabase.css`/`article.css`/`me.css`/`editor.css`) into **Tailwind (latest, v4)** using its
+  full feature set (CSS-first `@theme` tokens, no legacy `tailwind.config.js`), so the existing
+  visual design is preserved, not redesigned. **TipTap round-trip constraint (now load-bearing):**
+  with the raw-Markdown editor gone, TipTap is the *only* path edits flow through, so its
+  HTML<->Markdown bridge must be **lossless** or content degrades on every save - articles still
+  commit raw Markdown (frontmatter + body) to the repo. Frontmatter is edited via structured
+  fields, not the rich-text canvas. Custom constructs must survive: the `::: widget :::`
+  directives, `{{> partial }}` includes, and relative `.md` cross-links need dedicated TipTap
+  nodes (or protected raw blocks) so they aren't mangled into plain text.
+  **TipTap round-trip VALIDATED (2026-06-14) - architecture proven before touching the live
+  editor.** Stack installed **via pnpm** (project is pnpm-based; never npm - see
+  [[use-pnpm-never-npm]]): `@tiptap/core@3` + `@tiptap/starter-kit@3` + `@tiptap/extension-table@3`
+  (`TableKit`) + `tiptap-markdown@0.9` (+ `jsdom` dev). A headless harness
+  (`scripts/tiptap-roundtrip.mjs`, kept as a regression test) runs the **real** pipeline over all
+  503 articles: **98.8% idempotent** (re-saving a saved file is byte-identical - no progressive
+  drift, the property that matters for the only edit path) and **99.2% text-stable**. Critically,
+  **GFM tables round-trip losslessly** (cell separation, bold-in-cell, inline code, ASCII-art code
+  blocks all intact) - the three pinout/ECU table articles that a naive server-side
+  `league/html-to-markdown` proxy *mangled* (cells concatenated, `**` leaking) are all idempotent
+  here. `::: widget :::` directives **survive verbatim** (markdown-it passes them through as a
+  paragraph; making them friendly editor nodes is a later UX nicety, not a data-loss risk). The
+  only 4 non-stable files are pre-existing malformed legacy "link-soup" imports (e.g. `rom-maps`,
+  a heading glued to text) already slated for reformatting; the harness flags them.
+  **TipTap editor BUILT + WIRED IN (2026-06-14) - the textarea is gone.** The rich-text editor is a
+  code-split entry (`resources/js/editor.js`, loaded only on `/new` + `/edit` via `@vite` in the page
+  `@push('head')`, so readers never download the ~193 kB-gz TipTap bundle; site-wide `app.js` is now
+  empty). It registers an Alpine `tiptapEditor` component on `alpine:init` (survives `wire:navigate`),
+  mounts under `wire:ignore` so Livewire never morphs ProseMirror's DOM, and pushes serialized
+  Markdown back to the `$bodyMarkdown` Livewire property (debounced) to drive the same server-rendered
+  live preview as before. A `save()` flushes the latest Markdown in the submit round-trip so a click
+  mid-keystroke never loses content. The extension set is byte-identical to the validated harness, so
+  the round-trip guarantee still holds. **Frontmatter is now structured fields, not raw YAML**:
+  `App\Support\ArticleDocument` splits a file into frontmatter + body and recomposes canonical YAML
+  (per-key inline depth → house style: inline `tags`/leaf lists, block `applies_to`, block `sources`);
+  the shared `App\Livewire\Concerns\EditsFrontmatter` trait exposes summary / complexity / tags /
+  repeatable applies_to rows / source cards, and **preserves any unmodeled key verbatim** (e.g. a
+  hand-set `title`) so editing never drops metadata. Both `ArticleEditor` + `ArticleCreator` use the
+  trait + TipTap (the edit-reason field renamed `summary`→`note` to free `summary` for frontmatter).
+  **Three round-trip harnesses pass over all 503 articles:** the TipTap body (98.8% idempotent),
+  `scripts/frontmatter-roundtrip.php` (100% idempotent, 100% data preserved), and
+  `scripts/editor-roundtrip.php` (the full file→parse→structured-fields→recompose path: **100%
+  idempotent, 100% frontmatter preserved**). Verified end-to-end with the Livewire test harness
+  (both components mount + hydrate; a real edit composes the correct `proposed_body` with canonical
+  `tags: [...]`; rolled back, no DB/git side effects) and over HTTP (article/home 200, `/new` +
+  `/edit` 302 anon). **Known one-time cost (accepted per plan):** existing content is not yet in
+  TipTap/canonical-YAML form, so the *first* edit of each article reflows its whole body + frontmatter
+  (idempotent thereafter); only ~1.4% are already byte-identical. A future `hondabase:normalize` batch
+  pass could absorb this churn ahead of editors.
+  **editor.css CONVERTED + DELETED (2026-06-14):** its editor/creator/review/history/staff styles were
+  ported into `app.css` `@layer components` on the canonical `--color-*`/`--font-*` `@theme` tokens
+  (plus new TipTap canvas/toolbar/structured-metadata styles), the `@import './legacy/editor.css'`
+  dropped and the file removed; the five consuming blades kept their class names, so one bundle now
+  styles them (CSS 79.7 → 84.8 kB). Remaining P7: convert the last three legacy sheets
+  (`article`/`explorer`/`me`.css) + drop the var-alias block, `STYLE_GUIDE.md` (tokens as `@theme`),
+  `AGENTS.md`, hardening, CI.
 - [ ] **P8 - Later: full wiki port, pgmfi subdomain, i18n**
 
 ## Design directives (2026-06-13, from user)
@@ -260,10 +348,27 @@ Living log of the Hondabase rebuild. Plan of record:
 - **Attribution:** commits authored as bot; editor via `Co-Authored-By:` (real GitHub
   no-reply email if linked, else synthetic) + `Reviewed-By:` approver; pushed via deploy key.
 - **Security model:** all article edits are approval-gated (draft→review→publish).
-- **Styling:** interim homepage uses hand-written `public/assets/hondabase.css` encoding the
-  pgmfi tokens; full Tailwind/Vite migration in P7.
+- **Styling:** the established pgmfi look currently lives in hand-written
+  `public/assets/hondabase.css` (+ `article.css`/`me.css`/`editor.css`). P7 brings in Vite for the
+  TipTap WYSIWYG editor, so the styling will be **migrated to Tailwind (latest, v4)** at the same
+  time (CSS-first `@theme` tokens) - preserving the existing visual design, not redesigning it.
 
 ## Changelog
+- **2026-06-14** - **P7 TipTap editor built + wired in; editor.css converted.** Replaced the
+  raw-Markdown textarea in `ArticleEditor` + `ArticleCreator` with a TipTap rich-text canvas
+  (code-split `resources/js/editor.js`, loaded only on `/new`+`/edit`; Alpine `tiptapEditor` on
+  `alpine:init`, `wire:ignore` mount, debounced Markdown push to `$bodyMarkdown`, `save()` flush
+  before submit) and **structured frontmatter fields** (new `App\Support\ArticleDocument` split/
+  recompose + `App\Livewire\Concerns\EditsFrontmatter` trait: summary/complexity/tags/applies_to
+  rows/source cards, unmodeled keys preserved verbatim; edit-reason field renamed `summary`→`note`).
+  Recomposes canonical house-style YAML + Markdown so commits stay plain Markdown. Ported
+  `editor.css` into `app.css` `@layer components` on `@theme` tokens (+ TipTap canvas/toolbar styles),
+  dropped the `@import` and deleted the file. **Three harnesses green over 503 articles** (TipTap
+  98.8% idempotent; `frontmatter-roundtrip.php` + `editor-roundtrip.php` both 100% idempotent + 100%
+  data-preserved). Verified via Livewire test (mount/hydrate/edit→correct `proposed_body`, rolled
+  back) + HTTP (article/home 200, editor routes 302 anon); build green; www-data ownership restored.
+  Accepted one-time cost: first edit of each not-yet-normalized article reflows body+frontmatter
+  (idempotent after). Remaining P7: convert `article`/`explorer`/`me`.css, STYLE_GUIDE, AGENTS, CI.
 - **2026-06-14** - **P5 core personalization** (chosen slice; web-push deferred). Instance-local
   `favorites`/`user_vehicles`/`user_equipment` tables + models; `FavoriteButton` (article Save),
   `Garage` CRUD at `/me/garage` (vehicle save seeds engine/chassis follows), and the

@@ -1,5 +1,5 @@
 <div class="editor" x-data="{ tab: 'edit' }">
-    <nav class="crumbs">
+    <nav class="crumbs" aria-label="Breadcrumb">
         <a href="/">Home</a>
         <span class="sep">/</span>
         <span class="current">New article</span>
@@ -14,18 +14,23 @@
     </header>
 
     <p class="ed-note">
-        Choose where the article lives, then write it in Markdown. The first <code>#</code>
-        heading is the title.
+        Choose where the article lives, then write it with the rich-text editor. The first heading is
+        the title.
         @if ($canManage)
-            As staff, your new article is <strong>published immediately</strong> (tracked and
-            revertible from history).
+            As staff, your new article is <strong>published immediately</strong> (tracked and revertible from history).
         @else
             Your new article is <strong>reviewed before it goes live</strong>.
         @endif
     </p>
 
-    <form wire:submit="submit" class="ed-grid">
-        <section class="ed-pane ed-editpane" :class="{ 'is-hidden': tab !== 'edit' }">
+    {{-- Tabs: phone-first. On a wide screen both panes show side by side and these hide. --}}
+    <div class="ed-tabs" role="tablist">
+        <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'edit' }" @click="tab = 'edit'">Write</button>
+        <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'preview' }" @click="tab = 'preview'">Preview</button>
+    </div>
+
+    <div class="ed-grid">
+        <section class="ed-pane ed-editpane" :class="{ 'is-hidden': tab !== 'edit' }" x-data="tiptapEditor()">
             <div class="ed-locrow">
                 <div class="ed-locfield">
                     <label class="ed-label" for="ed-type">Type</label>
@@ -55,13 +60,14 @@
             </div>
             <p class="ed-pathpreview">URL: <code>/{{ $type }}/{{ $category ?: '…' }}/{{ $slug ?: '…' }}</code></p>
 
-            <label class="ed-label" for="ed-body">Article markdown</label>
-            <textarea id="ed-body" class="ed-textarea" wire:model.live.debounce.500ms="body"
-                      spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
-            @error('body') <p class="ed-error">{{ $message }}</p> @enderror
+            @include('livewire.partials.frontmatter-fields')
+
+            <label class="ed-label">Article body</label>
+            @include('livewire.partials.editor-canvas')
+            @error('bodyMarkdown') <p class="ed-error">{{ $message }}</p> @enderror
 
             <label class="ed-label">Images <span class="ed-opt">(optional, co-located with the article)</span></label>
-            <input type="file" class="ed-input" wire:model="images" multiple accept="image/png,image/jpeg,image/gif,image/webp">
+            <input type="file" class="ed-input ed-file" wire:model="images" multiple accept="image/png,image/jpeg,image/gif,image/webp">
             <div wire:loading wire:target="images" class="ed-rendering">Uploading…</div>
             @error('images.*') <p class="ed-error">{{ $message }}</p> @enderror
             @if (count($this->assetNames))
@@ -69,21 +75,21 @@
                     @foreach ($this->assetNames as $i => $name)
                         <li>
                             <code>{{ $name }}</code>
-                            <span class="ed-asset-snip">reference with <code>![]({{ $name }})</code></span>
+                            <span class="ed-asset-snip">add to the body as an image named <code>{{ $name }}</code></span>
                             <button type="button" class="ed-asset-rm" wire:click="removeImage({{ $i }})" aria-label="Remove image">&times;</button>
                         </li>
                     @endforeach
                 </ul>
-                <p class="ed-opt">Images appear in the article once it is published.</p>
+                <p class="ed-opt">Images are committed with the article once it is published.</p>
             @endif
 
-            <label class="ed-label" for="ed-summary">Note for the reviewer <span class="ed-opt">(optional)</span></label>
-            <input id="ed-summary" type="text" class="ed-input" wire:model="summary" maxlength="500"
+            <label class="ed-label" for="ed-note">Note for the reviewer <span class="ed-opt">(optional)</span></label>
+            <input id="ed-note" type="text" class="ed-input" wire:model="note" maxlength="500"
                    placeholder="e.g. New article documenting the knock sensor circuit">
-            @error('summary') <p class="ed-error">{{ $message }}</p> @enderror
+            @error('note') <p class="ed-error">{{ $message }}</p> @enderror
 
             <div class="ed-actions">
-                <button type="submit" class="btn ed-submit" wire:loading.attr="disabled" wire:target="submit,images">
+                <button type="button" class="btn ed-submit" @click="save()" wire:loading.attr="disabled" wire:target="submit,images">
                     <span wire:loading.remove wire:target="submit">{{ $canManage ? 'Publish article' : 'Submit for review' }}</span>
                     <span wire:loading wire:target="submit">{{ $canManage ? 'Publishing...' : 'Submitting...' }}</span>
                 </button>
@@ -94,7 +100,7 @@
         <section class="ed-pane ed-previewpane" :class="{ 'is-hidden': tab !== 'preview' }" aria-live="polite">
             <div class="ed-previewbar">
                 <span>Live preview</span>
-                <span class="ed-rendering" wire:loading wire:target="body">rendering...</span>
+                <span class="ed-rendering" wire:loading wire:target="bodyMarkdown">rendering...</span>
             </div>
             <article class="article ed-previewbody">
                 <header class="article-head">
@@ -105,11 +111,5 @@
                 </div>
             </article>
         </section>
-    </form>
-
-    {{-- Tabs: phone-first. On a wide screen both panes show side by side and these hide. --}}
-    <div class="ed-tabs ed-tabs-bottom" role="tablist">
-        <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'edit' }" @click="tab = 'edit'">Edit</button>
-        <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'preview' }" @click="tab = 'preview'">Preview</button>
     </div>
 </div>

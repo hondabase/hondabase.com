@@ -4,8 +4,7 @@
 
 @push('head')
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/article.css">
-<link rel="stylesheet" href="/assets/editor.css">
+@vite('resources/js/editor.js')
 @endpush
 
 @section('content')
