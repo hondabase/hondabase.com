@@ -1,0 +1,22 @@
+[Unit]
+Description=Hondabase Laravel queue worker (www)
+After=network-online.target mariadb.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/hondabase/www
+# --sleep keeps idle polling cheap; --tries/--max-time let it recover and recycle.
+# Git push jobs are slow, so a generous --timeout.
+ExecStart=/usr/bin/php artisan queue:work database --sleep=3 --tries=3 --max-time=3600 --timeout=300
+ExecReload=/usr/bin/php artisan queue:restart
+Restart=on-failure
+RestartSec=5s
+
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

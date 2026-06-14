@@ -17,6 +17,14 @@ Living log of the Hondabase rebuild. Plan of record:
   56 `home`); electronics = ECU/wiring/sensor/injector/ignition cluster in `library`.
   `attachments` table → co-located bundle assets. (Full wiki port is P8.)
 
+## Operations (live infra)
+- **Queue worker:** systemd unit `hondabase-queue.service` (in repo at
+  `docs/deploy/hondabase-queue.service`) runs `php artisan queue:work database` as `www-data`,
+  enabled at boot, `Restart=on-failure`, `ExecReload=queue:restart`. Drains the `database`
+  queue (CommitArticle git jobs + upcoming notifications). Verified processing a probe job.
+  Deploy on a fresh box: copy the unit to `/etc/systemd/system/`, `systemctl daemon-reload`,
+  `systemctl enable --now hondabase-queue`.
+
 ## Status by phase
 - [x] **P0 - Scaffold + SSO** *(done)*
   - [x] Composer installed; Laravel 13 scaffolded + merged into project root (legacy intact)
