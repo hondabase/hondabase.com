@@ -16,14 +16,38 @@ class ArticleRevision extends Model
 
     protected $casts = [
         'reviewed_at' => 'datetime',
-        'pushed'      => 'bool',
-        'assets'      => 'array',
+        'pushed' => 'bool',
+        'assets' => 'array',
     ];
 
     /** Absolute path where this revision's uploaded image assets are staged until commit. */
     public function assetStagingDir(): string
     {
-        return storage_path('app/pending-assets/' . $this->id);
+        return storage_path('app/pending-assets/'.$this->id);
+    }
+
+    /** Resolve one declared staged asset without allowing arbitrary storage reads. */
+    public function stagedAssetPath(string $file): ?string
+    {
+        $file = basename($file);
+        if (! in_array($file, $this->assets ?? [], true)) {
+            return null;
+        }
+        $path = $this->assetStagingDir().'/'.$file;
+
+        return is_file($path) ? $path : null;
+    }
+
+    public function cleanupStagedAssets(): void
+    {
+        $dir = $this->assetStagingDir();
+        if (! is_dir($dir)) {
+            return;
+        }
+        foreach ((array) glob($dir.'/*') as $file) {
+            @unlink($file);
+        }
+        @rmdir($dir);
     }
 
     public function author(): BelongsTo
@@ -125,6 +149,7 @@ class ArticleRevision extends Model
         while ($j < $m) {
             $rows[] = ['kind' => 'add', 'text' => $b[$j++]];
         }
+
         return $rows;
     }
 
@@ -150,7 +175,7 @@ class ArticleRevision extends Model
         $skipped = 0;
         $flush = function () use (&$out, &$skipped) {
             if ($skipped > 0) {
-                $out[] = ['kind' => 'gap', 'text' => "{$skipped} unchanged line" . ($skipped === 1 ? '' : 's')];
+                $out[] = ['kind' => 'gap', 'text' => "{$skipped} unchanged line".($skipped === 1 ? '' : 's')];
                 $skipped = 0;
             }
         };
@@ -163,6 +188,7 @@ class ArticleRevision extends Model
             }
         }
         $flush();
+
         return $out;
     }
 }

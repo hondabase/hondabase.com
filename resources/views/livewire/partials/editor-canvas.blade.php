@@ -19,6 +19,7 @@
         <button type="button" class="ed-tool" :class="is('codeBlock') && 'is-on'" @click="cmd('toggleCodeBlock')" title="Code block">Code</button>
         <span class="ed-tool-sep" aria-hidden="true"></span>
         <button type="button" class="ed-tool" @click="table()" title="Insert table">Table</button>
+        <button type="button" class="ed-tool" @click="carousel()" title="Insert image carousel">Carousel</button>
         <button type="button" class="ed-tool" @click="cmd('setHorizontalRule')" title="Divider">&horbar;</button>
     </div>
     <div x-ref="canvas" class="ed-canvas"></div>

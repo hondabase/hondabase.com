@@ -33,13 +33,14 @@ class RevisionReview extends Component
         $rev = ArticleRevision::pending()->find($id);
         if ($rev === null) {
             $this->message = "Edit #{$id} is no longer pending.";
+
             return;
         }
 
         $rev->update([
-            'status'       => 'approved',
-            'reviewer_id'  => auth()->id(),
-            'reviewed_at'  => now(),
+            'status' => 'approved',
+            'reviewer_id' => auth()->id(),
+            'reviewed_at' => now(),
             'review_notes' => $this->notes[$id] ?? null,
         ]);
 
@@ -57,15 +58,17 @@ class RevisionReview extends Component
         $rev = ArticleRevision::whereIn('status', ['pending', 'conflicted'])->find($id);
         if ($rev === null) {
             $this->message = "Edit #{$id} is not awaiting review.";
+
             return;
         }
 
         $rev->update([
-            'status'       => 'rejected',
-            'reviewer_id'  => auth()->id(),
-            'reviewed_at'  => now(),
+            'status' => 'rejected',
+            'reviewer_id' => auth()->id(),
+            'reviewed_at' => now(),
             'review_notes' => $this->notes[$id] ?? null,
         ]);
+        $rev->cleanupStagedAssets();
 
         unset($this->notes[$id]);
         $this->message = "Edit #{$id} rejected.";
@@ -84,22 +87,24 @@ class RevisionReview extends Component
         $rev = ArticleRevision::conflicted()->find($id);
         if ($rev === null) {
             $this->message = "Edit #{$id} is not awaiting conflict resolution.";
+
             return;
         }
 
         $raw = app(ArticleService::class)->rawMarkdown($rev->type, $rev->category, $rev->slug);
         if ($raw === null) {
             $this->message = "The article for edit #{$id} no longer exists on disk; reject it instead.";
+
             return;
         }
 
         $rev->update([
-            'status'        => 'approved',
-            'base_sha'      => $raw['sha'],
+            'status' => 'approved',
+            'base_sha' => $raw['sha'],
             'original_body' => $raw['content'], // re-base onto current on-disk for an honest diff
-            'reviewer_id'   => auth()->id(),
-            'reviewed_at'   => now(),
-            'review_notes'  => $this->notes[$id] ?? $rev->review_notes,
+            'reviewer_id' => auth()->id(),
+            'reviewed_at' => now(),
+            'review_notes' => $this->notes[$id] ?? $rev->review_notes,
         ]);
 
         CommitArticle::dispatch($rev->id);
@@ -113,9 +118,9 @@ class RevisionReview extends Component
         abort_unless(Gate::allows('manage-articles'), 403);
 
         return view('livewire.revision-review', [
-            'pending'    => ArticleRevision::pending()->with('author')->latest()->get(),
+            'pending' => ArticleRevision::pending()->with('author')->latest()->get(),
             'conflicted' => ArticleRevision::conflicted()->with('author')->latest()->get(),
-            'unpushed'   => ArticleRevision::unpushed()->count(),
+            'unpushed' => ArticleRevision::unpushed()->count(),
         ]);
     }
 }

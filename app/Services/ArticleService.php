@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Markdown\GithubAlertExtension;
+use App\Markdown\CarouselParser;
 use App\Markdown\MarkdownNormalizer;
 use Illuminate\Support\Str;
 use League\CommonMark\Environment\Environment;
@@ -27,6 +28,7 @@ class ArticleService
 
     public function __construct(
         private ArticleAuthorService $authors,
+        private CarouselParser $carousels,
         private MarkdownNormalizer $markdown,
     ) {
         $this->root = rtrim((string) config('hondabase.content_path'), '/');
@@ -219,7 +221,7 @@ class ArticleService
      * it) to ['title','html'] using the exact same pipeline as a published article. Drives
      * the editor's live preview so what the editor sees is what review/publish will show.
      */
-    public function preview(string $raw, string $type, string $category, string $slug): array
+    public function preview(string $raw, string $type, string $category, string $slug, array $assetUrls = []): array
     {
         [$fm, $body] = $this->splitFrontMatter($raw);
         $title = $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug);
@@ -228,8 +230,31 @@ class ArticleService
 
         return [
             'title' => $title,
-            'html' => $this->renderBody($body, $assetBase),
+            'html' => $this->renderBody($body, $assetBase, $assetUrls),
         ];
+    }
+
+    /** Existing co-located images available to the article editor asset picker. */
+    public function imageAssets(string $type, string $category, string $slug): array
+    {
+        if (! $this->safe($type, $category, $slug)) {
+            return [];
+        }
+        $dir = "{$this->root}/{$type}/{$category}/{$slug}";
+        if (! is_dir($dir)) {
+            return [];
+        }
+
+        $assets = [];
+        foreach ((array) glob("{$dir}/*") as $path) {
+            $name = basename($path);
+            if (is_file($path) && preg_match('/^[A-Za-z0-9._-]+\.(?:jpe?g|png|gif|svg|webp)$/i', $name)) {
+                $assets[] = ['name' => $name, 'url' => "/{$type}/{$category}/{$slug}/{$name}", 'pending' => false];
+            }
+        }
+        usort($assets, fn ($a, $b) => strcasecmp($a['name'], $b['name']));
+
+        return $assets;
     }
 
     /** Absolute path of a co-located asset, or null. */
@@ -359,10 +384,18 @@ class ArticleService
      * escaped); unknown widgets are left untouched. Shared by published articles and the
      * editor preview so both render identically.
      */
-    private function renderBody(string $body, string $assetBase): string
+    private function renderBody(string $body, string $assetBase, array $assetUrls = []): string
     {
         $body = $this->expandPartials($body);
         $body = $this->markdown->normalize($body);
+
+        $carousels = [];
+        $body = $this->carousels->replace($body, function (array $slides) use (&$carousels) {
+            $tok = 'xCAROUSEL'.count($carousels).'x';
+            $carousels[$tok] = view('partials.article-carousel', compact('slides'))->render();
+
+            return "\n\n{$tok}\n\n";
+        });
 
         $widgets = [];
         $body = preg_replace_callback(
@@ -384,10 +417,13 @@ class ArticleService
         foreach ($widgets as $tok => $whtml) {
             $html = str_replace(["<p>{$tok}</p>", $tok], $whtml, $html);
         }
+        foreach ($carousels as $tok => $carouselHtml) {
+            $html = str_replace(["<p>{$tok}</p>", $tok], $carouselHtml, $html);
+        }
         $html = $this->repairEmptyLinks($html);
         $html = $this->rewriteMalformedArchiveLinks($html);
         if ($assetBase !== '') {
-            $html = $this->rewriteAssets($html, $assetBase);
+            $html = $this->rewriteAssets($html, $assetBase, $assetUrls);
             $html = $this->rewriteArticleLinks($html, $assetBase);
             $html = $this->rewriteAttachmentLinks($html, $assetBase);
         }
@@ -586,14 +622,15 @@ class ArticleService
     }
 
     /** Point relative <img src> at the co-located asset route. */
-    private function rewriteAssets(string $html, string $assetBase): string
+    private function rewriteAssets(string $html, string $assetBase, array $assetUrls = []): string
     {
-        return preg_replace_callback('/<img\b[^>]*\bsrc="([^"]+)"/i', function ($m) use ($assetBase) {
+        return preg_replace_callback('/<img\b[^>]*\bsrc="([^"]+)"/i', function ($m) use ($assetBase, $assetUrls) {
             $url = $m[1];
             if (preg_match('#^(https?:)?//#i', $url) || str_starts_with($url, '/') || str_starts_with($url, 'data:')) {
                 return $m[0];
             }
-            $new = $assetBase.'/'.ltrim(preg_replace('#^\./#', '', $url), '/');
+            $name = ltrim(preg_replace('#^\./#', '', html_entity_decode($url, ENT_QUOTES | ENT_HTML5, 'UTF-8')), '/');
+            $new = htmlspecialchars($assetUrls[$name] ?? ($assetBase.'/'.$name), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 
             return str_replace('src="'.$url.'"', 'src="'.$new.'"', $m[0]);
         }, $html);

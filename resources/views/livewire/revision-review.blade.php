@@ -35,6 +35,7 @@
                     @if ($rev->summary)
                         <p class="rev-summary"><span>Editor's note</span>{{ $rev->summary }}</p>
                     @endif
+                    @include('livewire.partials.revision-assets', ['rev' => $rev])
 
                     <div class="rev-diff">
                         @foreach ($rev->compactDiff() as $line)
@@ -76,6 +77,7 @@
             @if ($rev->summary)
                 <p class="rev-summary"><span>Editor's note</span>{{ $rev->summary }}</p>
             @endif
+            @include('livewire.partials.revision-assets', ['rev' => $rev])
 
             <div class="rev-diff">
                 @foreach ($rev->compactDiff() as $line)

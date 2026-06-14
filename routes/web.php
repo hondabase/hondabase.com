@@ -1,14 +1,17 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PushSubscriptionController;
+use App\Models\Article;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('home'))->name('home');
 
 // Auth (Discord OAuth, shared application with the files app).
-Route::get('/auth/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
-Route::get('/auth/callback', [\App\Http\Controllers\AuthController::class, 'callback']);
-Route::post('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+Route::get('/auth/login', [AuthController::class, 'login'])->name('login');
+Route::get('/auth/callback', [AuthController::class, 'callback']);
+Route::post('/auth/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Personalization (auth-gated): "My Hondabase" dashboard + garage CRUD. `me` is not a
 // content type, so it never collides with the knowledgebase routes below.
@@ -17,8 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/me/garage', fn () => view('garage'))->name('me.garage');
 
     // Web Push subscription lifecycle (called by the service-worker subscribe toggle).
-    Route::post('/me/push', [\App\Http\Controllers\PushSubscriptionController::class, 'store'])->name('push.store');
-    Route::delete('/me/push', [\App\Http\Controllers\PushSubscriptionController::class, 'destroy'])->name('push.destroy');
+    Route::post('/me/push', [PushSubscriptionController::class, 'store'])->name('push.store');
+    Route::delete('/me/push', [PushSubscriptionController::class, 'destroy'])->name('push.destroy');
 });
 
 // New-article creation (auth-gated). `new` is not a content type, so it never collides with
@@ -36,6 +39,9 @@ Route::get('/edit/{type}/{category}/{slug}', fn (string $type, string $category,
 // revert. `manage-articles` = staff or owner (see AppServiceProvider).
 Route::middleware(['auth', 'can:manage-articles'])->group(function () {
     Route::get('/admin/reviews', fn () => view('admin.reviews'))->name('admin.reviews');
+    Route::get('/admin/reviews/{revision}/assets/{file}', [ArticleController::class, 'stagedAsset'])
+        ->where('file', '[A-Za-z0-9._-]+\.[A-Za-z0-9]+')
+        ->name('admin.revision.asset');
 
     Route::get('/admin/history', fn () => view('admin.history', ['type' => null, 'category' => null, 'slug' => null]))
         ->name('admin.history');
@@ -51,16 +57,16 @@ Route::middleware(['auth', 'can:manage-articles'])->group(function () {
 });
 
 Route::get('/sitemap.xml', function () {
-    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n"
-        . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n"
-        . '  <url><loc>https://www.hondabase.com/</loc></url>' . "\n";
-    foreach (\App\Models\Article::orderBy('type')->orderBy('category')->orderBy('slug')->get(['type', 'category', 'slug', 'updated_at']) as $a) {
-        $loc = 'https://www.hondabase.com/' . $a->type . '/' . $a->category . '/' . $a->slug;
-        $xml .= '  <url><loc>' . htmlspecialchars($loc) . '</loc>'
-            . ($a->updated_at ? '<lastmod>' . $a->updated_at->toDateString() . '</lastmod>' : '')
-            . '</url>' . "\n";
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n"
+        .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n"
+        .'  <url><loc>https://www.hondabase.com/</loc></url>'."\n";
+    foreach (Article::orderBy('type')->orderBy('category')->orderBy('slug')->get(['type', 'category', 'slug', 'updated_at']) as $a) {
+        $loc = 'https://www.hondabase.com/'.$a->type.'/'.$a->category.'/'.$a->slug;
+        $xml .= '  <url><loc>'.htmlspecialchars($loc).'</loc>'
+            .($a->updated_at ? '<lastmod>'.$a->updated_at->toDateString().'</lastmod>' : '')
+            .'</url>'."\n";
     }
-    $xml .= '</urlset>' . "\n";
+    $xml .= '</urlset>'."\n";
 
     return response($xml, 200, ['Content-Type' => 'application/xml']);
 })->name('sitemap');
@@ -68,12 +74,12 @@ Route::get('/sitemap.xml', function () {
 // Knowledgebase. Types are constrained to the content top-level folders so these
 // patterns never shadow other app routes or the legacy /pgmfi, /guides, /reference paths.
 $types = 'cars|motorcycles|aircraft|common';
-$seg   = '[A-Za-z0-9._-]+';
+$seg = '[A-Za-z0-9._-]+';
 
 // Co-located article asset (filename must have an extension) - registered before the
 // 3-segment article route so it wins for 4-segment paths.
 Route::get('/{type}/{category}/{slug}/{file}', [ArticleController::class, 'asset'])
-    ->where(['type' => $types, 'category' => $seg, 'slug' => $seg, 'file' => $seg . '\.[A-Za-z0-9]+'])
+    ->where(['type' => $types, 'category' => $seg, 'slug' => $seg, 'file' => $seg.'\.[A-Za-z0-9]+'])
     ->name('article.asset');
 
 Route::get('/{type}/{category}/{slug}', [ArticleController::class, 'show'])

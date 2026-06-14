@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ArticleRevision;
 use App\Services\ArticleService;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -14,11 +15,11 @@ class ArticleController extends Controller
         abort_unless($this->articles->categoryExists($type, $category), 404);
 
         return view('category', [
-            'type'           => $type,
-            'category'       => $category,
-            'type_label'     => ucwords(str_replace('-', ' ', $type)),
+            'type' => $type,
+            'category' => $category,
+            'type_label' => ucwords(str_replace('-', ' ', $type)),
             'category_label' => ucwords(str_replace('-', ' ', $category)),
-            'articles'       => $this->articles->articlesIn($type, $category),
+            'articles' => $this->articles->articlesIn($type, $category),
         ]);
     }
 
@@ -36,5 +37,13 @@ class ArticleController extends Controller
         abort_unless($path, 404);
 
         return response()->file($path, ['Cache-Control' => 'public, max-age=86400']);
+    }
+
+    public function stagedAsset(ArticleRevision $revision, string $file): BinaryFileResponse
+    {
+        $path = $revision->stagedAssetPath($file);
+        abort_unless($path, 404);
+
+        return response()->file($path, ['Cache-Control' => 'private, no-store']);
     }
 }

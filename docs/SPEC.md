@@ -79,6 +79,8 @@ Authoring/style rules and source-faithful porting rules are in
 - The first H1 becomes the page title; the body is rendered into the article page.
 - Relative image `src` and relative attachment `href` are rewritten to the co-located asset
   route.
+- **Image carousels:** fenced `carousel` blocks containing local image slides render as an
+  accessible manual-control/swipe carousel and have a visual TipTap editor node.
 - **Widgets:** a `::: widget <name> key="value" :::` directive renders a trusted Blade
   widget. Resolver: `app/Services/WidgetRenderer.php`; views in `resources/views/widgets/`;
   first widget is `error-codes` (interactive OBD code lookup, Alpine). See `docs/widgets.md`.

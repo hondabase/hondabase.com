@@ -37,7 +37,8 @@
     </div>
 
     <div class="ed-grid">
-        <section class="ed-pane ed-editpane" :class="{ 'is-hidden': tab !== 'edit' }" x-data="tiptapEditor()">
+        <section class="ed-pane ed-editpane" :class="{ 'is-hidden': tab !== 'edit' }" x-data="tiptapEditor()"
+            data-asset-base="/{{ $type }}/{{ $category }}/{{ $slug }}">
             @include('livewire.partials.frontmatter-fields')
 
             <label class="ed-label">Article body</label>

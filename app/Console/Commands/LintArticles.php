@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Markdown\MarkdownNormalizer;
+use App\Markdown\CarouselParser;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -32,6 +33,7 @@ class LintArticles extends Command
         $warnings = [];
         $checkedCount = 0;
         $normalizer = app(MarkdownNormalizer::class);
+        $carousels = app(CarouselParser::class);
 
         foreach ($types as $type) {
             $typePath = "{$contentPath}/{$type}";
@@ -205,6 +207,10 @@ class LintArticles extends Command
 
                     if (preg_match('#web\.archive\.org/web/(?:\d{14}/)?https?://web\.archive\.org/web/#i', $body)) {
                         $warnings[] = "[{$type}/{$category}/{$slug}] Contains a malformed nested Internet Archive URL";
+                    }
+
+                    foreach ($carousels->errors($body) as $carouselError) {
+                        $errors[] = "[{$type}/{$category}/{$slug}] {$carouselError}";
                     }
 
                     $repoPath = "{$type}/{$category}/{$slug}/".basename($mainFile);

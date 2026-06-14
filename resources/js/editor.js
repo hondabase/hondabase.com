@@ -11,15 +11,7 @@
 // loaded only on /new and /edit, so readers never download it.
 
 import { Editor } from '@tiptap/core';
-import StarterKit from '@tiptap/starter-kit';
-import { TableKit } from '@tiptap/extension-table';
-import { Markdown } from 'tiptap-markdown';
-
-const extensions = [
-    StarterKit,
-    TableKit.configure({ table: { resizable: false } }),
-    Markdown.configure({ html: true, tightLists: true, linkify: false, breaks: false }),
-];
+import { createEditorExtensions } from './editor-extensions';
 
 function debounce(fn, wait) {
     let t;
@@ -41,7 +33,16 @@ document.addEventListener('alpine:init', () => {
             const initial = this.$wire.get(wireProp) ?? '';
             this.editor = new Editor({
                 element: this.$refs.canvas,
-                extensions,
+                extensions: createEditorExtensions({
+                    assetBase: () => this.$root.dataset.assetBase || '',
+                    getAssets: () => this.$wire.editorAssets(),
+                    uploadImage: (file, knownNames) => new Promise((resolve, reject) => {
+                        this.$wire.$uploadMultiple('images', [file], async () => {
+                            const assets = await this.$wire.editorAssets();
+                            resolve(assets.find((asset) => asset.pending && !knownNames.includes(asset.name)) || null);
+                        }, reject);
+                    }),
+                }),
                 content: initial,
                 editorProps: {
                     attributes: { class: 'tiptap-canvas', spellcheck: 'false' },
@@ -90,6 +91,18 @@ document.addEventListener('alpine:init', () => {
         },
         table() {
             this.editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+            this.version++;
+        },
+        carousel() {
+            this.editor?.chain().focus().insertContent({
+                type: 'articleCarousel',
+                attrs: {
+                    slides: [
+                        { src: '', alt: '', caption: '' },
+                        { src: '', alt: '', caption: '' },
+                    ],
+                },
+            }).run();
             this.version++;
         },
         // active-state probe; reads `version` so the binding tracks it as a reactive dependency

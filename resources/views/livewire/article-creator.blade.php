@@ -30,7 +30,8 @@
     </div>
 
     <div class="ed-grid">
-        <section class="ed-pane ed-editpane" :class="{ 'is-hidden': tab !== 'edit' }" x-data="tiptapEditor()">
+        <section class="ed-pane ed-editpane" :class="{ 'is-hidden': tab !== 'edit' }" x-data="tiptapEditor()"
+            data-asset-base="/{{ $type }}/{{ $category }}/{{ $slug }}">
             <div class="ed-locrow">
                 <div class="ed-locfield">
                     <label class="ed-label" for="ed-type">Type</label>

@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\ArticleRevision;
 use App\Models\Article;
+use App\Models\ArticleRevision;
 use App\Services\ArticleAuthorService;
 use App\Services\ArticleIndexer;
 use App\Services\FollowerNotifier;
@@ -34,9 +34,7 @@ class CommitArticle implements ShouldQueue
 
     public int $tries = 5;
 
-    public function __construct(public int $revisionId)
-    {
-    }
+    public function __construct(public int $revisionId) {}
 
     /** Re-push backoff (seconds) for transient remote failures. */
     public function backoff(): array
@@ -57,7 +55,7 @@ class CommitArticle implements ShouldQueue
         if ($rev->commit_sha === null) {
             // A conflict (the on-disk base moved underneath this edit) parks the revision for
             // re-review and commits nothing; stop before crediting/pushing.
-            if (!$this->writeAndCommit($rev, $root)) {
+            if (! $this->writeAndCommit($rev, $root)) {
                 return;
             }
             // Make the change visible on the live site immediately, push or not.
@@ -92,11 +90,11 @@ class CommitArticle implements ShouldQueue
     {
         // Defense in depth: the path is already server-derived from safe() segments, but never
         // write outside the content root or anywhere but a .md file under it.
-        $abs  = $root . '/' . $rev->repo_path;
+        $abs = $root.'/'.$rev->repo_path;
         $real = realpath($root);
         $target = realpath(dirname($abs));
-        if ($real === false || str_contains($rev->repo_path, '..') || !str_ends_with($abs, '.md')
-            || ($target !== false && !str_starts_with($target, $real))) {
+        if ($real === false || str_contains($rev->repo_path, '..') || ! str_ends_with($abs, '.md')
+            || ($target !== false && ! str_starts_with($target, $real))) {
             throw new \RuntimeException("CommitArticle: refusing unsafe repo_path '{$rev->repo_path}'");
         }
 
@@ -108,15 +106,25 @@ class CommitArticle implements ShouldQueue
         if ($this->normalize($current) !== $this->normalize($rev->original_body)) {
             $rev->forceFill(['status' => 'conflicted'])->save();
             Log::warning('CommitArticle conflict: on-disk base changed, edit parked', [
-                'revision'  => $rev->id,
+                'revision' => $rev->id,
                 'repo_path' => $rev->repo_path,
             ]);
+
             return false;
         }
 
         $dir = dirname($abs);
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             mkdir($dir, 0775, true);
+        }
+        if ($this->hasAssetConflict($rev, $dir)) {
+            $rev->forceFill(['status' => 'conflicted'])->save();
+            Log::warning('CommitArticle asset conflict: bundle filename changed underneath edit', [
+                'revision' => $rev->id,
+                'repo_path' => $rev->repo_path,
+            ]);
+
+            return false;
         }
         file_put_contents($abs, $this->normalize($rev->proposed_body));
 
@@ -130,12 +138,13 @@ class CommitArticle implements ShouldQueue
         if (trim($status->output()) === '') {
             $rev->forceFill(['commit_sha' => $this->head($root)])->save();
             $this->cleanupAssets($rev);
+
             return true;
         }
 
-        $author   = optional($rev->author)->gitIdentity();
+        $author = optional($rev->author)->gitIdentity();
         $reviewer = optional($rev->reviewer)->gitIdentity();
-        $by       = optional($rev->author)->displayName() ?? 'a contributor';
+        $by = optional($rev->author)->displayName() ?? 'a contributor';
 
         $bot = config('hondabase.git');
 
@@ -158,9 +167,9 @@ class CommitArticle implements ShouldQueue
         if ($rev->reverts_revision_id) {
             $orig = ArticleRevision::find($rev->reverts_revision_id);
             $lines[] = "Reverts: revision #{$rev->reverts_revision_id}"
-                . ($orig && $orig->commit_sha ? ' (commit ' . substr($orig->commit_sha, 0, 12) . ')' : '');
+                .($orig && $orig->commit_sha ? ' (commit '.substr($orig->commit_sha, 0, 12).')' : '');
         }
-        $message = implode("\n", $lines) . "\n";
+        $message = implode("\n", $lines)."\n";
 
         $msgFile = tempnam(sys_get_temp_dir(), 'hb-commit-');
         file_put_contents($msgFile, $message);
@@ -170,21 +179,21 @@ class CommitArticle implements ShouldQueue
             // images) are known to git; `git commit <pathspec>` alone fails on untracked files.
             // Limiting `add` to $paths keeps the path-limited guarantee: nothing else is staged.
             $add = Process::path($root)->run(array_merge(['git', 'add', '--'], $paths));
-            if (!$add->successful()) {
-                throw new \RuntimeException('git add failed: ' . $add->errorOutput() . $add->output());
+            if (! $add->successful()) {
+                throw new \RuntimeException('git add failed: '.$add->errorOutput().$add->output());
             }
 
             // Path-limited commit: commits ONLY this article, ignoring any other dirty files
             // in the content clone. Bot is author + committer via the inline -c overrides.
             $commit = Process::path($root)->run(array_merge([
                 'git',
-                '-c', 'user.name=' . $bot['bot_name'],
-                '-c', 'user.email=' . $bot['bot_email'],
+                '-c', 'user.name='.$bot['bot_name'],
+                '-c', 'user.email='.$bot['bot_email'],
                 'commit', '-F', $msgFile, '--',
             ], $paths));
 
-            if (!$commit->successful()) {
-                throw new \RuntimeException('git commit failed: ' . $commit->errorOutput() . $commit->output());
+            if (! $commit->successful()) {
+                throw new \RuntimeException('git commit failed: '.$commit->errorOutput().$commit->output());
             }
         } finally {
             @unlink($msgFile);
@@ -193,6 +202,7 @@ class CommitArticle implements ShouldQueue
         $rev->forceFill(['commit_sha' => $this->head($root)])->save();
         $this->cleanupAssets($rev);
         Log::info('CommitArticle committed', ['revision' => $rev->id, 'sha' => $rev->commit_sha]);
+
         return true;
     }
 
@@ -210,33 +220,42 @@ class CommitArticle implements ShouldQueue
         }
         $staging = $rev->assetStagingDir();
         $relBase = trim(dirname($rev->repo_path), '/'); // type/category/slug
-        $paths   = [];
+        $paths = [];
         foreach ($names as $name) {
             $name = basename((string) $name);
             if ($name === '' || str_contains($name, '..')
-                || !preg_match('/^[A-Za-z0-9._-]+\.[A-Za-z0-9]+$/', $name)) {
+                || ! preg_match('/^[A-Za-z0-9._-]+\.[A-Za-z0-9]+$/', $name)) {
                 continue;
             }
-            $src = $staging . '/' . $name;
+            $src = $staging.'/'.$name;
             if (is_file($src)) {
-                copy($src, $bundleDir . '/' . $name);
+                copy($src, $bundleDir.'/'.$name);
             }
-            $paths[] = $relBase . '/' . $name;
+            $paths[] = $relBase.'/'.$name;
         }
+
         return $paths;
+    }
+
+    /** A concurrent differing file with the same name must be reviewed, never overwritten. */
+    private function hasAssetConflict(ArticleRevision $rev, string $bundleDir): bool
+    {
+        foreach ($rev->assets ?? [] as $name) {
+            $name = basename((string) $name);
+            $staged = $rev->assetStagingDir().'/'.$name;
+            $target = $bundleDir.'/'.$name;
+            if (is_file($staged) && is_file($target) && hash_file('sha256', $staged) !== hash_file('sha256', $target)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /** Remove the revision's staged uploads once they are safely committed. */
     private function cleanupAssets(ArticleRevision $rev): void
     {
-        $dir = $rev->assetStagingDir();
-        if (!is_dir($dir)) {
-            return;
-        }
-        foreach ((array) glob($dir . '/*') as $f) {
-            @unlink($f);
-        }
-        @rmdir($dir);
+        $rev->cleanupStagedAssets();
     }
 
     private function push(ArticleRevision $rev, string $root): void
@@ -247,17 +266,17 @@ class CommitArticle implements ShouldQueue
 
         // Push is opt-in: it stays off until a deploy key is configured on the box. Until then
         // the commit is local-only and surfaces in the admin "unpushed" count by design.
-        if (!config('hondabase.git.push')) {
+        if (! config('hondabase.git.push')) {
             return;
         }
 
         $branch = config('hondabase.git.branch');
         $result = Process::path($root)->run(['git', 'push', 'origin', $branch]);
 
-        if (!$result->successful()) {
+        if (! $result->successful()) {
             // Throw so the queue retries (with backoff). The commit already persisted, so the
             // retry path skips straight back here and only re-attempts the push.
-            throw new \RuntimeException('git push failed: ' . $result->errorOutput());
+            throw new \RuntimeException('git push failed: '.$result->errorOutput());
         }
 
         $rev->forceFill(['pushed' => true])->save();
@@ -267,12 +286,13 @@ class CommitArticle implements ShouldQueue
     private function head(string $root): ?string
     {
         $r = Process::path($root)->run(['git', 'rev-parse', 'HEAD']);
+
         return $r->successful() ? trim($r->output()) : null;
     }
 
     /** Match the editor's normalization so round-tripped files end with a single newline. */
     private function normalize(string $s): string
     {
-        return rtrim(str_replace("\r\n", "\n", $s)) . "\n";
+        return rtrim(str_replace("\r\n", "\n", $s))."\n";
     }
 }

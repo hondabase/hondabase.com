@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Jobs\CommitArticle;
 use App\Livewire\Concerns\EditsFrontmatter;
+use App\Livewire\Concerns\ManagesArticleImages;
+use App\Markdown\CarouselParser;
 use App\Models\ArticleRevision;
 use App\Services\ArticleService;
 use App\Support\ArticleDocument;
@@ -28,13 +30,18 @@ use Livewire\Component;
 class ArticleEditor extends Component
 {
     use EditsFrontmatter;
+    use ManagesArticleImages;
 
     public string $type;
+
     public string $category;
+
     public string $slug;
 
     public string $repoPath = '';
+
     public ?string $baseSha = null;
+
     public string $articleTitle = '';
 
     /** The on-disk file at load time (frontmatter + body); used to detect a real change (no-op guard). */
@@ -56,11 +63,11 @@ class ArticleEditor extends Component
         $raw = $articles->rawMarkdown($type, $category, $slug);
         abort_if($raw === null, 404);
 
-        $this->type     = $type;
+        $this->type = $type;
         $this->category = $category;
-        $this->slug     = $slug;
+        $this->slug = $slug;
         $this->repoPath = $raw['repo_path'];
-        $this->baseSha  = $raw['sha'];
+        $this->baseSha = $raw['sha'];
         $this->articleTitle = $raw['title'];
         $this->original = $raw['content'];
 
@@ -75,15 +82,28 @@ class ArticleEditor extends Component
     #[Computed]
     public function preview(): array
     {
-        return app(ArticleService::class)->preview($this->composedDocument(), $this->type, $this->category, $this->slug);
+        return app(ArticleService::class)->preview(
+            $this->composedDocument(),
+            $this->type,
+            $this->category,
+            $this->slug,
+            $this->uploadedPreviewUrls(),
+        );
     }
 
     public function submit()
     {
         $this->validate([
             'bodyMarkdown' => ['required', 'string', 'min:20'],
-            'note'         => ['nullable', 'string', 'max:500'],
+            'note' => ['nullable', 'string', 'max:500'],
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,gif,webp', 'max:4096'],
         ], [], ['bodyMarkdown' => 'article', 'note' => 'note']);
+
+        if ($error = app(CarouselParser::class)->errors($this->bodyMarkdown)[0] ?? null) {
+            $this->addError('bodyMarkdown', $error);
+
+            return null;
+        }
 
         // Never trust the client-held repo_path / base_sha / original: re-derive them on the
         // server from the (path-validated) type/category/slug, so a tampered Livewire payload
@@ -97,6 +117,7 @@ class ArticleEditor extends Component
 
         if ($this->normalize($composed) === $this->normalize($raw['content'])) {
             $this->addError('bodyMarkdown', 'No changes to submit. Edit the article first.');
+
             return null;
         }
 
@@ -104,26 +125,30 @@ class ArticleEditor extends Component
         $manage = Gate::allows('manage-articles');
 
         $rev = ArticleRevision::create([
-            'user_id'       => Auth::id(),
-            'type'          => $this->type,
-            'category'      => $this->category,
-            'slug'          => $this->slug,
-            'title'         => $svc->preview($composed, $this->type, $this->category, $this->slug)['title'],
-            'repo_path'     => $raw['repo_path'],
-            'base_sha'      => $raw['sha'],
+            'user_id' => Auth::id(),
+            'type' => $this->type,
+            'category' => $this->category,
+            'slug' => $this->slug,
+            'title' => $svc->preview($composed, $this->type, $this->category, $this->slug)['title'],
+            'repo_path' => $raw['repo_path'],
+            'base_sha' => $raw['sha'],
             'original_body' => $raw['content'],
             'proposed_body' => $composed,
-            'summary'       => $this->note !== '' ? $this->note : null,
-            'status'        => $manage ? 'approved' : 'pending',
-            'reviewer_id'   => $manage ? Auth::id() : null,
-            'reviewed_at'   => $manage ? now() : null,
+            'assets' => null,
+            'summary' => $this->note !== '' ? $this->note : null,
+            'status' => $manage ? 'approved' : 'pending',
+            'reviewer_id' => $manage ? Auth::id() : null,
+            'reviewed_at' => $manage ? now() : null,
         ]);
+
+        $names = $this->stageReferencedUploads($rev, $composed);
+        $rev->forceFill(['assets' => $names ?: null])->save();
 
         if ($manage) {
             CommitArticle::dispatch($rev->id);
-            session()->flash('status', 'Published. Your change (#' . $rev->id . ') was applied and committed; it can be reverted from history.');
+            session()->flash('status', 'Published. Your change (#'.$rev->id.') was applied and committed; it can be reverted from history.');
         } else {
-            session()->flash('status', 'Thanks. Your edit (#' . $rev->id . ') was submitted for review and will go live once approved.');
+            session()->flash('status', 'Thanks. Your edit (#'.$rev->id.') was submitted for review and will go live once approved.');
         }
 
         return $this->redirect($rev->url(), navigate: true);
@@ -132,7 +157,7 @@ class ArticleEditor extends Component
     /** Normalize trailing whitespace + final newline so a no-op save is detected reliably. */
     private function normalize(string $s): string
     {
-        return rtrim(str_replace("\r\n", "\n", $s)) . "\n";
+        return rtrim(str_replace("\r\n", "\n", $s))."\n";
     }
 
     public function render(): View

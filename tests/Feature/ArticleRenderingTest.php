@@ -40,6 +40,13 @@ Use this guide to diagnose the ECU.
 [Archived reference](http://web.archive.org/web/20200101000000/http://web.archive.org/web/20200101000000/http://example.com/reference)
 
 [Missing reference]()
+
+```carousel
+![ECU board front](board-front.jpg)
+*Front of the board.*
+<!-- slide -->
+![ECU board rear](board-rear.jpg)
+```
 MD
         );
 
@@ -71,6 +78,11 @@ MD
             ->assertSee('href="https://example.com/reference?part=ecu&amp;format=html"', false)
             ->assertSee('href="https://web.archive.org/web/20200101000000/http://example.com/reference"', false)
             ->assertSee('<p>Missing reference</p>', false)
+            ->assertSee('class="article-carousel"', false)
+            ->assertSee('src="/cars/electronics/render-test/board-front.jpg"', false)
+            ->assertSee('alt="ECU board front"', false)
+            ->assertSee('<figcaption>Front of the board.</figcaption>', false)
+            ->assertSee('aria-label="2 of 2"', false)
             ->assertDontSee('<a href="">Missing reference</a>', false);
     }
 }

@@ -9,17 +9,11 @@ for (const k of ['window', 'document', 'DOMParser', 'HTMLElement', 'Node', 'getC
 }
 
 const { Editor } = await import('@tiptap/core');
-const StarterKit = (await import('@tiptap/starter-kit')).default;
-const { TableKit } = await import('@tiptap/extension-table');
-const { Markdown } = await import('tiptap-markdown');
+const { createEditorExtensions } = await import('../resources/js/editor-extensions.js');
 const fs = await import('node:fs');
 const path = await import('node:path');
 
-const extensions = [
-    StarterKit,
-    TableKit.configure({ table: { resizable: false } }),
-    Markdown.configure({ html: true, tightLists: true, linkify: false, breaks: false }),
-];
+const extensions = createEditorExtensions();
 
 function toMarkdown(md) {
     const el = dom.window.document.createElement('div');
