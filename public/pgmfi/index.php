@@ -29,13 +29,10 @@ function archive_counts(string $configPath, string $sql): array
 
 $forum = archive_counts(__DIR__ . '/forum/inc/config.php',
     'SELECT (SELECT COUNT(*) FROM topics) t, (SELECT COUNT(*) FROM posts) p, (SELECT COUNT(*) FROM authors) a');
-$wiki = archive_counts(__DIR__ . '/wiki/inc/config.php',
-    'SELECT (SELECT COUNT(*) FROM topics) t, (SELECT COUNT(*) FROM attachments) a');
 
 $n = fn($v) => number_format((int) ($v ?? 0));
 $title = 'PGMFI.org Archive - Honda / Acura ECU Development';
-$description = 'The recovered pgmfi.org archive: ' . $n($forum['t'] ?? 0) . ' forum topics and '
-    . $n($wiki['t'] ?? 0) . ' wiki articles on grassroots Honda and Acura ECU development, '
+$description = 'The recovered pgmfi.org archive: ' . $n($forum['t'] ?? 0) . ' forum topics on grassroots Honda and Acura ECU development, '
     . 'chipping and tuning, preserved by HondaBase.';
 ?><!doctype html>
 <html lang="en">
@@ -104,7 +101,7 @@ main > p { line-height: 1.7; font-size: .95rem; margin: 1.5rem 0 2rem; max-width
 main > p b { color: #f4f4f5; font-weight: 600; }
 
 main nav { display: grid; gap: 1rem; }
-@media (min-width: 640px) { main nav { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 640px) { main nav { grid-template-columns: 1fr; max-width: 28rem; } }
 main nav a {
   display: block; border: 1px solid var(--border);
   background: rgba(24,24,27,.6); padding: 1.5rem 1.5rem 1.25rem;
@@ -155,12 +152,6 @@ body > footer a { color: #a1a1aa; }
       <p>The phpBB board: development threads, Q&amp;A, datalogging, ROM trading and a decade of
          collective debugging, recovered post by post.</p>
       <small><?= $n($forum['t'] ?? 0) ?> topics · <?= $n($forum['p'] ?? 0) ?> posts · <?= $n($forum['a'] ?? 0) ?> members</small>
-    </a>
-    <a href="/pgmfi/wiki/">
-      <h2>Wiki</h2>
-      <p>The TWiki library: structured technical documentation - ECU hardware, definition codes,
-         sensors, chipping guides and tool downloads.</p>
-      <small><?= $n($wiki['t'] ?? 0) ?> articles · <?= $n($wiki['a'] ?? 0) ?> attachments</small>
     </a>
   </nav>
 </main>

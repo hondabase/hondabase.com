@@ -99,7 +99,13 @@
                 @endif
             </p>
             @if (!empty($art['sources']))
-                <p class="source-note">Adapted from <a href="{{ $art['sources'][0]['url'] }}">{{ $art['sources'][0]['name'] }}</a></p>
+                <p class="source-note">Adapted from
+                    @if (str_starts_with($art['sources'][0]['url'], '/pgmfi/wiki'))
+                        {{ $art['sources'][0]['name'] }}
+                    @else
+                        <a href="{{ $art['sources'][0]['url'] }}">{{ $art['sources'][0]['name'] }}</a>
+                    @endif
+                </p>
             @endif
             <div class="article-actions">
                 <livewire:favorite-button :type="$art['type']" :category="$art['category']" :slug="$art['slug']" />
@@ -139,7 +145,13 @@
                 @foreach ($art['sources'] as $source)
                     <p>
                         <span class="attribution-label">Source</span>
-                        @if (!empty($source['adapted'])) Adapted from @endif<a href="{{ $source['url'] }}">{{ $source['title'] ?? $source['name'] }}</a> on {{ $source['name'] }}.
+                        @if (!empty($source['adapted'])) Adapted from @endif
+                        @if (str_starts_with($source['url'], '/pgmfi/wiki'))
+                            {{ $source['title'] ?? $source['name'] }}
+                        @else
+                            <a href="{{ $source['url'] }}">{{ $source['title'] ?? $source['name'] }}</a>
+                        @endif
+                        on {{ $source['name'] }}.
                         @if (!empty($source['license']) && !empty($source['license_url']))
                             Licensed under <a href="{{ $source['license_url'] }}" rel="license">{{ $source['license'] }}</a>.
                         @endif
