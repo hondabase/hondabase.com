@@ -304,7 +304,7 @@ function admin_pdo(string $dbname): PDO
  */
 function build_dedupe_map(array $pubSizes): array
 {
-    $pdo = admin_pdo('hondabase_files');
+    $pdo = admin_pdo('hondabase');
     $folders = $pdo->query('SELECT id, parent_id, name FROM folders')->fetchAll(PDO::FETCH_UNIQUE);
     $paths = [];
     $resolve = function (?int $id) use (&$resolve, &$paths, $folders): ?string {
