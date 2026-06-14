@@ -35,10 +35,18 @@
         ],
         'keywords' => $art['tags'] ?: null,
     ], fn ($value) => $value !== null);
+    $breadcrumbSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => $art['category_label'], 'item' => url("/{$art['type']}/{$art['category']}")],
+            ['@type' => 'ListItem', 'position' => 3, 'name' => $art['title'], 'item' => $canonical],
+        ],
+    ];
 @endphp
 
 @push('head')
-<link rel="stylesheet" href="/assets/article.css">
 <link rel="canonical" href="{{ $canonical }}">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Hondabase">
@@ -55,15 +63,16 @@
 <meta property="article:tag" content="{{ $tag }}">
 @endforeach
 <script type="application/ld+json">{!! json_encode($articleSchema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+<script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
 @endpush
 
 @section('content')
-    <nav class="crumbs">
+    <nav class="crumbs" aria-label="Breadcrumb">
         <a href="/">Home</a>
         <span class="sep">/</span>
         <a href="/{{ $art['type'] }}/{{ $art['category'] }}">{{ $art['category_label'] }}</a>
         <span class="sep">/</span>
-        <span class="current">{{ $art['title'] }}</span>
+        <span class="current" aria-current="page">{{ $art['title'] }}</span>
     </nav>
 
     @php $at = $art['applies_to'] ?? []; @endphp

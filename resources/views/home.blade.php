@@ -2,10 +2,6 @@
 
 @section('title', 'Hondabase')
 
-@push('head')
-<link rel="stylesheet" href="/assets/explorer.css">
-@endpush
-
 @section('content')
     <section class="hero compact-hero">
         <div class="tag">Honda &amp; Acura · Technical Knowledgebase</div>

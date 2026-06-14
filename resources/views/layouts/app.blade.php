@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/base.css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @if (config('hondabase.ga_id'))
         <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('hondabase.ga_id') }}"></script>
         <script>

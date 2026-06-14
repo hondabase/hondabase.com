@@ -4,7 +4,6 @@
 
 @push('head')
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="/assets/editor.css">
 @endpush
 
 @section('content')

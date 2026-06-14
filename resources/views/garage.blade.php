@@ -2,10 +2,6 @@
 
 @section('title', 'My Garage')
 
-@push('head')
-<link rel="stylesheet" href="/assets/me.css">
-@endpush
-
 @section('content')
     <nav class="crumbs">
         <a href="/me" wire:navigate>My Hondabase</a>
