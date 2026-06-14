@@ -31,7 +31,7 @@
                 <p>Community-Driven Honda Knowledgebase</p>
             </a>
             <nav class="nav">
-                <a href="/pgmfi/wiki/">Wiki</a>
+                <a href="/pgmfi/">Wiki</a>
                 <a href="https://files.hondabase.com">Files</a>
                 @auth
                     <a href="/me" class="nav-signin">My&nbsp;Hondabase</a>
