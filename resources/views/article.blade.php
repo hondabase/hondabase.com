@@ -1,9 +1,60 @@
 @extends('layouts.app')
 
 @section('title', $art['title'])
+@section('description', $art['seo_description'])
+
+@php
+    $canonical = route('article.show', [
+        'type' => $art['type'],
+        'category' => $art['category'],
+        'slug' => $art['slug'],
+    ]);
+    $schemaAuthors = $art['authors']->map(fn ($credit) => [
+        '@type' => 'Person',
+        'name' => $credit->user->displayName(),
+    ])->values()->all();
+    $articleSchema = array_filter([
+        '@context' => 'https://schema.org',
+        '@type' => 'TechArticle',
+        'headline' => $art['title'],
+        'description' => $art['seo_description'],
+        'dateModified' => $art['updated'],
+        'mainEntityOfPage' => [
+            '@type' => 'WebPage',
+            '@id' => $canonical,
+        ],
+        'author' => $schemaAuthors ?: [[
+            '@type' => 'Organization',
+            'name' => 'Hondabase',
+            'url' => config('app.url'),
+        ]],
+        'publisher' => [
+            '@type' => 'Organization',
+            'name' => 'Hondabase',
+            'url' => config('app.url'),
+        ],
+        'keywords' => $art['tags'] ?: null,
+    ], fn ($value) => $value !== null);
+@endphp
 
 @push('head')
 <link rel="stylesheet" href="/assets/article.css">
+<link rel="canonical" href="{{ $canonical }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hondabase">
+<meta property="og:title" content="{{ $art['title'] }} - Honda Knowledgebase">
+<meta property="og:description" content="{{ $art['seo_description'] }}">
+<meta property="og:url" content="{{ $canonical }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ $art['title'] }} - Honda Knowledgebase">
+<meta name="twitter:description" content="{{ $art['seo_description'] }}">
+@if ($art['updated'])
+<meta property="article:modified_time" content="{{ $art['updated'] }}">
+@endif
+@foreach ($art['tags'] as $tag)
+<meta property="article:tag" content="{{ $tag }}">
+@endforeach
+<script type="application/ld+json">{!! json_encode($articleSchema, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
 @endpush
 
 @section('content')
@@ -32,7 +83,7 @@
             @endif
             <p class="meta">
                 @if ($art['updated'])
-                    <span>Updated {{ \Illuminate\Support\Carbon::parse($art['updated'])->format('M j, Y') }}</span>
+                    <time datetime="{{ $art['updated'] }}">Updated {{ \Illuminate\Support\Carbon::parse($art['updated'])->format('M j, Y') }}</time>
                 @endif
                 @if (!empty($art['complexity']))
                     <span class="badge badge-{{ $art['complexity'] }}">{{ ucfirst($art['complexity']) }}</span>

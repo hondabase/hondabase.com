@@ -117,16 +117,48 @@
   color: var(--txt-dim);
 }
 .prose-article hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
-.prose-article table {
-  border-collapse: collapse;
+.prose-article .table-scroll {
   width: 100%;
   margin: 1.25rem 0;
-  font-size: .9rem;
-  display: block;
   overflow-x: auto;
+  border: 1px solid var(--border-2);
+}
+.prose-article .table-scroll:focus { outline: 2px solid rgba(251,191,36,.45); outline-offset: 2px; }
+.prose-article table {
+  border-collapse: collapse;
+  width: max-content;
+  min-width: 100%;
+  margin: 0;
+  font-size: .9rem;
 }
 .prose-article th, .prose-article td { border: 1px solid var(--border-2); padding: .45rem .65rem; text-align: left; }
 .prose-article th { font-family: var(--font-mono); text-transform: uppercase; font-size: .72rem; letter-spacing: .05em; color: var(--amber-2); background: var(--bg-2); }
+.prose-article .table-scroll th:first-child, .prose-article .table-scroll td:first-child { border-left: 0; }
+.prose-article .table-scroll th:last-child, .prose-article .table-scroll td:last-child { border-right: 0; }
+.prose-article .table-scroll thead:first-child tr:first-child th { border-top: 0; }
+.prose-article .table-scroll tbody:last-child tr:last-child td { border-bottom: 0; }
+.prose-article blockquote.markdown-alert {
+  --alert-color: var(--amber);
+  border: 1px solid color-mix(in srgb, var(--alert-color) 45%, var(--border));
+  border-left: 3px solid var(--alert-color);
+  background: color-mix(in srgb, var(--alert-color) 8%, var(--panel));
+  padding: .75rem 1rem;
+}
+.prose-article .markdown-alert-title {
+  margin: 0 0 .35rem;
+  color: var(--alert-color);
+  font-family: var(--font-mono);
+  font-size: .74rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.prose-article .markdown-alert > :last-child { margin-bottom: 0; }
+.prose-article .markdown-alert-note { --alert-color: #60a5fa; }
+.prose-article .markdown-alert-tip { --alert-color: var(--green); }
+.prose-article .markdown-alert-important { --alert-color: #c084fc; }
+.prose-article .markdown-alert-warning { --alert-color: var(--amber); }
+.prose-article .markdown-alert-caution { --alert-color: #f87171; }
 .heading-anchor { color: var(--border-2); text-decoration: none; margin-left: .4rem; font-weight: 400; opacity: 0; transition: opacity .12s; }
 .prose-article h2:hover .heading-anchor, .prose-article h3:hover .heading-anchor { opacity: 1; }
 

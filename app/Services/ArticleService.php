@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Markdown\GithubAlertExtension;
+use App\Markdown\MarkdownNormalizer;
+use Illuminate\Support\Str;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
@@ -19,28 +22,44 @@ use Symfony\Component\Yaml\Yaml;
 class ArticleService
 {
     private string $root;
+
     private MarkdownConverter $converter;
 
-    public function __construct(private ArticleAuthorService $authors)
-    {
+    public function __construct(
+        private ArticleAuthorService $authors,
+        private MarkdownNormalizer $markdown,
+    ) {
         $this->root = rtrim((string) config('hondabase.content_path'), '/');
 
         $env = new Environment([
-            'html_input'         => 'escape',
+            'html_input' => 'escape',
             'allow_unsafe_links' => false,
-            'heading_permalink'  => [
-                'html_class'        => 'heading-anchor',
-                'id_prefix'         => '',
-                'fragment_prefix'   => '',
-                'insert'            => 'after',
+            'heading_permalink' => [
+                'html_class' => 'heading-anchor',
+                'id_prefix' => '',
+                'fragment_prefix' => '',
+                'insert' => 'after',
                 'min_heading_level' => 2,
-                'symbol'            => '#',
-                'aria_hidden'       => true,
+                'symbol' => '#',
+                'aria_hidden' => true,
+            ],
+            'table' => [
+                'wrap' => [
+                    'enabled' => true,
+                    'tag' => 'div',
+                    'attributes' => [
+                        'class' => 'table-scroll',
+                        'role' => 'region',
+                        'tabindex' => '0',
+                        'aria-label' => 'Scrollable table',
+                    ],
+                ],
             ],
         ]);
-        $env->addExtension(new CommonMarkCoreExtension());
-        $env->addExtension(new GithubFlavoredMarkdownExtension());
-        $env->addExtension(new HeadingPermalinkExtension());
+        $env->addExtension(new CommonMarkCoreExtension);
+        $env->addExtension(new GithubFlavoredMarkdownExtension);
+        $env->addExtension(new HeadingPermalinkExtension);
+        $env->addExtension(new GithubAlertExtension);
         $this->converter = new MarkdownConverter($env);
     }
 
@@ -58,19 +77,20 @@ class ArticleService
     public function categories(string $type): array
     {
         $dir = "{$this->root}/{$type}";
-        if (!$this->safe($type) || !is_dir($dir)) {
+        if (! $this->safe($type) || ! is_dir($dir)) {
             return [];
         }
         $out = [];
         foreach (glob("{$dir}/*", GLOB_ONLYDIR) as $d) {
             $slug = basename($d);
             $out[] = [
-                'slug'  => $slug,
+                'slug' => $slug,
                 'label' => $this->humanize($slug),
                 'count' => count($this->articlesIn($type, $slug)),
             ];
         }
         usort($out, fn ($a, $b) => strcasecmp($a['label'], $b['label']));
+
         return $out;
     }
 
@@ -78,7 +98,7 @@ class ArticleService
     public function articlesIn(string $type, string $category): array
     {
         $dir = "{$this->root}/{$type}/{$category}";
-        if (!$this->safe($type, $category) || !is_dir($dir)) {
+        if (! $this->safe($type, $category) || ! is_dir($dir)) {
             return [];
         }
         $out = [];
@@ -90,21 +110,22 @@ class ArticleService
             }
             [$fm, $body] = $this->splitFrontMatter((string) file_get_contents($file));
             $out[] = [
-                'slug'  => $slug,
+                'slug' => $slug,
                 'title' => $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug),
             ];
         }
         usort($out, fn ($a, $b) => strcasecmp($a['title'], $b['title']));
+
         return $out;
     }
 
     /** Full rendered article, or null if not found. */
     public function find(string $type, string $category, string $slug): ?array
     {
-        if (!$this->safe($type, $category, $slug)) {
+        if (! $this->safe($type, $category, $slug)) {
             return null;
         }
-        $dir  = "{$this->root}/{$type}/{$category}/{$slug}";
+        $dir = "{$this->root}/{$type}/{$category}/{$slug}";
         $file = $this->mdFile($dir, $slug);
         if ($file === null) {
             return null;
@@ -112,17 +133,17 @@ class ArticleService
 
         [$fm, $body] = $this->splitFrontMatter((string) file_get_contents($file));
         $title = $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug);
-        $body  = $this->stripFirstH1($body);
+        $body = $this->stripFirstH1($body);
 
         $assetBase = "/{$type}/{$category}/{$slug}";
-        $html      = $this->renderBody($body, $assetBase);
-        $rel       = "{$type}/{$category}/{$slug}/" . basename($file);
+        $html = $this->renderBody($body, $assetBase);
+        $rel = "{$type}/{$category}/{$slug}/".basename($file);
 
         $attachments = [];
         $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
         $md_extensions = ['md', 'mdx', 'gitkeep'];
         foreach (glob("{$dir}/*") as $file_path) {
-            if (!is_file($file_path)) {
+            if (! is_file($file_path)) {
                 continue;
             }
             $filename = basename($file_path);
@@ -135,33 +156,34 @@ class ArticleService
             }
             $attachments[] = [
                 'name' => $filename,
-                'url'  => "/{$type}/{$category}/{$slug}/{$filename}",
+                'url' => "/{$type}/{$category}/{$slug}/{$filename}",
                 'size' => filesize($file_path),
                 'hash' => hash_file('sha256', $file_path),
-                'ext'  => strtoupper($ext)
+                'ext' => strtoupper($ext),
             ];
         }
         usort($attachments, fn ($a, $b) => strcasecmp($a['name'], $b['name']));
 
         return [
-            'type'           => $type,
-            'category'       => $category,
-            'slug'           => $slug,
-            'title'          => $title,
-            'summary'        => $fm['summary'] ?? null,
-            'html'           => $html,
-            'type_label'     => $this->humanize($type),
+            'type' => $type,
+            'category' => $category,
+            'slug' => $slug,
+            'title' => $title,
+            'summary' => $fm['summary'] ?? null,
+            'seo_description' => $this->seoDescription($fm['summary'] ?? null, $html, $title),
+            'html' => $html,
+            'type_label' => $this->humanize($type),
             'category_label' => $this->humanize($category),
-            'updated'        => $this->lastUpdated($rel),
-            'tags'           => $this->asList($fm['tags'] ?? []),
-            'complexity'     => $fm['complexity'] ?? null,
-            'applies_to'     => is_array($fm['applies_to'] ?? null) ? $fm['applies_to'] : null,
-            'meta'           => $fm,
-            'sources'        => $this->sources($fm['sources'] ?? []),
-            'authors'        => $this->authors->forArticle($rel),
-            'edit_url'       => 'https://github.com/' . config('hondabase.content_repo') . '/blob/main/' . $rel,
-            'attachments'    => $attachments,
-            'repo_path'      => $rel,
+            'updated' => $this->lastUpdated($rel),
+            'tags' => $this->asList($fm['tags'] ?? []),
+            'complexity' => $fm['complexity'] ?? null,
+            'applies_to' => is_array($fm['applies_to'] ?? null) ? $fm['applies_to'] : null,
+            'meta' => $fm,
+            'sources' => $this->sources($fm['sources'] ?? []),
+            'authors' => $this->authors->forArticle($rel),
+            'edit_url' => 'https://github.com/'.config('hondabase.content_repo').'/blob/main/'.$rel,
+            'attachments' => $attachments,
+            'repo_path' => $rel,
         ];
     }
 
@@ -173,10 +195,10 @@ class ArticleService
      */
     public function rawMarkdown(string $type, string $category, string $slug): ?array
     {
-        if (!$this->safe($type, $category, $slug)) {
+        if (! $this->safe($type, $category, $slug)) {
             return null;
         }
-        $dir  = "{$this->root}/{$type}/{$category}/{$slug}";
+        $dir = "{$this->root}/{$type}/{$category}/{$slug}";
         $file = $this->mdFile($dir, $slug);
         if ($file === null) {
             return null;
@@ -185,10 +207,10 @@ class ArticleService
         [$fm, $body] = $this->splitFrontMatter($raw);
 
         return [
-            'repo_path' => "{$type}/{$category}/{$slug}/" . basename($file),
-            'content'   => $raw,
-            'sha'       => $this->headSha(),
-            'title'     => $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug),
+            'repo_path' => "{$type}/{$category}/{$slug}/".basename($file),
+            'content' => $raw,
+            'sha' => $this->headSha(),
+            'title' => $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug),
         ];
     }
 
@@ -201,12 +223,12 @@ class ArticleService
     {
         [$fm, $body] = $this->splitFrontMatter($raw);
         $title = $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug);
-        $body  = $this->stripFirstH1($body);
+        $body = $this->stripFirstH1($body);
         $assetBase = $this->safe($type, $category, $slug) ? "/{$type}/{$category}/{$slug}" : '';
 
         return [
             'title' => $title,
-            'html'  => $this->renderBody($body, $assetBase),
+            'html' => $this->renderBody($body, $assetBase),
         ];
     }
 
@@ -214,10 +236,11 @@ class ArticleService
     public function assetPath(string $type, string $category, string $slug, string $file): ?string
     {
         $file = basename($file);
-        if (!$this->safe($type, $category, $slug) || $file === '' || str_contains($file, '..')) {
+        if (! $this->safe($type, $category, $slug) || $file === '' || str_contains($file, '..')) {
             return null;
         }
         $path = "{$this->root}/{$type}/{$category}/{$slug}/{$file}";
+
         return is_file($path) ? $path : null;
     }
 
@@ -227,7 +250,7 @@ class ArticleService
         $rows = [];
         foreach ($this->types() as $type) {
             $tdir = "{$this->root}/{$type}";
-            if (!is_dir($tdir)) {
+            if (! is_dir($tdir)) {
                 continue;
             }
             foreach (glob("{$tdir}/*", GLOB_ONLYDIR) as $cdir) {
@@ -240,16 +263,18 @@ class ArticleService
                 }
             }
         }
+
         return $rows;
     }
 
     /** Index row for a single article (same shape as scan()), or null if missing. */
     public function scanOne(string $type, string $category, string $slug): ?array
     {
-        if (!$this->safe($type, $category, $slug)) {
+        if (! $this->safe($type, $category, $slug)) {
             return null;
         }
         $adir = "{$this->root}/{$type}/{$category}/{$slug}";
+
         return is_dir($adir) ? $this->scanRow($type, $category, $adir) : null;
     }
 
@@ -262,19 +287,19 @@ class ArticleService
             return null;
         }
         [$fm, $body] = $this->splitFrontMatter((string) file_get_contents($file));
-        $rel = "{$type}/{$category}/{$slug}/" . basename($file);
+        $rel = "{$type}/{$category}/{$slug}/".basename($file);
 
         return [
-            'type'       => $type,
-            'category'   => $category,
-            'slug'       => $slug,
-            'title'      => $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug),
-            'summary'    => $fm['summary'] ?? null,
+            'type' => $type,
+            'category' => $category,
+            'slug' => $slug,
+            'title' => $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug),
+            'summary' => $fm['summary'] ?? null,
             'complexity' => $fm['complexity'] ?? null,
-            'body_text'  => trim($this->stripFirstH1($body)),
-            'repo_path'  => $rel,
-            'updated'    => $this->lastUpdated($rel),
-            'facets'     => $this->facetsFor($fm, $type, $category),
+            'body_text' => trim($this->markdown->normalize($this->stripFirstH1($body))),
+            'repo_path' => $rel,
+            'updated' => $this->lastUpdated($rel),
+            'facets' => $this->facetsFor($fm, $type, $category),
         ];
     }
 
@@ -289,38 +314,39 @@ class ArticleService
             ['category', $category, $this->humanize($category)],
         ];
         foreach ($this->asList($fm['tags'] ?? []) as $t) {
-            $f[] = ['tag', \Illuminate\Support\Str::slug($t) ?: $t, $t];
+            $f[] = ['tag', Str::slug($t) ?: $t, $t];
         }
-        $at      = is_array($fm['applies_to'] ?? null) ? $fm['applies_to'] : [];
+        $at = is_array($fm['applies_to'] ?? null) ? $fm['applies_to'] : [];
         $kindMap = ['engines' => 'engine', 'ecus' => 'ecu', 'models' => 'model', 'trims' => 'trim', 'systems' => 'system', 'years' => 'year'];
         foreach ($at as $key => $vals) {
             $kind = $kindMap[$key] ?? (string) $key;
             foreach ((array) $vals as $v) {
-                if (!is_scalar($v) || trim((string) $v) === '') {
+                if (! is_scalar($v) || trim((string) $v) === '') {
                     continue;
                 }
                 $v = trim((string) $v);
                 if ($kind === 'obd') {
-                    $f[] = ['obd', $v, 'OBD' . $v];
-                } elseif ($kind === 'engine' && !preg_match('/\d/', $v)) {
-                    $lbl = strtoupper(preg_replace('/[-_ ]?series$/i', '', strtolower($v))) . '-Series';
-                    $f[] = ['engine', \Illuminate\Support\Str::slug($lbl), $lbl];
+                    $f[] = ['obd', $v, 'OBD'.$v];
+                } elseif ($kind === 'engine' && ! preg_match('/\d/', $v)) {
+                    $lbl = strtoupper(preg_replace('/[-_ ]?series$/i', '', strtolower($v))).'-Series';
+                    $f[] = ['engine', Str::slug($lbl), $lbl];
                 } elseif ($kind === 'scope') {
-                    $f[] = ['scope', \Illuminate\Support\Str::slug($v), ucwords(str_replace('-', ' ', $v))];
+                    $f[] = ['scope', Str::slug($v), ucwords(str_replace('-', ' ', $v))];
                 } else {
-                    $f[] = [$kind, \Illuminate\Support\Str::slug($v) ?: strtolower($v), $kind === 'brand' ? ucfirst($v) : $v];
+                    $f[] = [$kind, Str::slug($v) ?: strtolower($v), $kind === 'brand' ? ucfirst($v) : $v];
                 }
             }
         }
         $seen = [];
-        $out  = [];
+        $out = [];
         foreach ($f as $row) {
-            $k = $row[0] . '|' . $row[1];
-            if (!isset($seen[$k])) {
+            $k = $row[0].'|'.$row[1];
+            if (! isset($seen[$k])) {
                 $seen[$k] = true;
                 $out[] = $row;
             }
         }
+
         return $out;
     }
 
@@ -336,6 +362,7 @@ class ArticleService
     private function renderBody(string $body, string $assetBase): string
     {
         $body = $this->expandPartials($body);
+        $body = $this->markdown->normalize($body);
 
         $widgets = [];
         $body = preg_replace_callback(
@@ -345,8 +372,9 @@ class ArticleService
                 if ($html === null) {
                     return $m[0];
                 }
-                $tok = 'xWIDGET' . count($widgets) . 'x';
+                $tok = 'xWIDGET'.count($widgets).'x';
                 $widgets[$tok] = $html;
+
                 return "\n\n{$tok}\n\n";
             },
             $body
@@ -361,6 +389,7 @@ class ArticleService
             $html = $this->rewriteArticleLinks($html, $assetBase);
             $html = $this->rewriteAttachmentLinks($html, $assetBase);
         }
+
         return $html;
     }
 
@@ -373,14 +402,16 @@ class ArticleService
      */
     private function expandPartials(string $body, int $depth = 0): string
     {
-        if ($depth > 4 || !str_contains($body, '{{>')) {
+        if ($depth > 4 || ! str_contains($body, '{{>')) {
             return $body;
         }
+
         return preg_replace_callback('/\{\{>\s*([\w-]+)\s*\}\}/', function ($m) use ($depth) {
             $file = "{$this->root}/_partials/{$m[1]}.md";
-            if (!$this->safe($m[1]) || !is_file($file)) {
+            if (! $this->safe($m[1]) || ! is_file($file)) {
                 return $m[0];
             }
+
             return $this->expandPartials((string) file_get_contents($file), $depth + 1);
         }, $body);
     }
@@ -394,6 +425,7 @@ class ArticleService
     private function rewriteArticleLinks(string $html, string $assetBase): string
     {
         $baseDir = trim($assetBase, '/'); // e.g. cars/electronics/tps-sensor
+
         return preg_replace_callback('/<a\b[^>]*\bhref="([^"]+)"/i', function ($m) use ($baseDir) {
             $url = $m[1];
             if (
@@ -406,19 +438,20 @@ class ArticleService
 
             [$path, $frag] = array_pad(explode('#', $url, 2), 2, null);
             $path = preg_replace('/\?.*$/', '', (string) $path);
-            if (!str_ends_with(strtolower($path), '.md')) {
+            if (! str_ends_with(strtolower($path), '.md')) {
                 return $m[0];
             }
 
             $resolved = $this->resolvePath($baseDir, $path);
             // Only rewrite when it lands on a real article bundle: type/category/slug/<file>.md.
-            if (!preg_match('#^([^/]+)/([^/]+)/([^/]+)/[^/]+\.md$#i', $resolved, $p)
-                || !in_array($p[1], $this->types(), true)) {
+            if (! preg_match('#^([^/]+)/([^/]+)/([^/]+)/[^/]+\.md$#i', $resolved, $p)
+                || ! in_array($p[1], $this->types(), true)) {
                 return $m[0];
             }
 
-            $route = '/' . $p[1] . '/' . $p[2] . '/' . $p[3] . ($frag !== null ? '#' . $frag : '');
-            return str_replace('href="' . $url . '"', 'href="' . $route . '"', $m[0]);
+            $route = '/'.$p[1].'/'.$p[2].'/'.$p[3].($frag !== null ? '#'.$frag : '');
+
+            return str_replace('href="'.$url.'"', 'href="'.$route.'"', $m[0]);
         }, $html);
     }
 
@@ -436,6 +469,7 @@ class ArticleService
                 $segments[] = $seg;
             }
         }
+
         return implode('/', $segments);
     }
 
@@ -454,8 +488,9 @@ class ArticleService
     /** Current HEAD commit sha of the content repo (for edit conflict awareness), or null. */
     private function headSha(): ?string
     {
-        $cmd = 'git -C ' . escapeshellarg($this->root) . ' rev-parse HEAD 2>/dev/null';
+        $cmd = 'git -C '.escapeshellarg($this->root).' rev-parse HEAD 2>/dev/null';
         $out = trim((string) @shell_exec($cmd));
+
         return $out !== '' ? $out : null;
     }
 
@@ -467,13 +502,14 @@ class ArticleService
             }
         }
         $md = glob("{$dir}/*.md");
+
         return $md[0] ?? null;
     }
 
     /** Returns [frontmatterArray, bodyWithoutFrontmatter]. */
     private function splitFrontMatter(string $raw): array
     {
-        if (!preg_match('/^---\s*?\r?\n(.*?)\r?\n---\s*?\r?\n(.*)$/s', $raw, $m)) {
+        if (! preg_match('/^---\s*?\r?\n(.*?)\r?\n---\s*?\r?\n(.*)$/s', $raw, $m)) {
             return [[], $raw];
         }
         try {
@@ -481,6 +517,7 @@ class ArticleService
         } catch (\Throwable $e) {
             $fm = [];
         }
+
         return [is_array($fm) ? $fm : [], $m[2]];
     }
 
@@ -502,6 +539,7 @@ class ArticleService
                 $attrs[$a[1]] = $a[2];
             }
         }
+
         return $attrs;
     }
 
@@ -513,8 +551,9 @@ class ArticleService
             if (preg_match('#^(https?:)?//#i', $url) || str_starts_with($url, '/') || str_starts_with($url, 'data:')) {
                 return $m[0];
             }
-            $new = $assetBase . '/' . ltrim(preg_replace('#^\./#', '', $url), '/');
-            return str_replace('src="' . $url . '"', 'src="' . $new . '"', $m[0]);
+            $new = $assetBase.'/'.ltrim(preg_replace('#^\./#', '', $url), '/');
+
+            return str_replace('src="'.$url.'"', 'src="'.$new.'"', $m[0]);
         }, $html);
     }
 
@@ -533,20 +572,22 @@ class ArticleService
 
             $path = preg_replace('/[?#].*$/', '', $url);
             $path = ltrim(preg_replace('#^\./#', '', $path), '/');
-            if (str_contains($path, '/') || !preg_match('/\.[A-Za-z0-9]+$/', $path)) {
+            if (str_contains($path, '/') || ! preg_match('/\.[A-Za-z0-9]+$/', $path)) {
                 return $m[0];
             }
 
             $suffix = substr($url, strlen(preg_replace('/[?#].*$/', '', $url)));
-            $new = $assetBase . '/' . $path . $suffix;
-            return str_replace('href="' . $url . '"', 'href="' . $new . '"', $m[0]);
+            $new = $assetBase.'/'.$path.$suffix;
+
+            return str_replace('href="'.$url.'"', 'href="'.$new.'"', $m[0]);
         }, $html);
     }
 
     private function lastUpdated(string $relPath): ?string
     {
-        $cmd = 'git -C ' . escapeshellarg($this->root) . ' log -1 --format=%cI -- ' . escapeshellarg($relPath) . ' 2>/dev/null';
+        $cmd = 'git -C '.escapeshellarg($this->root).' log -1 --format=%cI -- '.escapeshellarg($relPath).' 2>/dev/null';
         $out = trim((string) @shell_exec($cmd));
+
         return $out !== '' ? $out : null;
     }
 
@@ -555,12 +596,13 @@ class ArticleService
         if (is_array($v)) {
             return array_values(array_filter(array_map('strval', $v), fn ($s) => $s !== ''));
         }
+
         return is_string($v) && $v !== '' ? [$v] : [];
     }
 
     private function sources(mixed $sources): array
     {
-        if (!is_array($sources)) {
+        if (! is_array($sources)) {
             return [];
         }
 
@@ -577,13 +619,29 @@ class ArticleService
         return ucwords(str_replace(['-', '_'], ' ', $slug));
     }
 
+    private function seoDescription(mixed $summary, string $html, string $title): string
+    {
+        $text = is_scalar($summary) ? trim((string) $summary) : '';
+        if ($text === '') {
+            $text = trim(html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        }
+        if ($text === '') {
+            $text = "{$title} technical reference from Hondabase.";
+        }
+
+        $text = preg_replace('/\s+/u', ' ', $text);
+
+        return Str::limit($text, 157, '...');
+    }
+
     private function safe(string ...$segments): bool
     {
         foreach ($segments as $s) {
-            if ($s === '' || str_contains($s, '..') || !preg_match('/^[A-Za-z0-9._-]+$/', $s)) {
+            if ($s === '' || str_contains($s, '..') || ! preg_match('/^[A-Za-z0-9._-]+$/', $s)) {
                 return false;
             }
         }
+
         return true;
     }
 }
