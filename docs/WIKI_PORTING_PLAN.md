@@ -1,15 +1,27 @@
 # Hondatabase - Wiki Porting Assessment & Progress Plan
 
-This plan assesses all **513 topics** in the `library` web of the `pgmfi` wiki archive database. It categorizes them, identifies valuable articles vs stubs, and establishes a clear path to complete the porting process.
+This plan assessed all **513 topics** in the `library` web of the `pgmfi` wiki archive database. It categorized them, identified valuable articles vs stubs, and established the path to complete the porting process.
 
-## 1. Overall Progress Summary
+> **STATUS: PORTING COMPLETE (2026-06-15).** The content port is done. The per-category backlog
+> tables in sections 2-3 below are a **historical record** of the original assessment (frozen at
+> "Batch 13"); they were never updated through the final bulk-port commits and **do not reflect
+> reality**. See the live counts here and in `docs/PROGRESS.md`. The one outstanding content task is
+> **re-categorization** (see section 5), not more porting.
 
-| Status | Count | Percentage | Description |
-| :--- | :---: | :---: | :--- |
-| **Completed** | 49 | 9.6% | Articles ported, cleaned, and merged to main |
-| **Pending Porting** | 376 | 73.3% | Relevant content articles remaining to be ported |
-| **Stubs / Ignored** | 88 | 17.2% | Wiki pages with < 100 characters of text (empty templates, personal placeholders) |
-| **Total** | **513** | **100%** | All topics in `library` web |
+## 1. Overall Progress Summary (current, 2026-06-15)
+
+| Status | Count | Description |
+| :--- | :---: | :--- |
+| **Ported to articles** | **496** | English article bundles on disk under `content/cars/` (`hondabase:reindex` → 496 `en` index rows) |
+| ↳ credited to the pgmfi wiki | 493 | articles carrying a `sources: pgmfi.org wiki` credit (the rest are freshly authored: wideband guide, injector-offsets DB, carousel docs) |
+| **Translated (pt-PT)** | **496** | Portuguese mirror bundles under `content/pt/cars/` (496 `pt` index rows; en==pt after the duplicate-slug cleanup) |
+| **Skipped** | ~20 | of the 513 library topics: empty stubs, personal placeholders, and duplicates consolidated during porting (e.g. the OBD0 conversion-formula pages) |
+
+The closing commits in the **content** repo (`hondabase/articles`) were `7e2f6af "Port all remaining
+valuable PGMFI wiki articles to Hondabase"` and `2a4a9db "Port short technical stub articles and
+formulas"`, which superseded the batch-by-batch ledger below.
+
+## 2. Category Breakdown (HISTORICAL - frozen at Batch 13, does not reflect the completed port)
 
 ## 2. Category Breakdown
 
@@ -186,3 +198,67 @@ Below are the top pending articles in each category, sorted by length (approxima
 3. **Phase 3: Diagnostics & Troubleshooting**: Standardize error code guides and symptom-based checklists.
 4. **Phase 4: Mechanical & Drivetrain**: Port mechanical guides like RT4WD details, cams, and mechanical engine basics.
 5. **Phase 5: Cleaning Stubs**: Review the 88 stubs and decide whether to delete them or write thin helper summaries.
+
+---
+
+## 5. Re-categorization pass (DRAFT proposal, 2026-06-15)
+
+**Problem.** The port is content-complete, but **495 of 496 articles landed in a single flat
+`cars/electronics/` folder** (only `cars/engine` has one article). Because the category is part of
+the URL (`/cars/{category}/{slug}`) and drives the `category` facet/browse tree, the whole
+knowledgebase currently reads as one giant "electronics" bucket. The remaining content work is to
+split this into the real taxonomy the assessment above already defined.
+
+**Proposed `cars/` taxonomy** (derived from the section-2 categories + the actual tag vocabulary):
+
+| Category | Scope | Primary tags |
+| :--- | :--- | :--- |
+| `cars/ecu` | ECU hardware, board components, chip readers, RAM/XRAM maps, comms | `ecu`, `hardware`, `microcontroller`, `serial` |
+| `cars/rom` | ROM editing, chipping, definition maps | `rom`, `chipping` |
+| `cars/tuning` | Fuel/ignition map tuning, datalogging, VTEC tuning | `tuning`, `maps`, `datalogging` |
+| `cars/sensors` | Sensors & solenoids (TPS, MAP, O2, VSS, knock, VTEC solenoid) | `sensors`, `vtec`, `knock` |
+| `cars/wiring` | Harness pinouts, OBD conversions, swaps | `wiring`, `conversion`, `pinout`, `swap` |
+| `cars/diagnostics` | Trouble codes, CEL, symptom checklists | `diagnostics`, `troubleshooting`, error codes |
+| `cars/fueling` | Injectors, fuel system | `fueling`, `injectors`, `fuel` |
+| `cars/engine` | Engine & drivetrain mechanical | `engine`, `mechanical` |
+| `cars/reference` | Glossary, history, general info, off-topic wiki pages (e.g. `wabi-sabi`) | `reference`, `education`, `history` |
+
+**Mechanical assignment rule (no per-article hand-sorting):** each article already carries
+frontmatter `tags`; assign its category by the **first match** in a priority-ordered tag→category
+table. A quick pass over the current files produces this *indicative* distribution (numbers are
+approximate - the final rule + a short manual review of the fallbacks will shift them):
+
+```
+~173 cars/tuning     ~158 cars/sensors    ~79 cars/wiring     ~36 cars/ecu
+ ~28 cars/reference   ~11 cars/rom          ~9 cars/diagnostics  ~2 cars/fueling
+```
+
+Only ~7 articles have no usable tag and need a manual category (they fall back to `reference`).
+
+**Hard constraints (why this is a migration, not a bulk `mv`):**
+
+1. **URLs change** → every moved article needs a **301 redirect** from `/cars/electronics/{slug}`
+   to its new path. There is no redirect mechanism yet; this pass must introduce one
+   (`content/_data/redirects.yaml` + a redirect route/middleware, the deferred item from P2/P3).
+2. **Both locale trees move in lockstep** - `content/cars/...` **and** `content/pt/cars/...` (plus
+   each bundle's co-located assets) move together, or translations 404.
+3. **Internal links** - relative `.md` cross-links re-resolve fine, but any **absolute**
+   `/cars/electronics/...` link in body text must be rewritten to the new category.
+4. **Index + facets rebuild** - `category` facets derive from the path, so a full
+   `hondabase:reindex` follows the move (forkability invariant: the DB is derived).
+5. **Slug collisions** - slugs are currently globally unique (one folder); confirm none collide once
+   split across categories before moving.
+
+**Proposed execution (safe, reviewable):**
+- Build a one-off `hondabase:recategorize` artisan command: reads the tag→category map, computes the
+  full move plan, and (with `--dry-run` first) `git mv`s each bundle in **both** locale trees, emits
+  the `redirects.yaml` entries, and rewrites absolute internal links. Idempotent + reversible.
+- Run on a branch in `hondabase/articles`, eyeball the dry-run plan + the ~7 fallbacks, then commit
+  via the normal bot/deploy-key path. Reindex. Ship the redirect route in the same change so old
+  links keep working.
+
+**Open decisions for the owner (need your call before building the command):**
+- Final category names + whether to keep an `electronics` umbrella or drop it entirely (the draft
+  drops it in favour of `ecu`/`rom`/`sensors`/`wiring`).
+- Redirect mechanism: a generated `redirects.yaml` consumed by a route, vs nginx-level rewrites.
+- Whether off-topic wiki pages (`wabi-sabi`, etc.) move to `cars/reference` or get pruned instead.

@@ -300,7 +300,19 @@ Living log of the Hondabase rebuild. Plan of record:
   styles them (CSS 79.7 → 84.8 kB). Remaining P7: convert the last three legacy sheets
   (`article`/`explorer`/`me`.css) + drop the var-alias block, `STYLE_GUIDE.md` (tokens as `@theme`),
   `AGENTS.md`, hardening, CI.
-- [~] **P8 - Later: full wiki port, pgmfi subdomain, i18n** *(i18n started 2026-06-15)*:
+- [~] **P8 - Later: full wiki port, pgmfi subdomain, i18n** *(wiki port done; i18n done incl. translation authoring; pgmfi subdomain pending)*:
+  **Full wiki port DONE (recorded 2026-06-15):** the earlier "batch" notes below understated reality.
+  The content repo's closing commits (`7e2f6af "Port all remaining valuable PGMFI wiki articles"`,
+  `2a4a9db "Port short technical stub articles and formulas"`) finished it: **496 English article
+  bundles** on disk (493 credited to the pgmfi wiki), the ~20 unported library topics being stubs,
+  placeholders, or duplicates consolidated during porting. `docs/WIKI_PORTING_PLAN.md` was stale
+  (frozen at "Batch 13", still reading 49/513); its section 1 is now corrected and its batch tables
+  marked historical. **Known content debt:** all 495 articles sit in a flat `cars/electronics/`
+  folder (only 1 in `cars/engine`) - a **re-categorization pass** into the real taxonomy is the one
+  remaining content task, drafted as `WIKI_PORTING_PLAN.md` section 5 (tag-driven assignment + a
+  `redirects.yaml` mechanism for the URL changes; awaiting owner sign-off on category names). A
+  stray duplicate pt bundle (`obd0-pm6pm7ram-locations`, a hyphen-slug copy of
+  `obd0pm6pm7ram-locations`) was removed so en==pt==496 index rows.
   **Scope decided (2026-06-15, user):** full **UI + content** i18n; first target locale is
   **European Portuguese (`pt`, hreflang `pt-PT`)** alongside English (the default + fallback).
   **i18n foundation DONE (2026-06-15):** supported-locale map in `config/hondabase.php`
@@ -430,6 +442,14 @@ Living log of the Hondabase rebuild. Plan of record:
   Visual design preserved, not redesigned.
 
 ## Changelog
+- **2026-06-15** - **Wiki-port status reconciled + re-categorization drafted.** Recorded that the
+  full wiki port is complete (496 EN bundles, 493 wiki-credited; ~20 library topics intentionally
+  skipped) - the old per-batch ledger in `WIKI_PORTING_PLAN.md` was stale and is now corrected
+  (section 1 rewritten, batch tables marked historical). Removed a stray duplicate pt bundle so
+  en==pt==496 index rows. Drafted the **re-categorization pass** (`WIKI_PORTING_PLAN.md` section 5):
+  proposed `cars/` taxonomy, a tag-driven assignment rule with an indicative distribution, the
+  migration constraints (301 redirects, both locale trees, link rewrites, reindex), and a
+  reviewable `hondabase:recategorize` execution plan - awaiting owner sign-off on category names.
 - **2026-06-15** - **P8 translation authoring (Phase C).** Translations are now authored through the
   TipTap editor + the same review/commit pipeline. Added `article_revisions.locale`; made
   `ArticleService::rawMarkdown` locale-aware (English seed for a new translation, empty on-disk base);
