@@ -6,6 +6,7 @@ use App\Jobs\CommitArticle;
 use App\Livewire\Concerns\EditsFrontmatter;
 use App\Livewire\Concerns\ManagesArticleImages;
 use App\Markdown\CarouselParser;
+use App\Markdown\WirelistParser;
 use App\Models\ArticleRevision;
 use App\Services\ArticleService;
 use App\Support\ArticleDocument;
@@ -100,6 +101,11 @@ class ArticleEditor extends Component
         ], [], ['bodyMarkdown' => 'article', 'note' => 'note']);
 
         if ($error = app(CarouselParser::class)->errors($this->bodyMarkdown)[0] ?? null) {
+            $this->addError('bodyMarkdown', $error);
+
+            return null;
+        }
+        if ($error = app(WirelistParser::class)->errors($this->bodyMarkdown)[0] ?? null) {
             $this->addError('bodyMarkdown', $error);
 
             return null;

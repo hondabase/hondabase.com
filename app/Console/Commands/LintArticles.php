@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Markdown\CarouselParser;
 use App\Markdown\MarkdownNormalizer;
+use App\Markdown\WirelistParser;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -34,6 +35,7 @@ class LintArticles extends Command
         $checkedCount = 0;
         $normalizer = app(MarkdownNormalizer::class);
         $carousels = app(CarouselParser::class);
+        $wirelists = app(WirelistParser::class);
 
         foreach ($types as $type) {
             $typePath = "{$contentPath}/{$type}";
@@ -211,6 +213,9 @@ class LintArticles extends Command
 
                     foreach ($carousels->errors($body) as $carouselError) {
                         $errors[] = "[{$type}/{$category}/{$slug}] {$carouselError}";
+                    }
+                    foreach ($wirelists->errors($body) as $wirelistError) {
+                        $errors[] = "[{$type}/{$category}/{$slug}] {$wirelistError}";
                     }
 
                     $repoPath = "{$type}/{$category}/{$slug}/".basename($mainFile);

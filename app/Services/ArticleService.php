@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Markdown\CarouselParser;
 use App\Markdown\GithubAlertExtension;
 use App\Markdown\MarkdownNormalizer;
+use App\Markdown\WirelistParser;
 use Illuminate\Support\Str;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
@@ -30,6 +31,7 @@ class ArticleService
         private ArticleAuthorService $authors,
         private CarouselParser $carousels,
         private MarkdownNormalizer $markdown,
+        private WirelistParser $wirelists,
     ) {
         $this->root = rtrim((string) config('hondabase.content_path'), '/');
 
@@ -397,6 +399,14 @@ class ArticleService
             return "\n\n{$tok}\n\n";
         });
 
+        $wirelists = [];
+        $body = $this->wirelists->replace($body, function (array $wirelist) use (&$wirelists) {
+            $tok = 'xWIRELIST'.count($wirelists).'x';
+            $wirelists[$tok] = view('partials.article-wirelist', compact('wirelist'))->render();
+
+            return "\n\n{$tok}\n\n";
+        });
+
         $widgets = [];
         $body = preg_replace_callback(
             '/^:::[ \t]*widget[ \t]+([\w-]+)[ \t]*(.*?)[ \t]*:::[ \t]*$/m',
@@ -419,6 +429,9 @@ class ArticleService
         }
         foreach ($carousels as $tok => $carouselHtml) {
             $html = str_replace(["<p>{$tok}</p>", $tok], $carouselHtml, $html);
+        }
+        foreach ($wirelists as $tok => $wirelistHtml) {
+            $html = str_replace(["<p>{$tok}</p>", $tok], $wirelistHtml, $html);
         }
         $html = $this->repairEmptyLinks($html);
         $html = $this->rewriteMalformedArchiveLinks($html);

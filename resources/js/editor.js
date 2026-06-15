@@ -105,6 +105,25 @@ document.addEventListener('alpine:init', () => {
             }).run();
             this.version++;
         },
+        wirelist() {
+            this.editor?.chain().focus().insertContent({
+                type: 'articleWirelist',
+                attrs: {
+                    wirelist: {
+                        title: 'ECU connection wirelist',
+                        variants: [{
+                            id: 'ecu-family',
+                            label: 'ECU family',
+                            groups: [{
+                                label: 'Component',
+                                rows: [{ pin: 'Pin 1', signal: 'Signal', path: 'Connection path', note: '' }],
+                            }],
+                        }],
+                    },
+                },
+            }).run();
+            this.version++;
+        },
         // active-state probe; reads `version` so the binding tracks it as a reactive dependency
         is(name, attrs) {
             void this.version;

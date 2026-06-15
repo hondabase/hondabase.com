@@ -510,4 +510,9 @@ Living log of the Hondabase rebuild. Plan of record:
   (`RevisionReview::rebase()`) or reject, and the history view badges them. Verified in an
   isolated repo: stale-base edit parks untouched, clean edit commits, re-based conflict commits.
 
+- **2026-06-15** - Added Markdown-backed searchable ECU wirelists: shared parser/renderer,
+  mobile-first Alpine filtering, and a structured TipTap row editor that keeps wirelist data
+  inside approval-gated, diffable, revertible article revisions. Reformatted the OBD1 ECU
+  chipping wirelist into clear instructions plus 96 preserved connections. Added the
+  report-only `hondabase:audit-presentation` queue across all configured locales.
 

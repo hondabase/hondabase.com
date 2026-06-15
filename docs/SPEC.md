@@ -147,7 +147,8 @@ is committed **with the site repo** (pending the site repo's Git connection).
 
 ## 12. Tooling and docs
 
-- Commands: `hondabase:reindex`, `hondabase:dump`, `app:lint-articles` (frontmatter linter).
+- Commands: `hondabase:reindex`, `hondabase:dump`, `app:lint-articles` (frontmatter linter),
+  `hondabase:audit-presentation` (report-only presentation cleanup queue).
 - Wiki migration: `bin/port-wiki.php` (TWiki HTML to Hondabase Markdown), `WIKI_PORTING_PLAN.md`.
 - Docs: `docs/PROGRESS.md`, `docs/widgets.md`, `docs/analytics.md`, this `docs/SPEC.md`;
   content/authoring docs in the articles repo (`content/docs/article-format.md`,

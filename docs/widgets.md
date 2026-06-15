@@ -34,6 +34,10 @@ Rules:
 
 (Embedded example: `cars/electronics/Honda-Acura-Trouble-Codes`.)
 
+Searchable ECU wirelists use a separate fenced `wirelist` article construct rather than
+the `::: widget` directive. Their structured data stays inside the article Markdown so
+community edits pass through the normal review, diff, commit, and revert workflow.
+
 ## How it works (architecture)
 
 The flow lives in two classes plus a Blade view per widget.

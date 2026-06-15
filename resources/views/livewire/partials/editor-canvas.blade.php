@@ -21,6 +21,7 @@
         <button type="button" class="ed-tool" @click="table()" title="Insert table">Table</button>
         <button type="button" class="ed-tool" @click="carousel()" title="Insert image carousel">Carousel</button>
         <button type="button" class="ed-tool" @click="cmd('setHorizontalRule')" title="Divider">&horbar;</button>
+        <button type="button" class="ed-tool" @click="wirelist()" title="{{ __('Insert searchable wirelist') }}">{{ __('Wirelist') }}</button>
     </div>
     <div x-ref="canvas" class="ed-canvas"></div>
 </div>

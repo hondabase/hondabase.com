@@ -5,7 +5,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "test:editor": "node scripts/editor-carousel-test.mjs"
+        "test:editor": "node scripts/editor-carousel-test.mjs && node scripts/editor-wirelist-test.mjs"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
