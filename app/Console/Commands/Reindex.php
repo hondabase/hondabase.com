@@ -21,7 +21,9 @@ class Reindex extends Command
         $counts = $indexer->indexAll();
 
         $this->info(sprintf(
-            'Indexed %d articles, %d facets (%d distinct kinds).',
+            'Seeded %d taxonomy nodes, %d subjects. Indexed %d articles, %d facets (%d distinct kinds).',
+            $counts['nodes'] ?? 0,
+            $counts['subjects'] ?? 0,
             $counts['articles'],
             $counts['facets'],
             ArticleFacet::distinct('kind')->count('kind'),

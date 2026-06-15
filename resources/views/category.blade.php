@@ -5,18 +5,29 @@
 @php
     $locale = $locale ?? \App\Support\Locales::default();
     $localizedCat = function (string $loc) use ($type, $category) {
-        return \App\Support\Locales::isDefault($loc)
-            ? route('article.category', ['type' => $type, 'category' => $category])
-            : route('article.category.localized', ['locale' => $loc, 'type' => $type, 'category' => $category]);
+        $p = \App\Support\Locales::isDefault($loc) ? '' : "/{$loc}";
+
+        return url("{$p}/{$type}/{$category}");
     };
     $canonical = $localizedCat($locale);
+    $localePrefix = \App\Support\Locales::isDefault($locale) ? '' : "/{$locale}";
+    // One breadcrumb per ancestor category segment (electronics, electronics/ecu, ...); the last
+    // is the current page.
+    $catCrumbs = [];
+    $acc = '';
+    foreach (array_filter(explode('/', $category)) as $seg) {
+        $acc = $acc === '' ? $seg : "{$acc}/{$seg}";
+        $catCrumbs[] = ['name' => \Illuminate\Support\Str::headline($seg), 'url' => url("{$localePrefix}/{$type}/{$acc}")];
+    }
+    $crumbItems = [['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => url('/')]];
+    $pos = 2;
+    foreach ($catCrumbs as $c) {
+        $crumbItems[] = ['@type' => 'ListItem', 'position' => $pos++, 'name' => $c['name'], 'item' => $c['url']];
+    }
     $breadcrumbSchema = [
         '@context' => 'https://schema.org',
         '@type' => 'BreadcrumbList',
-        'itemListElement' => [
-            ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => url('/')],
-            ['@type' => 'ListItem', 'position' => 2, 'name' => $category_label, 'item' => $canonical],
-        ],
+        'itemListElement' => $crumbItems,
     ];
 @endphp
 
@@ -32,8 +43,14 @@
 @section('content')
     <nav class="crumbs" aria-label="Breadcrumb">
         <a href="/">{{ __('Home') }}</a>
-        <span class="sep">/</span>
-        <span class="current" aria-current="page">{{ $category_label }}</span>
+        @foreach ($catCrumbs as $i => $c)
+            <span class="sep">/</span>
+            @if ($loop->last)
+                <span class="current" aria-current="page">{{ $c['name'] }}</span>
+            @else
+                <a href="{{ $c['url'] }}">{{ $c['name'] }}</a>
+            @endif
+        @endforeach
     </nav>
 
     <section class="hero compact">

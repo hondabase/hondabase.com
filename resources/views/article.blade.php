@@ -6,17 +6,21 @@
 @php
     // Localized URL for this article in a given locale: canonical (unprefixed) for the default,
     // /{locale}/... otherwise. Drives the canonical link, hreflang alternates and the switcher.
+    // The category may be an arbitrary-depth path (electronics/ecu), so URLs interpolate it whole.
     $localizedUrl = function (string $loc) use ($art) {
-        $params = ['type' => $art['type'], 'category' => $art['category'], 'slug' => $art['slug']];
+        $p = \App\Support\Locales::isDefault($loc) ? '' : "/{$loc}";
 
-        return \App\Support\Locales::isDefault($loc)
-            ? route('article.show', $params)
-            : route('article.show.localized', ['locale' => $loc] + $params);
+        return url("{$p}/{$art['type']}/{$art['category']}/{$art['slug']}");
     };
     $canonical = $localizedUrl($art['locale']);
-    $categoryUrl = \App\Support\Locales::isDefault($art['locale'])
-        ? "/{$art['type']}/{$art['category']}"
-        : "/{$art['locale']}/{$art['type']}/{$art['category']}";
+    $localePrefix = \App\Support\Locales::isDefault($art['locale']) ? '' : "/{$art['locale']}";
+    // One breadcrumb per category path segment (electronics, electronics/ecu, ...).
+    $catCrumbs = [];
+    $acc = '';
+    foreach (array_filter(explode('/', $art['category'])) as $seg) {
+        $acc = $acc === '' ? $seg : "{$acc}/{$seg}";
+        $catCrumbs[] = ['name' => \Illuminate\Support\Str::headline($seg), 'url' => url("{$localePrefix}/{$art['type']}/{$acc}")];
+    }
     $schemaAuthors = $art['authors']->map(fn ($credit) => [
         '@type' => 'Person',
         'name' => $credit->user->displayName(),
@@ -43,14 +47,16 @@
         ],
         'keywords' => $art['tags'] ?: null,
     ], fn ($value) => $value !== null);
+    $crumbItems = [['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')]];
+    $pos = 2;
+    foreach ($catCrumbs as $c) {
+        $crumbItems[] = ['@type' => 'ListItem', 'position' => $pos++, 'name' => $c['name'], 'item' => $c['url']];
+    }
+    $crumbItems[] = ['@type' => 'ListItem', 'position' => $pos, 'name' => $art['title'], 'item' => $canonical];
     $breadcrumbSchema = [
         '@context' => 'https://schema.org',
         '@type' => 'BreadcrumbList',
-        'itemListElement' => [
-            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
-            ['@type' => 'ListItem', 'position' => 2, 'name' => $art['category_label'], 'item' => url("/{$art['type']}/{$art['category']}")],
-            ['@type' => 'ListItem', 'position' => 3, 'name' => $art['title'], 'item' => $canonical],
-        ],
+        'itemListElement' => $crumbItems,
     ];
 @endphp
 
@@ -81,8 +87,10 @@
 @section('content')
     <nav class="crumbs" aria-label="Breadcrumb">
         <a href="/">{{ __('Home') }}</a>
-        <span class="sep">/</span>
-        <a href="{{ $categoryUrl }}">{{ $art['category_label'] }}</a>
+        @foreach ($catCrumbs as $c)
+            <span class="sep">/</span>
+            <a href="{{ $c['url'] }}">{{ $c['name'] }}</a>
+        @endforeach
         <span class="sep">/</span>
         <span class="current" aria-current="page">{{ $art['title'] }}</span>
     </nav>

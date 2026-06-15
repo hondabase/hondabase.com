@@ -126,7 +126,12 @@ class Explorer extends Component
         if ($this->scopeType && ! $this->scopeAll) {
             $query->where('type', $this->scopeType);
             if ($this->scopeCategory) {
-                $query->where('category', $this->scopeCategory);
+                // Match the category itself and any nested descendant (electronics also shows
+                // electronics/ecu/... articles), so a parent-category page drills down.
+                $query->where(function ($w) {
+                    $w->where('category', $this->scopeCategory)
+                        ->orWhere('category', 'like', $this->scopeCategory.'/%');
+                });
             }
         }
 

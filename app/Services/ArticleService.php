@@ -100,33 +100,56 @@ class ArticleService
         return $out;
     }
 
+    /**
+     * Split a /{type}/<tail> path into its category *path* and slug (the slug is the last
+     * segment; everything before it is the category, '' if there is none). Used by the routes +
+     * resolver to map an arbitrary-depth URL onto type/category/slug.
+     *
+     * @return array{category: string, slug: string}
+     */
+    public static function splitPath(string $path): array
+    {
+        $path = trim($path, '/');
+        $pos = strrpos($path, '/');
+
+        return $pos === false
+            ? ['category' => '', 'slug' => $path]
+            : ['category' => substr($path, 0, $pos), 'slug' => substr($path, $pos + 1)];
+    }
+
     public function categoryExists(string $type, string $category): bool
     {
         return $this->safe($type, $category) && is_dir("{$this->root}/{$type}/{$category}");
     }
 
-    /** Categories under a type, each with an article count. */
+    /**
+     * Every distinct category *path* under a type that holds at least one article, each with a
+     * direct-article count. With nesting this returns both leaf and intermediate paths
+     * (e.g. 'electronics' and 'electronics/ecu'); 'slug' carries the full path.
+     */
     public function categories(string $type): array
     {
-        $dir = "{$this->root}/{$type}";
-        if (! $this->safe($type) || ! is_dir($dir)) {
+        if (! $this->safe($type)) {
             return [];
         }
+        $counts = [];
+        foreach ($this->findBundles($this->root, $type) as $b) {
+            $counts[$b['category']] = ($counts[$b['category']] ?? 0) + 1;
+        }
         $out = [];
-        foreach (glob("{$dir}/*", GLOB_ONLYDIR) as $d) {
-            $slug = basename($d);
+        foreach ($counts as $path => $count) {
             $out[] = [
-                'slug' => $slug,
-                'label' => $this->humanize($slug),
-                'count' => count($this->articlesIn($type, $slug)),
+                'slug' => $path,
+                'label' => $this->humanize(basename($path)),
+                'count' => $count,
             ];
         }
-        usort($out, fn ($a, $b) => strcasecmp($a['label'], $b['label']));
+        usort($out, fn ($a, $b) => strcasecmp($a['slug'], $b['slug']));
 
         return $out;
     }
 
-    /** Article stubs (slug + title) in a category. */
+    /** Direct article stubs (slug + title) in a category path (sub-categories are excluded). */
     public function articlesIn(string $type, string $category, string $locale = 'en'): array
     {
         // The canonical article set is the default-locale tree; a translation is a subset, so
@@ -138,6 +161,9 @@ class ArticleService
         $out = [];
         foreach (glob("{$dir}/*", GLOB_ONLYDIR) as $d) {
             $slug = basename($d);
+            if (! $this->isBundle($d, $slug)) {
+                continue; // a nested sub-category, not an article
+            }
             $file = $this->mdFile($d, $slug);
             if ($file === null) {
                 continue;
@@ -153,6 +179,25 @@ class ArticleService
             ];
         }
         usort($out, fn ($a, $b) => strcasecmp($a['title'], $b['title']));
+
+        return $out;
+    }
+
+    /** Direct sub-category paths of a category (for nested browse), each with a direct count. */
+    public function subcategories(string $type, string $category): array
+    {
+        if (! $this->safe($type, $category)) {
+            return [];
+        }
+        $prefix = $category === '' ? '' : $category.'/';
+        $out = [];
+        foreach ($this->categories($type) as $c) {
+            // a direct child path: starts with "$category/" and has no further slash beyond it
+            if ($prefix !== '' && str_starts_with($c['slug'], $prefix)
+                && ! str_contains(substr($c['slug'], strlen($prefix)), '/')) {
+                $out[] = $c;
+            }
+        }
 
         return $out;
     }
@@ -376,17 +421,10 @@ class ArticleService
         foreach (Locales::codes() as $locale) {
             $root = $this->localeRoot($locale);
             foreach ($this->types() as $type) {
-                $tdir = "{$root}/{$type}";
-                if (! is_dir($tdir)) {
-                    continue;
-                }
-                foreach (glob("{$tdir}/*", GLOB_ONLYDIR) as $cdir) {
-                    $category = basename($cdir);
-                    foreach (glob("{$cdir}/*", GLOB_ONLYDIR) as $adir) {
-                        $row = $this->scanRow($type, $category, $adir, $locale);
-                        if ($row !== null) {
-                            $rows[] = $row;
-                        }
+                foreach ($this->findBundles($root, $type) as $b) {
+                    $row = $this->scanRow($type, $b['category'], $b['dir'], $locale);
+                    if ($row !== null) {
+                        $rows[] = $row;
                     }
                 }
             }
@@ -444,8 +482,15 @@ class ArticleService
     {
         $f = [
             ['type', $type, $this->humanize($type)],
-            ['category', $category, $this->humanize($category)],
         ];
+        // One category facet per ancestor path segment, so a nested article (electronics/ecu) is
+        // discoverable under both 'electronics' and 'electronics/ecu' (drill-down). A flat category
+        // yields the single facet it always did.
+        $acc = '';
+        foreach (array_filter(explode('/', $category)) as $seg) {
+            $acc = $acc === '' ? $seg : "{$acc}/{$seg}";
+            $f[] = ['category', $acc, $this->humanize($seg)];
+        }
         foreach ($this->asList($fm['tags'] ?? []) as $t) {
             $f[] = ['tag', Str::slug($t) ?: $t, $t];
         }
@@ -835,11 +880,55 @@ class ArticleService
     private function safe(string ...$segments): bool
     {
         foreach ($segments as $s) {
-            if ($s === '' || str_contains($s, '..') || ! preg_match('/^[A-Za-z0-9._-]+$/', $s)) {
-                return false;
+            // A category may be a multi-segment path (e.g. electronics/ecu); validate each
+            // slash-delimited part. type/slug never contain slashes, so this is a no-op for them.
+            foreach (explode('/', $s) as $part) {
+                if ($part === '' || str_contains($part, '..') || ! preg_match('/^[A-Za-z0-9._-]+$/', $part)) {
+                    return false;
+                }
             }
         }
 
         return true;
+    }
+
+    /**
+     * A directory is an article *bundle* when it carries a Markdown file named after the folder
+     * (slug == folder) or an index.md. Otherwise it is a category container that nests deeper.
+     * This is the rule the recursive scanner uses to tell leaves (articles) from branches.
+     */
+    private function isBundle(string $dir, string $name): bool
+    {
+        return is_file("{$dir}/{$name}.md") || is_file("{$dir}/index.md");
+    }
+
+    /**
+     * Recursively walk a type's tree for one locale, returning every article bundle with its
+     * category *path* (the slash-joined directories between {type} and the bundle). Supports
+     * arbitrary nesting depth: a flat content/cars/electronics/foo yields category 'electronics',
+     * a nested content/cars/electronics/ecu/foo yields 'electronics/ecu'.
+     *
+     * @return list<array{category: string, slug: string, dir: string}>
+     */
+    private function findBundles(string $root, string $type): array
+    {
+        $base = "{$root}/{$type}";
+        if (! is_dir($base)) {
+            return [];
+        }
+        $out = [];
+        $walk = function (string $dir, string $rel) use (&$walk, &$out) {
+            foreach (glob("{$dir}/*", GLOB_ONLYDIR) as $sub) {
+                $name = basename($sub);
+                if ($this->isBundle($sub, $name)) {
+                    $out[] = ['category' => $rel, 'slug' => $name, 'dir' => $sub];
+                } else {
+                    $walk($sub, $rel === '' ? $name : "{$rel}/{$name}");
+                }
+            }
+        };
+        $walk($base, '');
+
+        return $out;
     }
 }

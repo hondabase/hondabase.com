@@ -12,46 +12,52 @@ class ArticleController extends Controller
 {
     public function __construct(private ArticleService $articles) {}
 
-    // Route params are read by name (not positional method args): the localized routes carry an
-    // extra leading {locale} segment, so positional binding would shift type/category/slug. The
-    // {locale} param is present only on the /{locale}/... routes; the canonical unprefixed routes
-    // have no such param, so this resolves to the default locale and an unprefixed URL is always
-    // English (regardless of any cookie).
-    public function category(Request $request)
+    // The knowledgebase serves arbitrary-depth category paths (electronics/ecu/...), which route
+    // regex can't disambiguate, so a single catch-all `/{type}/{path}` (+ /{locale}/ mirror) lands
+    // here and is resolved against the content/index: co-located asset, then article, then category
+    // listing, else 404. Params are read by name: the localized route carries a leading {locale}
+    // segment, absent on the canonical unprefixed route (which is therefore always the default,
+    // English locale, regardless of any cookie).
+    public function resolve(Request $request)
     {
         $type = $request->route('type');
-        $category = $request->route('category');
+        $path = trim((string) $request->route('path'), '/');
         $locale = $request->route('locale') ?? Locales::default();
-        abort_unless($this->articles->categoryExists($type, $category), 404);
 
-        return view('category', [
-            'type' => $type,
-            'category' => $category,
-            'locale' => $locale,
-            'type_label' => ucwords(str_replace('-', ' ', $type)),
-            'category_label' => ucwords(str_replace('-', ' ', $category)),
-            'articles' => $this->articles->articlesIn($type, $category, $locale),
-        ]);
-    }
+        // 1. Co-located asset: the final segment is a filename with an extension. Resolve the
+        //    bundle (category path + slug) from the segments before it.
+        $last = basename($path);
+        if (preg_match('/\.[A-Za-z0-9]+$/', $last) && str_contains($path, '/')) {
+            $bundle = ArticleService::splitPath(substr($path, 0, strrpos($path, '/')));
+            if ($bundle['category'] !== '') {
+                $abs = $this->articles->assetPath($type, $bundle['category'], $bundle['slug'], $last);
+                if ($abs) {
+                    return response()->file($abs, ['Cache-Control' => 'public, max-age=86400']);
+                }
+            }
+        }
 
-    public function show(Request $request)
-    {
-        $type = $request->route('type');
-        $category = $request->route('category');
-        $slug = $request->route('slug');
-        $locale = $request->route('locale') ?? Locales::default();
-        $art = $this->articles->find($type, $category, $slug, $locale);
-        abort_unless($art, 404);
+        // 2. Article at this exact path (slug = last segment, category = the rest).
+        ['category' => $category, 'slug' => $slug] = ArticleService::splitPath($path);
+        if ($category !== '') {
+            $art = $this->articles->find($type, $category, $slug, $locale);
+            if ($art) {
+                return view('article', ['art' => $art]);
+            }
+        }
 
-        return view('article', ['art' => $art]);
-    }
+        // 3. Category listing: the whole path is a category (any depth).
+        if ($this->articles->categoryExists($type, $path)) {
+            return view('category', [
+                'type' => $type,
+                'category' => $path,
+                'locale' => $locale,
+                'type_label' => ucwords(str_replace('-', ' ', $type)),
+                'category_label' => ucwords(str_replace('-', ' ', basename($path))),
+            ]);
+        }
 
-    public function asset(string $type, string $category, string $slug, string $file): BinaryFileResponse
-    {
-        $path = $this->articles->assetPath($type, $category, $slug, $file);
-        abort_unless($path, 404);
-
-        return response()->file($path, ['Cache-Control' => 'public, max-age=86400']);
+        abort(404);
     }
 
     public function stagedAsset(ArticleRevision $revision, string $file): BinaryFileResponse

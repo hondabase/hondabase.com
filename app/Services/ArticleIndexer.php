@@ -14,11 +14,15 @@ use Illuminate\Support\Facades\DB;
  */
 class ArticleIndexer
 {
-    public function __construct(private ArticleService $articles) {}
+    public function __construct(private ArticleService $articles, private TaxonomySync $taxonomy) {}
 
-    /** Rebuild the entire index. Returns ['articles' => n, 'facets' => n]. */
+    /** Rebuild the entire index. Returns ['articles' => n, 'facets' => n, 'nodes' => n, 'subjects' => n]. */
     public function indexAll(): array
     {
+        // Seed the derived taxonomy + subjects first (forkability: a fresh clone restores the whole
+        // catalog from content/_data), so article indexing can resolve paths against it.
+        $tax = $this->taxonomy->sync();
+
         $rows = $this->articles->scan();
 
         DB::transaction(function () use ($rows) {
@@ -29,7 +33,7 @@ class ArticleIndexer
             }
         });
 
-        return ['articles' => Article::count(), 'facets' => ArticleFacet::count()];
+        return ['articles' => Article::count(), 'facets' => ArticleFacet::count()] + $tax;
     }
 
     /**

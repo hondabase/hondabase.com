@@ -13,11 +13,11 @@ use Illuminate\Support\Str;
 use NotificationChannels\WebPush\HasPushSubscriptions;
 
 #[Fillable([
-    'name', 'email', 'password', 'discord_id', 'discord_username', 'discord_global_name',
+    'name', 'discord_id', 'discord_username', 'discord_global_name',
     'avatar', 'github_id', 'github_login', 'is_staff', 'is_legacy_author', 'legacy_source',
     'legacy_handle', 'legacy_key',
 ])]
-#[Hidden(['password', 'remember_token'])]
+#[Hidden(['remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -26,8 +26,6 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
             'is_staff' => 'bool',
             'is_legacy_author' => 'bool',
         ];
