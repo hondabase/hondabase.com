@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Article;
 use App\Models\ArticleFacet;
+use App\Models\Compatibility;
+use App\Support\Locales;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -14,18 +16,24 @@ use Illuminate\Support\Facades\DB;
  */
 class ArticleIndexer
 {
-    public function __construct(private ArticleService $articles, private TaxonomySync $taxonomy) {}
+    public function __construct(
+        private ArticleService $articles,
+        private TaxonomySync $taxonomy,
+        private CompatibilityResolver $compatibility,
+    ) {}
 
-    /** Rebuild the entire index. Returns ['articles' => n, 'facets' => n, 'nodes' => n, 'subjects' => n]. */
+    /** Rebuild the entire index. Returns article/facet/node/subject/compatibility counts. */
     public function indexAll(): array
     {
         // Seed the derived taxonomy + subjects first (forkability: a fresh clone restores the whole
         // catalog from content/_data), so article indexing can resolve paths against it.
         $tax = $this->taxonomy->sync();
+        $this->compatibility->forget(); // drop any node cache from before the reseed
 
         $rows = $this->articles->scan();
 
         DB::transaction(function () use ($rows) {
+            Compatibility::query()->delete();
             ArticleFacet::query()->delete();
             Article::query()->delete();
             foreach ($rows as $r) {
@@ -33,7 +41,7 @@ class ArticleIndexer
             }
         });
 
-        return ['articles' => Article::count(), 'facets' => ArticleFacet::count()] + $tax;
+        return ['articles' => Article::count(), 'facets' => ArticleFacet::count(), 'compatibilities' => Compatibility::count()] + $tax;
     }
 
     /**
@@ -72,17 +80,43 @@ class ArticleIndexer
             'updated_at' => $r['updated'],
         ]);
 
+        // Resolve node compatibility (default-locale identity only) and fold the node-derived
+        // facets in with the path/frontmatter facets so make/model/generation drill-down works.
+        // Gated on locale, not on frontmatter: inherited compatibility comes from the folder path,
+        // so an article with no front matter at all still links to the node it lives under.
+        $rows = $r['facets'];
+        $links = [];
+        if (Locales::isDefault($r['locale'] ?? 'en')) {
+            $resolved = $this->compatibility->resolve($r['type'], $r['category'], is_array($r['fm'] ?? null) ? $r['fm'] : []);
+            $rows = array_merge($rows, $resolved['facets']);
+            $links = $resolved['links'];
+        }
+
         $facets = [];
-        foreach ($r['facets'] as [$kind, $value, $label]) {
-            $facets[] = [
-                'article_id' => $article->id,
-                'kind' => $kind,
-                'value' => $value,
-                'label' => $label,
-            ];
+        $seen = [];
+        foreach ($rows as [$kind, $value, $label]) {
+            $key = $kind.'|'.$value;
+            if (isset($seen[$key])) {
+                continue; // article_facets is unique on (article, kind, value)
+            }
+            $seen[$key] = true;
+            $facets[] = ['article_id' => $article->id, 'kind' => $kind, 'value' => $value, 'label' => $label];
         }
         if ($facets) {
             ArticleFacet::insert($facets);
+        }
+
+        $compat = [];
+        foreach ($links as $nodeId => $link) {
+            $compat[] = [
+                'article_id' => $article->id,
+                'taxonomy_node_id' => $nodeId,
+                'source' => $link['source'],
+                'meta' => $link['meta'] !== null ? json_encode($link['meta']) : null,
+            ];
+        }
+        if ($compat) {
+            Compatibility::insert($compat);
         }
     }
 }

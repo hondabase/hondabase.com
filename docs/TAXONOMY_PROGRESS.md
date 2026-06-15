@@ -23,10 +23,14 @@ the full path. This epic adds the semantic layer over those paths.
   - [x] `TaxonomySync` seeds both from the JSON inside `hondabase:reindex` (idempotent, forkable);
         reindex reports 36 nodes / 17 subjects
   - [x] `App\Services\PathParser` (greedy node-prefix match -> nodePath + subject); `TaxonomyTest` (4)
-- [ ] **P2 - Compatibility & fits**
-  - [ ] `compatibilities` pivot migration (article_id, taxonomy_node_id, source, meta)
-  - [ ] sync hydration: inherited (path), explicit (`fits:`), `applies_to`->node bridge
-  - [ ] derive node facets into existing `article_facets` (explorer/follows keep working); tests
+- [x] **P2 - Compatibility & fits** *(done 2026-06-15)*
+  - [x] `compatibilities` pivot migration + `Compatibility` model (cascades with the article row)
+  - [x] `CompatibilityResolver`: inherited (folder path via PathParser), explicit (`fits:` paths),
+        `applies_to` chassis/models/trims -> node bridge; wired into `ArticleIndexer::persist`
+        (default-locale identity only, gated on locale not frontmatter)
+  - [x] node-derived make/model/generation facets merged into `article_facets` (de-duped on
+        kind|value); `CompatibilityTest` (4). Real corpus yields 0 links today (no chassis/model/
+        `fits` data + all under `electronics`) - correct; lights up in P4 + as authors add `fits:`
 - [ ] **P3 - Routing, node pages & breadcrumbs**
   - [ ] taxonomy-aware `resolve()` node branch + `node.blade` (reuses Explorer)
   - [ ] generation-rich breadcrumbs + BreadcrumbList JSON-LD; tests + HTTP smoke
@@ -50,6 +54,10 @@ the full path. This epic adds the semantic layer over those paths.
   file-canonical (a control panel edits + commits the JSON; tables stay derived) - panel slated for P3.
 
 ## Changelog
+- **2026-06-15** - **P2 done.** `compatibilities` pivot + `Compatibility` model; `CompatibilityResolver`
+  (inherited folder path / explicit `fits:` / `applies_to` bridge) wired into the indexer with
+  node-derived make/model/generation facets folded into `article_facets`. `CompatibilityTest` (4).
+  42 tests pass. Current corpus links = 0 (no generation-specific data yet), which is expected.
 - **2026-06-15** - **P1 done.** taxonomy.json + subjects.json (all-products, data-driven kinds),
   `taxonomy_nodes`/`subjects` tables + models, `TaxonomySync` wired into `hondabase:reindex`
   (36 nodes/17 subjects), `PathParser`, `TaxonomyTest` (4). Also: dropped unused `users.email`/

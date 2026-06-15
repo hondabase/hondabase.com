@@ -471,6 +471,9 @@ class ArticleService
             'repo_path' => $rel,
             'updated' => $this->lastUpdated($rel),
             'facets' => Locales::isDefault($locale) ? $this->facetsFor($fm, $type, $category) : [],
+            // Raw front matter (default locale only) so the indexer can resolve node compatibility
+            // from `fits:`/`applies_to`. Translation rows carry the English identity's links.
+            'fm' => Locales::isDefault($locale) ? $fm : [],
         ];
     }
 
