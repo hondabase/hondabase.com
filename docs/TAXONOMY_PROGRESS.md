@@ -42,14 +42,22 @@ the full path. This epic adds the semantic layer over those paths.
         nodes (path auto-computed), rename (cascades descendant paths), delete subtree, subject CRUD,
         "Rebuild article links" (reindex). Slug rename/delete blocked when articles are filed under
         the node (folder-coupling guard). Nav link added. `TaxonomyManagerTest` (7).
-- [~] **P4 - Content migration** *(tooling done 2026-06-15; execution AWAITS owner approval)*
+- [x] **P4 - Content migration** *(done 2026-06-15; executed, no prunes)*
   - [x] `Recategorizer` + `hondabase:recategorize` (dry-run default; `--execute`, `--prune=`).
-        `RecategorizeTest` (3). Dry-run on live corpus: **0 generation-specific** (no chassis
-        metadata), all 496 re-file from `electronics` into subjects -> sensors 137, rom 119,
-        wiring 79, diagnostics 76, ecu 36, reference 23, fueling 11, tuning 11, ignition 4.
-        2 no-tag review candidates (Honda-Acura-Trouble-Codes, how-to-check-obd1-ecu-codes).
-  - [ ] **owner: approve the subject mapping/ordering + name any prune slugs**, then `--execute`
-        (git mv en+pt, rewrite absolute links, reindex). Not run yet.
+        `RecategorizeTest` (3). **0 generation-specific** (no chassis metadata yet), all 496 re-filed
+        from `electronics` into subjects -> sensors 137, rom 119, wiring 79, diagnostics 78, ecu 36,
+        reference 21, fueling 11, tuning 11, ignition 4.
+  - [x] 2 no-tag articles retagged `diagnostics` (Honda-Acura-Trouble-Codes, how-to-check-obd1-ecu-codes);
+        review list then empty. Owner approved the mapping as-is, no prunes (generation-filing deferred
+        until chassis/model metadata is gathered separately).
+  - [x] Executed across en + pt (992 bundles). **Caveat hit:** `git mv` only moves tracked files, but
+        the entire pt tree + a few new en articles were uncommitted WIP -> those moves silently failed
+        and were finished with a plain filesystem `mv` from the saved plan (git records them as renames
+        at commit time anyway). Empty `electronics` dirs removed; reindexed (992 articles, 4235 facets,
+        0 compatibilities - expected). en/pt now share one category per slug (0 cross-locale mismatch).
+  - [x] Internal absolute links rewritten in 746 files; the 12 residual `/cars/electronics/...` links
+        are pre-existing dead links to non-existent legacy wiki UI pages (debug-info, all-pages, ...),
+        correctly left untouched. HTTP-verified: new paths 200 (en+pt), old paths 404 (no redirects).
 - [ ] **P5 - Product-centric personalization**
   - [ ] rename `user_vehicles`->`user_products`, `UserVehicle`->`UserProduct`, Garage labels; data preserved
   - [ ] optional `taxonomy_node_id` FK; "fits my products" filtering + node follows; localized node names
@@ -73,6 +81,13 @@ the full path. This epic adds the semantic layer over those paths.
   those folders - the control panel ties rename to a content move, or restricts it to empty nodes.
 
 ## Changelog
+- **2026-06-15** - **P4 done: content migration executed.** Re-filed all 496 articles (en + pt) out of
+  the flat `cars/electronics` into the 9 tag-derived subjects; 0 generation-specific (no chassis
+  metadata yet, so generation-filing is deferred). 2 no-tag articles retagged `diagnostics`, no prunes.
+  `git mv` failed silently on the uncommitted-WIP pt tree + new en articles; finished those with plain
+  `mv` from the saved plan. Reindexed (992 articles, 0 compatibilities), links rewritten in 746 files,
+  HTTP-verified new=200/old=404. 57 tests pass. Content changes left uncommitted for the owner to
+  commit alongside their in-flight attribution pass (owner choice).
 - **2026-06-15** - **P3b done: taxonomy control panel.** `/admin/taxonomy` (`TaxonomyManager`,
   manage-articles, English) for direct CRUD on the DB-canonical taxonomy + subjects, with path
   auto-compute, descendant repath on rename, subtree delete, and a folder-coupling guard
