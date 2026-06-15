@@ -3,3 +3,5 @@ Disallow: /pgmfi/wiki/
 Disallow: /pgmfi/forum/search.php
 Disallow: /pgmfi/forum/suggest.php
 Disallow: /pgmfi/forum/live.php
+
+Sitemap: https://www.hondabase.com/sitemap.xml

@@ -1484,7 +1484,7 @@
 .chip-follow {
   font-size: .8rem; line-height: 1; color: var(--color-muted);
   background: var(--color-panel); border: 1px solid var(--color-border-2); border-left: 0;
-  padding: 0 .4rem; cursor: pointer; display: inline-flex; align-items: center;
+  padding: 0 .4rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
 }
 .chip-follow:hover { color: var(--color-amber); border-color: rgba(251,191,36,.5); }
 .chip-follow.is-following { color: var(--color-amber); }
@@ -1526,9 +1526,9 @@
 .chip-kind { color: var(--color-amber); border-color: rgba(251,191,36,.4); }
 
 .follow-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.1rem; }
-.chip-follow { font-family: var(--font-mono); font-size: .74rem; color: var(--color-amber); background: var(--color-panel); border: 1px solid rgba(251,191,36,.4); padding: .18rem .2rem .18rem .55rem; display: inline-flex; align-items: center; gap: .3rem; }
-.chip-follow button { background: none; border: 0; color: var(--color-muted); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0 .3rem; }
-.chip-follow button:hover { color: var(--color-red); }
+.chip-followed { font-family: var(--font-mono); font-size: .74rem; color: var(--color-amber); background: var(--color-panel); border: 1px solid rgba(251,191,36,.4); padding: .18rem .2rem .18rem .55rem; display: inline-flex; align-items: center; gap: .3rem; }
+.chip-followed button { background: none; border: 0; color: var(--color-muted); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0 .3rem; }
+.chip-followed button:hover { color: var(--color-red); }
 
 /* ---------- garage cards ---------- */
 .garage-card { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: .9rem 1.1rem; background: var(--color-panel); border: 1px solid var(--color-border); margin-bottom: .7rem; }

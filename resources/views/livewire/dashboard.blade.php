@@ -41,7 +41,7 @@
             @if ($follows->isNotEmpty())
                 <div class="follow-chips">
                     @foreach ($follows as $f)
-                        <span class="chip chip-follow" wire:key="fol-{{ $f->id }}">
+                        <span class="chip chip-followed" wire:key="fol-{{ $f->id }}">
                             {{ $f->label ?: $f->value }}
                             <button type="button" wire:click="unfollow('{{ $f->kind }}:{{ $f->value }}')"
                                 title="Unfollow" aria-label="Unfollow {{ $f->label ?: $f->value }}">&times;</button>
