@@ -55,4 +55,12 @@ class TaxonomyNode extends Model
     {
         return '/'.$this->path;
     }
+
+    /** This node's id plus every descendant's, for "all articles fitting this node or below". */
+    public function selfAndDescendantIds(): array
+    {
+        return self::where('path', $this->path)
+            ->orWhere('path', 'like', $this->path.'/%')
+            ->pluck('id')->all();
+    }
 }

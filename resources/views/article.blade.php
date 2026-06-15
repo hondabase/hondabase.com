@@ -13,14 +13,9 @@
         return url("{$p}/{$art['type']}/{$art['category']}/{$art['slug']}");
     };
     $canonical = $localizedUrl($art['locale']);
-    $localePrefix = \App\Support\Locales::isDefault($art['locale']) ? '' : "/{$art['locale']}";
-    // One breadcrumb per category path segment (electronics, electronics/ecu, ...).
-    $catCrumbs = [];
-    $acc = '';
-    foreach (array_filter(explode('/', $art['category'])) as $seg) {
-        $acc = $acc === '' ? $seg : "{$acc}/{$seg}";
-        $catCrumbs[] = ['name' => \Illuminate\Support\Str::headline($seg), 'url' => url("{$localePrefix}/{$art['type']}/{$acc}")];
-    }
+    // Taxonomy-aware breadcrumbs are built by the controller (BreadcrumbBuilder): node segments
+    // get their generation/model name, subject segments their subject name. One crumb per segment.
+    $catCrumbs = $crumbs ?? [];
     $schemaAuthors = $art['authors']->map(fn ($credit) => [
         '@type' => 'Person',
         'name' => $credit->user->displayName(),
@@ -50,7 +45,7 @@
     $crumbItems = [['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')]];
     $pos = 2;
     foreach ($catCrumbs as $c) {
-        $crumbItems[] = ['@type' => 'ListItem', 'position' => $pos++, 'name' => $c['name'], 'item' => $c['url']];
+        $crumbItems[] = ['@type' => 'ListItem', 'position' => $pos++, 'name' => $c['name'], 'item' => url($c['url'])];
     }
     $crumbItems[] = ['@type' => 'ListItem', 'position' => $pos, 'name' => $art['title'], 'item' => $canonical];
     $breadcrumbSchema = [

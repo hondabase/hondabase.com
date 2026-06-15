@@ -29,6 +29,9 @@
     "No filters available.": "Sem filtros disponíveis.",
     "No articles match your search.": "Nenhum artigo corresponde à tua pesquisa.",
     "Reset": "Repor",
+    "Sub-categories": "Subcategorias",
+    "{0}No articles yet|{1}:count article|[2,*]:count articles": "{0}Ainda sem artigos|{1}:count artigo|[2,*]:count artigos",
+    "No articles are filed under this yet. Browse the knowledgebase or suggest one.": "Ainda não há artigos arquivados aqui. Explora a base de conhecimento ou sugere um.",
 
     "Welcome to your Hondabase.": "Bem-vindo à tua Hondabase.",
     "Add your vehicle and we'll tailor your homepage and this dashboard to it: new articles for your engine and chassis show up here automatically.": "Adiciona o teu veículo e personalizamos a tua página inicial e este painel para ele: novos artigos para o teu motor e chassis aparecem aqui automaticamente.",

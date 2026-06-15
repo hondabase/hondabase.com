@@ -31,9 +31,13 @@ the full path. This epic adds the semantic layer over those paths.
   - [x] node-derived make/model/generation facets merged into `article_facets` (de-duped on
         kind|value); `CompatibilityTest` (4). Real corpus yields 0 links today (no chassis/model/
         `fits` data + all under `electronics`) - correct; lights up in P4 + as authors add `fits:`
-- [ ] **P3 - Routing, node pages & breadcrumbs**
-  - [ ] taxonomy-aware `resolve()` node branch + `node.blade` (reuses Explorer)
-  - [ ] generation-rich breadcrumbs + BreadcrumbList JSON-LD; tests + HTTP smoke
+- [~] **P3 - Routing, node pages & breadcrumbs** *(read side done 2026-06-15; control panel = P3b)*
+  - [x] taxonomy-aware `resolve()` node branch + `node.blade` (node metadata + child nodes +
+        compatible-article cards; static listing rather than the full Explorer - simpler, can swap later)
+  - [x] `BreadcrumbBuilder` -> generation/model + subject-named breadcrumbs on article/category/node
+        + BreadcrumbList JSON-LD; `NodePageTest` (5); HTTP-verified node pages 200 + bad child 404
+  - [ ] **P3b - taxonomy control panel** (owner/staff, English): tree editor that edits + commits
+        `content/_data/taxonomy.json` via the article-commit machinery; tables stay derived
 - [ ] **P4 - Content migration (file under generations)**
   - [ ] taxonomy-aware `hondabase:recategorize --dry-run` (generation-specific vs multi-fit + prune)
   - [ ] owner approves split + prune list; execute en+pt + internal link rewrite; reindex
@@ -54,6 +58,11 @@ the full path. This epic adds the semantic layer over those paths.
   file-canonical (a control panel edits + commits the JSON; tables stay derived) - panel slated for P3.
 
 ## Changelog
+- **2026-06-15** - **P3 read side done.** Node landing pages (`/cars/honda/civic/eg`) via a
+  taxonomy-aware `resolve()` branch + `node.blade` (metadata, child nodes, compatible-article cards);
+  `BreadcrumbBuilder` gives generation/model/subject-named breadcrumbs across article/category/node
+  with BreadcrumbList JSON-LD. `NodePageTest` (5); 47 tests pass; HTTP-verified. Remaining: P3b
+  taxonomy control panel.
 - **2026-06-15** - **P2 done.** `compatibilities` pivot + `Compatibility` model; `CompatibilityResolver`
   (inherited folder path / explicit `fits:` / `applies_to` bridge) wired into the indexer with
   node-derived make/model/generation facets folded into `article_facets`. `CompatibilityTest` (4).

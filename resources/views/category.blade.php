@@ -10,19 +10,12 @@
         return url("{$p}/{$type}/{$category}");
     };
     $canonical = $localizedCat($locale);
-    $localePrefix = \App\Support\Locales::isDefault($locale) ? '' : "/{$locale}";
-    // One breadcrumb per ancestor category segment (electronics, electronics/ecu, ...); the last
-    // is the current page.
-    $catCrumbs = [];
-    $acc = '';
-    foreach (array_filter(explode('/', $category)) as $seg) {
-        $acc = $acc === '' ? $seg : "{$acc}/{$seg}";
-        $catCrumbs[] = ['name' => \Illuminate\Support\Str::headline($seg), 'url' => url("{$localePrefix}/{$type}/{$acc}")];
-    }
+    // Taxonomy-aware breadcrumbs from the controller (node + subject names); last = current page.
+    $catCrumbs = $crumbs ?? [];
     $crumbItems = [['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => url('/')]];
     $pos = 2;
     foreach ($catCrumbs as $c) {
-        $crumbItems[] = ['@type' => 'ListItem', 'position' => $pos++, 'name' => $c['name'], 'item' => $c['url']];
+        $crumbItems[] = ['@type' => 'ListItem', 'position' => $pos++, 'name' => $c['name'], 'item' => url($c['url'])];
     }
     $breadcrumbSchema = [
         '@context' => 'https://schema.org',

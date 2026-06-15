@@ -1635,6 +1635,17 @@
 .ex-card:hover { border-color: rgba(251,191,36,.5); background: var(--color-panel-hover); }
 .ex-card-kicker { font-family: var(--font-mono); font-size: .6rem; text-transform: uppercase; letter-spacing: .08em; color: var(--color-amber); }
 .ex-card-title { font-family: var(--font-display); font-size: 1rem; color: var(--color-amber-2); margin: .25rem 0 .35rem; line-height: 1.2; }
+
+/* Taxonomy node landing page */
+.node-meta { display: flex; flex-wrap: wrap; gap: .5rem .9rem; margin-top: .4rem; font-family: var(--font-mono); font-size: .76rem; }
+.node-years { color: var(--color-amber); }
+.node-chassis { color: var(--color-dim); text-transform: uppercase; letter-spacing: .06em; }
+.node-children { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+.node-child { padding: .4rem .8rem; background: var(--color-panel); border: 1px solid var(--color-border); font-family: var(--font-mono); font-size: .78rem; color: var(--color-amber-2); }
+.node-child:hover { border-color: rgba(251,191,36,.5); background: var(--color-panel-hover); }
+.node-articles { margin-top: 1.2rem; }
+.node-section { font-family: var(--font-mono); font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; color: var(--color-dim); margin-bottom: .7rem; }
+.node-empty { color: var(--color-muted); }
 .ex-card-summary { font-size: .82rem; color: var(--color-dim); margin: 0; }
 .ex-noresults { color: var(--color-muted); font-family: var(--font-mono); padding: 1rem 0; }
 .ex-noresults .ex-clear { display: inline-block; margin-top: .5rem; }
