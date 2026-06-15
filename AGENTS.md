@@ -19,8 +19,9 @@ a separate repo for forkability; the database is a *derived, rebuildable* index.
 1. **Forkability.** Content lives in the public `hondabase/articles` repo, cloned to
    `content/`. MariaDB is *derived* — anything in it must be rebuildable with
    `php artisan hondabase:reindex`. **No SaaS** (search = MariaDB FULLTEXT via Scout).
-2. **No PII in any public repo.** The nightly `mysqldump` (`hondabase:dump`) goes to a
-   **private** repo and excludes analytics/transient/PII tables.
+2. **Public database dumps.** The daily database dump (`hondabase:dump`) commits to the public
+   site repository (since auth is Discord OAuth only and no email/passwords are collected). It
+   excludes security-sensitive credentials (`remember_token`, push keys) and transient tables.
 3. **Editing is approval-gated.** Member edits → review queue → attributed git commit.
    Staff edits auto-apply. Every edit is a tracked, revertible `article_revisions` row.
    Commits are authored by the bot with `Co-Authored-By:` the editor + `Reviewed-By:` the
@@ -30,6 +31,12 @@ a separate repo for forkability; the database is a *derived, rebuildable* index.
    HTML↔Markdown round-trip must stay **lossless** — it is the only edit path. Custom
    constructs (`::: widget :::`, `{{> partial }}`, relative `.md` cross-links) must
    survive a round-trip. See the round-trip harnesses below.
+6. **DB-canonical taxonomy & subjects.** The taxonomy (`taxonomy_nodes`) and subjects are DB-canonical
+   and editable directly via the control panel at `/admin/taxonomy`. They are bootstrapped once
+   via `php artisan hondabase:taxonomy:seed` and not overwritten by `reindex`.
+7. **Multi-locale content moves.** Articles exist in both `en` (unprefixed) and `pt` (Portuguese,
+   in `content/pt/...`) locales. Any recategorization or folder moves must be executed across
+   both locale trees (e.g. using `hondabase:recategorize`) and internal absolute links rewritten.
 
 ## Layout
 
@@ -93,6 +100,10 @@ A systemd unit `hondabase-queue.service` (in `docs/deploy/`) drains the `databas
 
 - Touching the **render pipeline, editor, or `ArticleDocument`** → run the round-trip
   harnesses (`scripts/*roundtrip*`); they must stay idempotent or content degrades on save.
+- Moving content or changing paths → ensure moves are mirrored in both locales (`en` and `pt`) and
+  internal links are updated across the entire corpus.
+- Modifying taxonomy nodes or subjects → use `/admin/taxonomy` or the seed command
+  `hondabase:taxonomy:seed`, and ensure `hondabase:reindex` successfully updates compatibility links.
 - Touching **anything indexed** → confirm `hondabase:reindex` still rebuilds cleanly
   (the index must be reproducible from `content/` alone).
 - Adding **content-derived DB state** → make sure it's rebuildable and PII-free.

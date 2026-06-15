@@ -42,14 +42,13 @@ the full path. This epic adds the semantic layer over those paths.
         nodes (path auto-computed), rename (cascades descendant paths), delete subtree, subject CRUD,
         "Rebuild article links" (reindex). Slug rename/delete blocked when articles are filed under
         the node (folder-coupling guard). Nav link added. `TaxonomyManagerTest` (7).
-- [x] **P4 - Content migration** *(done 2026-06-15; executed, no prunes)*
+- [x] **P4 - Content migration** *(done 2026-06-15; generation filling executed 2026-06-16)*
   - [x] `Recategorizer` + `hondabase:recategorize` (dry-run default; `--execute`, `--prune=`).
-        `RecategorizeTest` (3). **0 generation-specific** (no chassis metadata yet), all 496 re-filed
-        from `electronics` into subjects -> sensors 137, rom 119, wiring 79, diagnostics 78, ecu 36,
-        reference 21, fueling 11, tuning 11, ignition 4.
+        `RecategorizeTest` (3). Initial run moved 0 generation-specific (no chassis metadata yet);
+        subsequent run on 2026-06-16 moved 8 generation-specific articles (16 en+pt bundles) into the
+        generation folders once chassis/model metadata was gathered.
   - [x] 2 no-tag articles retagged `diagnostics` (Honda-Acura-Trouble-Codes, how-to-check-obd1-ecu-codes);
-        review list then empty. Owner approved the mapping as-is, no prunes (generation-filing deferred
-        until chassis/model metadata is gathered separately).
+        review list then empty. Owner approved the mapping as-is, no prunes. Generation filing completed on 2026-06-16.
   - [x] Executed across en + pt (992 bundles). **Caveat hit:** `git mv` only moves tracked files, but
         the entire pt tree + a few new en articles were uncommitted WIP -> those moves silently failed
         and were finished with a plain filesystem `mv` from the saved plan (git records them as renames
@@ -87,6 +86,7 @@ the full path. This epic adds the semantic layer over those paths.
   those folders - the control panel ties rename to a content move, or restricts it to empty nodes.
 
 ## Changelog
+- **2026-06-16** - **Generation filling executed.** Ran `hondabase:recategorize --execute` after the owner enriched the content frontmatter with chassis/model metadata. This moved 16 bundles (8 en + 8 pt) into their specific generation folders (`honda/civic/eg/...` and `honda/civic/ek/...`) and successfully rewrote absolute links in 12 files. Reindexed (992 articles, 6177 compatibility links).
 - **2026-06-15** - **P5 done: product-centric personalization. EPIC COMPLETE.** Renamed
   `user_vehicles`->`user_products` (+ `UserVehicle`->`UserProduct`, `User::products()`), added a
   nullable `taxonomy_node_id` FK with node-derived follows; UI/route keep "vehicle"/"garage" wording

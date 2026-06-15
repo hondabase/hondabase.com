@@ -442,6 +442,7 @@ Living log of the Hondabase rebuild. Plan of record:
   Visual design preserved, not redesigned.
 
 ## Changelog
+- **2026-06-16** - **Generation filling executed.** Ran `hondabase:recategorize --execute` after the owner enriched the content frontmatter with chassis/model metadata. This moved 16 bundles (8 en + 8 pt) into their specific generation folders (`honda/civic/eg/...` and `honda/civic/ek/...`) and successfully rewrote absolute links in 12 files. Reindexed (992 articles, 6177 compatibility links).
 - **2026-06-15** - **Wiki-port status reconciled + re-categorization drafted.** Recorded that the
   full wiki port is complete (496 EN bundles, 493 wiki-credited; ~20 library topics intentionally
   skipped) - the old per-batch ledger in `WIKI_PORTING_PLAN.md` was stale and is now corrected
