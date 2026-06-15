@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Services\ArticleIndexer;
 use App\Services\ArticleService;
+use App\Services\TaxonomySync;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
@@ -43,6 +44,7 @@ class NodePageTest extends TestCase
 
         config(['hondabase.content_path' => $this->root]);
         $this->app->forgetInstance(ArticleService::class);
+        $this->app->make(TaxonomySync::class)->import($this->root.'/_data/taxonomy.json', $this->root.'/_data/subjects.json');
         $this->app->make(ArticleIndexer::class)->indexAll();
     }
 

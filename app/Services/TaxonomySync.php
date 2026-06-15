@@ -8,20 +8,26 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
- * Seeds the DERIVED taxonomy_nodes + subjects tables from the forkable source of truth
- * (content/_data/taxonomy.json + subjects.json). Run as part of the full reindex so a fresh
- * clone restores the whole catalog (forkability invariant). Idempotent: it rebuilds both tables.
+ * Imports the product taxonomy + subjects from a JSON seed into the taxonomy_nodes/subjects tables.
+ *
+ * The tables are the LIVE source of truth (edited via the taxonomy control panel and distributed in
+ * the public DB dump) - this importer only *bootstraps* them from the shipped seed files
+ * (database/data/*.json) via `php artisan hondabase:taxonomy:seed`, or loads a fixture in tests. It
+ * is intentionally NOT part of `hondabase:reindex`, so a reindex never clobbers control-panel edits.
  */
 class TaxonomySync
 {
-    /** @return array{nodes:int, subjects:int} */
-    public function sync(): array
+    /**
+     * Replace the taxonomy + subjects with the contents of the given seed files (a missing file is
+     * treated as empty). Destructive: callers guard against clobbering live edits.
+     *
+     * @return array{nodes:int, subjects:int}
+     */
+    public function import(string $taxonomyFile, string $subjectsFile): array
     {
-        $root = rtrim((string) config('hondabase.content_path'), '/');
-
-        return DB::transaction(function () use ($root) {
+        return DB::transaction(function () use ($taxonomyFile, $subjectsFile) {
             TaxonomyNode::query()->delete();
-            foreach ($this->json("{$root}/_data/taxonomy.json") as $type => $tree) {
+            foreach ($this->json($taxonomyFile) as $type => $tree) {
                 if ($type === '_comment' || ! is_array($tree)) {
                     continue;
                 }
@@ -29,8 +35,7 @@ class TaxonomySync
             }
 
             Subject::query()->delete();
-            $subjects = $this->json("{$root}/_data/subjects.json")['subjects'] ?? [];
-            foreach ($subjects as $slug => $name) {
+            foreach ($this->json($subjectsFile)['subjects'] ?? [] as $slug => $name) {
                 Subject::create(['slug' => $slug, 'name' => $name]);
             }
 
@@ -38,7 +43,7 @@ class TaxonomySync
         });
     }
 
-    /** Register a subject slug discovered in content if it isn't already seeded. */
+    /** Register a subject slug discovered in content if it isn't already present. */
     public function ensureSubject(string $slug): void
     {
         if ($slug !== '' && ! Subject::where('slug', $slug)->exists()) {

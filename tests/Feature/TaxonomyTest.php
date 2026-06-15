@@ -11,8 +11,9 @@ use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 /**
- * P1: the product taxonomy + subjects are DERIVED from content/_data/*.json by TaxonomySync, and
- * PathParser splits an article's category path into its taxonomy-node prefix + subject remainder.
+ * P1: the product taxonomy + subjects are bootstrapped from a JSON seed by TaxonomySync::import
+ * (the DB table is the live source of truth thereafter), and PathParser splits an article's category
+ * path into its taxonomy-node prefix + subject remainder.
  */
 class TaxonomyTest extends TestCase
 {
@@ -54,7 +55,7 @@ class TaxonomyTest extends TestCase
 
     public function test_sync_seeds_nodes_and_subjects(): void
     {
-        $counts = app(TaxonomySync::class)->sync();
+        $counts = app(TaxonomySync::class)->import($this->root.'/_data/taxonomy.json', $this->root.'/_data/subjects.json');
 
         $this->assertSame(['nodes' => 3, 'subjects' => 2], $counts); // honda, civic, eg
         $this->assertDatabaseHas('taxonomy_nodes', ['path' => 'cars/honda/civic/eg', 'kind' => 'generation']);
@@ -68,8 +69,8 @@ class TaxonomyTest extends TestCase
 
     public function test_sync_is_idempotent(): void
     {
-        app(TaxonomySync::class)->sync();
-        app(TaxonomySync::class)->sync();
+        app(TaxonomySync::class)->import($this->root.'/_data/taxonomy.json', $this->root.'/_data/subjects.json');
+        app(TaxonomySync::class)->import($this->root.'/_data/taxonomy.json', $this->root.'/_data/subjects.json');
 
         $this->assertSame(3, TaxonomyNode::count());
         $this->assertSame(2, Subject::count());
@@ -77,7 +78,7 @@ class TaxonomyTest extends TestCase
 
     public function test_pathparser_splits_node_prefix_from_subject(): void
     {
-        app(TaxonomySync::class)->sync();
+        app(TaxonomySync::class)->import($this->root.'/_data/taxonomy.json', $this->root.'/_data/subjects.json');
         $p = new PathParser; // fresh (uncached) instance
 
         $deep = $p->parse('cars', 'honda/civic/eg/engine');
@@ -101,7 +102,7 @@ class TaxonomyTest extends TestCase
 
     public function test_ensure_subject_registers_a_discovered_slug(): void
     {
-        app(TaxonomySync::class)->sync();
+        app(TaxonomySync::class)->import($this->root.'/_data/taxonomy.json', $this->root.'/_data/subjects.json');
         $sync = app(TaxonomySync::class);
 
         $sync->ensureSubject('wiring');

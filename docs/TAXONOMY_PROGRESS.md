@@ -16,12 +16,13 @@ the full path. This epic adds the semantic layer over those paths.
 
 ## Status by phase
 
-- [x] **P1 - Taxonomy & subjects foundation** *(done 2026-06-15)*
-  - [x] `content/_data/taxonomy.json` (data-driven node kinds; real Honda/Acura cars branch w/
-        chassis+years; stubbed motorcycles/aircraft) + `content/_data/subjects.json`
-  - [x] `taxonomy_nodes` + `subjects` migrations + `TaxonomyNode`/`Subject` models
-  - [x] `TaxonomySync` seeds both from the JSON inside `hondabase:reindex` (idempotent, forkable);
-        reindex reports 36 nodes / 17 subjects
+- [x] **P1 - Taxonomy & subjects foundation** *(done 2026-06-15; storage pivoted to DB-canonical)*
+  - [x] `database/data/taxonomy.json` + `subjects.json` SEED (data-driven node kinds; real Honda/Acura
+        cars branch w/ chassis+years; stubbed motorcycles/aircraft). NOTE: moved out of `content/_data`
+        - it's a one-time bootstrap, not the live source.
+  - [x] `taxonomy_nodes` + `subjects` migrations + `TaxonomyNode`/`Subject` models (durable, editable)
+  - [x] `TaxonomySync::import()` + `hondabase:taxonomy:seed` (empty-guard + `--force`); `reindex` no
+        longer seeds/wipes taxonomy (36 nodes / 17 subjects persist across reindex)
   - [x] `App\Services\PathParser` (greedy node-prefix match -> nodePath + subject); `TaxonomyTest` (4)
 - [x] **P2 - Compatibility & fits** *(done 2026-06-15)*
   - [x] `compatibilities` pivot migration + `Compatibility` model (cascades with the article row)
@@ -54,10 +55,21 @@ the full path. This epic adds the semantic layer over those paths.
 - **Privacy posture (owner, 2026-06-15):** everything is public. No email/password collected (Discord
   OAuth only; those `users` columns dropped). The DB dump commits to the **public** site source;
   only credentials (`remember_token`, `push_subscriptions` keys) + transient tables are excluded
-  (security, not privacy). Old "no PII / private backups repo" rule is dropped. Taxonomy management:
-  file-canonical (a control panel edits + commits the JSON; tables stay derived) - panel slated for P3.
+  (security, not privacy). Old "no PII / private backups repo" rule is dropped.
+- **Taxonomy storage: DB-canonical (owner, 2026-06-15).** The `taxonomy_nodes`/`subjects` TABLES are
+  the live source of truth (edited via the control panel; natural add/remove/rename for an evolving,
+  not-fully-known dataset). A JSON seed (`database/data/*.json`) bootstraps them once via
+  `hondabase:taxonomy:seed`; `reindex` never touches them; forkability rides on the public DB dump.
+  (Reversed the earlier file-canonical plan once the dump became public.) Caveat: a node `slug` is
+  also a content folder name, so renaming/removing a node with inherited articles implies moving
+  those folders - the control panel ties rename to a content move, or restricts it to empty nodes.
 
 ## Changelog
+- **2026-06-15** - **Taxonomy pivoted to DB-canonical.** The `taxonomy_nodes`/`subjects` tables are now
+  the live, control-panel-editable source of truth (better for an evolving dataset); JSON moved from
+  `content/_data` to a `database/data` seed loaded once by `hondabase:taxonomy:seed`. `reindex` no
+  longer seeds/wipes taxonomy. Viable now that the DB dump is public (forkability rides on it). Tests
+  updated to `import()` the fixture before reindex. 47 tests pass.
 - **2026-06-15** - **P3 read side done.** Node landing pages (`/cars/honda/civic/eg`) via a
   taxonomy-aware `resolve()` branch + `node.blade` (metadata, child nodes, compatible-article cards);
   `BreadcrumbBuilder` gives generation/model/subject-named breadcrumbs across article/category/node

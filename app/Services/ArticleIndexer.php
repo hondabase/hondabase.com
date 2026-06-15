@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Article;
 use App\Models\ArticleFacet;
 use App\Models\Compatibility;
+use App\Models\Subject;
+use App\Models\TaxonomyNode;
 use App\Support\Locales;
 use Illuminate\Support\Facades\DB;
 
@@ -18,17 +20,14 @@ class ArticleIndexer
 {
     public function __construct(
         private ArticleService $articles,
-        private TaxonomySync $taxonomy,
         private CompatibilityResolver $compatibility,
     ) {}
 
-    /** Rebuild the entire index. Returns article/facet/node/subject/compatibility counts. */
+    /** Rebuild the derived index (articles, facets, compatibilities). The taxonomy itself is NOT
+     *  touched here - it is durable, control-panel-edited state, seeded once by hondabase:taxonomy:seed. */
     public function indexAll(): array
     {
-        // Seed the derived taxonomy + subjects first (forkability: a fresh clone restores the whole
-        // catalog from content/_data), so article indexing can resolve paths against it.
-        $tax = $this->taxonomy->sync();
-        $this->compatibility->forget(); // drop any node cache from before the reseed
+        $this->compatibility->forget(); // fresh node cache for this run
 
         $rows = $this->articles->scan();
 
@@ -41,7 +40,13 @@ class ArticleIndexer
             }
         });
 
-        return ['articles' => Article::count(), 'facets' => ArticleFacet::count(), 'compatibilities' => Compatibility::count()] + $tax;
+        return [
+            'articles' => Article::count(),
+            'facets' => ArticleFacet::count(),
+            'compatibilities' => Compatibility::count(),
+            'nodes' => TaxonomyNode::count(),
+            'subjects' => Subject::count(),
+        ];
     }
 
     /**

@@ -21,12 +21,13 @@ class Reindex extends Command
         $counts = $indexer->indexAll();
 
         $this->info(sprintf(
-            'Seeded %d taxonomy nodes, %d subjects. Indexed %d articles, %d facets (%d distinct kinds).',
-            $counts['nodes'] ?? 0,
-            $counts['subjects'] ?? 0,
+            'Indexed %d articles, %d facets (%d kinds), %d compatibilities. Taxonomy: %d nodes, %d subjects (seed via hondabase:taxonomy:seed).',
             $counts['articles'],
             $counts['facets'],
             ArticleFacet::distinct('kind')->count('kind'),
+            $counts['compatibilities'] ?? 0,
+            $counts['nodes'] ?? 0,
+            $counts['subjects'] ?? 0,
         ));
 
         return self::SUCCESS;
