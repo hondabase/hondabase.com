@@ -91,7 +91,7 @@ class RevisionReview extends Component
             return;
         }
 
-        $raw = app(ArticleService::class)->rawMarkdown($rev->type, $rev->category, $rev->slug);
+        $raw = app(ArticleService::class)->rawMarkdown($rev->type, $rev->category, $rev->slug, $rev->locale ?? 'en');
         if ($raw === null) {
             $this->message = "The article for edit #{$id} no longer exists on disk; reject it instead.";
 

@@ -108,4 +108,12 @@ if ($locales !== '') {
     Route::get('/{locale}/{type}/{category}', [ArticleController::class, 'category'])
         ->where(['locale' => $locales, 'type' => $types, 'category' => $seg])
         ->name('article.category.localized');
+
+    // Translation authoring (auth-gated): edit/create a non-default-locale translation of an
+    // existing article. 5 segments, so it never collides with the 4-segment localized show route
+    // above; `edit` isn't a content type so it can't match the {type} mirror either.
+    Route::get('/{locale}/edit/{type}/{category}/{slug}', fn (string $locale, string $type, string $category, string $slug) => view('translate', compact('locale', 'type', 'category', 'slug')))
+        ->middleware('auth')
+        ->where(['locale' => $locales, 'type' => $types, 'category' => $seg, 'slug' => $seg])
+        ->name('article.translate');
 }

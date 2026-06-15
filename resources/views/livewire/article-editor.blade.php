@@ -1,21 +1,38 @@
+@php $articleUrl = ($isTranslation ? "/{$locale}" : '')."/{$type}/{$category}/{$slug}"; @endphp
 <div class="editor" x-data="{ tab: 'edit' }">
     <nav class="crumbs" aria-label="Breadcrumb">
         <a href="/">{{ __('Home') }}</a>
         <span class="sep">/</span>
         <a href="/{{ $type }}/{{ $category }}">{{ \Illuminate\Support\Str::headline($category) }}</a>
         <span class="sep">/</span>
-        <a href="/{{ $type }}/{{ $category }}/{{ $slug }}">{{ $articleTitle }}</a>
+        <a href="{{ $articleUrl }}">{{ $articleTitle }}</a>
         <span class="sep">/</span>
-        <span class="current">{{ __('Edit') }}</span>
+        <span class="current">{{ $isTranslation ? __('Translate') : __('Edit') }}</span>
     </nav>
 
     <header class="ed-head">
         <div>
-            <div class="kicker">{{ __('Suggesting an edit') }}</div>
+            <div class="kicker">
+                @if ($isTranslation)
+                    {{ __('Translating to :language', ['language' => \App\Support\Locales::all()[$locale]['native']]) }}
+                @else
+                    {{ __('Suggesting an edit') }}
+                @endif
+            </div>
             <h1>{{ $articleTitle }}</h1>
         </div>
-        <a class="ed-cancel" href="/{{ $type }}/{{ $category }}/{{ $slug }}" wire:navigate>{{ __('Cancel') }}</a>
+        <a class="ed-cancel" href="{{ $articleUrl }}" wire:navigate>{{ __('Cancel') }}</a>
     </header>
+
+    @if ($isTranslation)
+        <p class="ed-note">
+            @if ($isNewTranslation)
+                {!! __('No :language translation exists yet. The body below is pre-filled with the English text; replace it with your translation. Open the :source in another tab to follow along.', ['language' => e(\App\Support\Locales::all()[$locale]['native']), 'source' => '<a href="/'.$type.'/'.$category.'/'.$slug.'" target="_blank" rel="noopener">'.e(__('English version')).'</a>']) !!}
+            @else
+                {!! __('Editing the :language translation. Open the :source in another tab to compare.', ['language' => e(\App\Support\Locales::all()[$locale]['native']), 'source' => '<a href="/'.$type.'/'.$category.'/'.$slug.'" target="_blank" rel="noopener">'.e(__('English version')).'</a>']) !!}
+            @endif
+        </p>
+    @endif
 
     <p class="ed-note">
         {{ __('Edit the article below with the rich-text editor; its metadata (tags, summary, what it applies to) is set in the fields above the body.') }}
@@ -55,7 +72,7 @@
                     <span wire:loading.remove wire:target="submit">{{ $canManage ? __('Publish changes') : __('Submit for review') }}</span>
                     <span wire:loading wire:target="submit">{{ $canManage ? __('Publishing...') : __('Submitting...') }}</span>
                 </button>
-                <a class="ed-cancel-link" href="/{{ $type }}/{{ $category }}/{{ $slug }}" wire:navigate>{{ __('Discard') }}</a>
+                <a class="ed-cancel-link" href="{{ $articleUrl }}" wire:navigate>{{ __('Discard') }}</a>
             </div>
         </section>
 

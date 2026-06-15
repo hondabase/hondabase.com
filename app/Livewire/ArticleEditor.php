@@ -10,6 +10,7 @@ use App\Markdown\WirelistParser;
 use App\Models\ArticleRevision;
 use App\Services\ArticleService;
 use App\Support\ArticleDocument;
+use App\Support\Locales;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -39,6 +40,16 @@ class ArticleEditor extends Component
 
     public string $slug;
 
+    /** Target locale of this edit: the default ('en') edits the canonical bundle; another locale
+     *  (e.g. 'pt') authors a translation written to the /{locale}/... mirror path. */
+    public string $locale = 'en';
+
+    /** True when editing a non-default locale (a translation rather than the English source). */
+    public bool $isTranslation = false;
+
+    /** True when this is the first time a translation is being written (no file on disk yet). */
+    public bool $isNewTranslation = false;
+
     public string $repoPath = '';
 
     public ?string $baseSha = null;
@@ -57,22 +68,30 @@ class ArticleEditor extends Component
     /** UI only (button/copy). The authoritative auto-apply decision is re-checked in submit(). */
     public bool $canManage = false;
 
-    public function mount(string $type, string $category, string $slug, ArticleService $articles): void
+    public function mount(string $type, string $category, string $slug, ArticleService $articles, string $locale = 'en'): void
     {
         abort_unless(Auth::check(), 403);
+        abort_unless(Locales::isSupported($locale), 404);
 
-        $raw = $articles->rawMarkdown($type, $category, $slug);
+        $raw = $articles->rawMarkdown($type, $category, $slug, $locale);
         abort_if($raw === null, 404);
 
         $this->type = $type;
         $this->category = $category;
         $this->slug = $slug;
+        $this->locale = $locale;
+        $this->isTranslation = ! Locales::isDefault($locale);
+        $this->isNewTranslation = $this->isTranslation && ! $raw['exists'];
         $this->repoPath = $raw['repo_path'];
         $this->baseSha = $raw['sha'];
         $this->articleTitle = $raw['title'];
+        // The on-disk base the edit diffs against: the translation file ('' for a brand-new one),
+        // never the English seed, so the conflict check has nothing to clobber on first save.
         $this->original = $raw['content'];
 
-        $doc = ArticleDocument::parse($raw['content']);
+        // A new translation pre-fills the canvas from the English source so the translator works
+        // from a structural copy; an existing translation (or any English edit) loads its own file.
+        $doc = ArticleDocument::parse($this->isNewTranslation ? (string) $raw['seed'] : $raw['content']);
         $this->bodyMarkdown = $doc['body'];
         $this->hydrateFrontmatter($doc['fm']);
 
@@ -116,13 +135,13 @@ class ArticleEditor extends Component
         // cannot redirect the write to an arbitrary file. rawMarkdown() runs the safe() guard
         // and confirms the article still exists.
         $svc = app(ArticleService::class);
-        $raw = $svc->rawMarkdown($this->type, $this->category, $this->slug);
+        $raw = $svc->rawMarkdown($this->type, $this->category, $this->slug, $this->locale);
         abort_if($raw === null, 404);
 
         $composed = $this->composedDocument();
 
         if ($this->normalize($composed) === $this->normalize($raw['content'])) {
-            $this->addError('bodyMarkdown', 'No changes to submit. Edit the article first.');
+            $this->addError('bodyMarkdown', __('No changes to submit. Edit the article first.'));
 
             return null;
         }
@@ -135,6 +154,7 @@ class ArticleEditor extends Component
             'type' => $this->type,
             'category' => $this->category,
             'slug' => $this->slug,
+            'locale' => $this->locale,
             'title' => $svc->preview($composed, $this->type, $this->category, $this->slug)['title'],
             'repo_path' => $raw['repo_path'],
             'base_sha' => $raw['sha'],
@@ -147,8 +167,12 @@ class ArticleEditor extends Component
             'reviewed_at' => $manage ? now() : null,
         ]);
 
-        $names = $this->stageReferencedUploads($rev, $composed);
-        $rev->forceFill(['assets' => $names ?: null])->save();
+        // Translations reuse the English bundle's co-located assets (locale-agnostic asset URLs),
+        // so image uploads only attach to a default-locale edit.
+        if (! $this->isTranslation) {
+            $names = $this->stageReferencedUploads($rev, $composed);
+            $rev->forceFill(['assets' => $names ?: null])->save();
+        }
 
         if ($manage) {
             CommitArticle::dispatch($rev->id);

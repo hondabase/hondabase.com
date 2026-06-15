@@ -351,8 +351,31 @@ Living log of the Hondabase rebuild. Plan of record:
   English fallback, bad-locale 404, reindex creates a pt row, `availableLocales`). 29 tests pass; Pint
   clean; Vite build green. **Note:** the controller reads route params **by name** (not positional
   method args) so the extra leading `{locale}` segment never shifts `type`/`category`/`slug`.
-  **Out of scope (later, Phase C):** authoring/editing translations in the TipTap editor + creator
-  (a locale target, `CommitArticle` writing `pt/...` paths, a per-locale review queue).
+  **Translation authoring DONE (Phase C, 2026-06-15):** translations are now authored through the
+  same TipTap editor + review pipeline. A new `article_revisions.locale` column carries the target
+  locale; `ArticleService::rawMarkdown($type,$cat,$slug,$locale)` is locale-aware (default = the
+  canonical bundle; a non-default locale reads the `/{locale}/...` mirror, requires an English source
+  to translate from, and for a brand-new translation returns an empty on-disk base + the English
+  **seed** the editor pre-fills the canvas with). `ArticleEditor` gained a `locale` mount param
+  (`isTranslation`/`isNewTranslation` flags): a new auth-gated route
+  **`GET /{locale}/edit/{type}/{category}/{slug}`** (`article.translate`, `translate` view, locale
+  constrained to the declared others, 5 segments so it never shadows the localized show route) opens
+  the editor in translation mode with a "translating to / pre-filled from English" banner + a link to
+  the English source; the article footer shows per-locale **"Translate to :language" / "Edit the
+  :language translation"** CTAs. Submit records a revision with `locale=pt` and the `pt/...`
+  `repo_path` (image uploads skipped for translations - they reuse the English bundle's locale-agnostic
+  assets); members go to review, staff auto-apply. `CommitArticle` writes the `pt/...` file in the
+  same path-limited commit, reindexes the **pt** locale row (`indexOne(... ,locale)`), and **skips
+  follower notifications** for non-default locales (facets/follows stay on the English identity). The
+  review queue badges translation revisions (`pt translation`) and `ArticleRevision::url()` +
+  `RevisionReview::rebase()` + `ArticleHistory::revert()` are all locale-aware (a translation reverts
+  within its own locale tree). Admin views stay English (see [[i18n-admin-views-english]]); the 8 new
+  member-facing strings are in `lang/pt.json`. **Verified** with `tests/Feature/TranslationAuthoringTest.php`
+  (5 tests: new-translation seeds from English with an empty base, member translation parks pending at
+  the `pt/...` path with no file/index row, staff translation commits to the `pt` tree + indexes a pt
+  row while the English source stays untouched, English edit still defaults to `en`, translating a
+  missing article 404s) and over HTTP (`/pt/edit/...` 302s anon; article/localized/category 200). 34
+  tests pass; Pint clean; Vite build green.
 
 ## Design directives (2026-06-13, from user)
 - **Homepage = exploration surface ("universe" style)**, not legacy entrypoints: show ALL
@@ -407,6 +430,15 @@ Living log of the Hondabase rebuild. Plan of record:
   Visual design preserved, not redesigned.
 
 ## Changelog
+- **2026-06-15** - **P8 translation authoring (Phase C).** Translations are now authored through the
+  TipTap editor + the same review/commit pipeline. Added `article_revisions.locale`; made
+  `ArticleService::rawMarkdown` locale-aware (English seed for a new translation, empty on-disk base);
+  `ArticleEditor` gained a `locale` mount param with a new auth-gated `GET /{locale}/edit/{type}/{cat}/{slug}`
+  route (`article.translate`) + translation banner, per-locale footer CTAs, and a `pt translation` badge
+  in the review queue. `CommitArticle` writes the `/{locale}/...` file, reindexes the locale row, and
+  skips follower notifications for non-default locales; `ArticleRevision::url()`, `RevisionReview::rebase()`
+  and `ArticleHistory::revert()` are locale-aware. 8 new `lang/pt.json` strings (admin stays English).
+  Verified with `TranslationAuthoringTest` (5 tests) + HTTP. 34 tests pass, Pint clean, build green.
 - **2026-06-15** - **P8 content i18n.** Article bodies now serve per locale: separate `content/pt/...`
   tree (non-`.md` assets fall back to the en bundle), unprefixed+canonical English with prefixed
   `/pt/...` mirror routes (constrained so they never shadow a content type), `App\Support\Locales`

@@ -206,6 +206,15 @@
     "Sign in to suggest an edit": "Inicia sessão para sugerir uma edição",
     "Spotted an error or have something to add? Sign in with Discord to suggest an edit. Every change is reviewed before it goes live.": "Detetaste um erro ou tens algo a acrescentar? Inicia sessão com o Discord para sugerir uma edição. Todas as alterações são revistas antes de entrarem em vigor.",
 
+    "Edit the :language translation": "Editar a tradução em :language",
+    "Translate to :language": "Traduzir para :language",
+    "Translate": "Traduzir",
+    "Translating to :language": "A traduzir para :language",
+    "No :language translation exists yet. The body below is pre-filled with the English text; replace it with your translation. Open the :source in another tab to follow along.": "Ainda não existe tradução em :language. O corpo abaixo está preenchido com o texto em inglês; substitua-o pela sua tradução. Abra a :source noutro separador para acompanhar.",
+    "Editing the :language translation. Open the :source in another tab to compare.": "A editar a tradução em :language. Abra a :source noutro separador para comparar.",
+    "English version": "versão em inglês",
+    "No changes to submit. Edit the article first.": "Não há alterações para submeter. Edite primeiro o artigo.",
+
     "Article applicability": "Aplicabilidade do artigo",
     "Knowledgebase": "Base de conhecimento",
     "Brand": "Marca",

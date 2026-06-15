@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Locales;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -101,7 +102,9 @@ class ArticleRevision extends Model
 
     public function url(): string
     {
-        return "/{$this->type}/{$this->category}/{$this->slug}";
+        $prefix = ($this->locale && ! Locales::isDefault($this->locale)) ? "/{$this->locale}" : '';
+
+        return "{$prefix}/{$this->type}/{$this->category}/{$this->slug}";
     }
 
     /**

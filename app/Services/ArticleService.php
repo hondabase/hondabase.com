@@ -238,29 +238,77 @@ class ArticleService
     }
 
     /**
-     * Raw on-disk markdown for an article (the whole file: frontmatter + body), plus the
-     * repo-relative path, the current content HEAD sha, and the resolved title. Drives the
-     * editor: the textarea holds exactly this, so an approved edit round-trips byte-for-byte.
-     * Returns null if the article does not exist.
+     * Raw on-disk markdown for an article in a given locale (the whole file: frontmatter + body),
+     * plus the repo-relative path, the current content HEAD sha, and the resolved title. Drives the
+     * editor: the canvas holds exactly this, so an approved edit round-trips byte-for-byte.
+     *
+     * For the default locale this is the canonical English bundle and returns null if it doesn't
+     * exist. For a non-default locale (a translation) the English source must exist to translate
+     * from (else null); the returned `repo_path` is the /{locale}/... mirror. A translation that
+     * isn't written yet returns `exists=false`, an empty on-disk `content` (so the conflict check
+     * has nothing to clobber), and `seed` = the English raw file the editor can pre-fill from.
+     *
+     * @return array{repo_path:string, content:string, sha:?string, title:string, locale:string, exists:bool, seed:?string}|null
      */
-    public function rawMarkdown(string $type, string $category, string $slug): ?array
+    public function rawMarkdown(string $type, string $category, string $slug, string $locale = 'en'): ?array
     {
         if (! $this->safe($type, $category, $slug)) {
             return null;
         }
-        $dir = "{$this->root}/{$type}/{$category}/{$slug}";
-        $file = $this->mdFile($dir, $slug);
-        if ($file === null) {
+
+        if (Locales::isDefault($locale)) {
+            $file = $this->mdFile("{$this->root}/{$type}/{$category}/{$slug}", $slug);
+            if ($file === null) {
+                return null;
+            }
+            $raw = (string) file_get_contents($file);
+            [$fm, $body] = $this->splitFrontMatter($raw);
+
+            return [
+                'repo_path' => "{$type}/{$category}/{$slug}/".basename($file),
+                'content' => $raw,
+                'sha' => $this->headSha(),
+                'title' => $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug),
+                'locale' => $locale,
+                'exists' => true,
+                'seed' => null,
+            ];
+        }
+
+        // Translation: there must be an English source to translate from.
+        $enFile = $this->mdFile("{$this->root}/{$type}/{$category}/{$slug}", $slug);
+        if ($enFile === null) {
             return null;
         }
-        $raw = (string) file_get_contents($file);
-        [$fm, $body] = $this->splitFrontMatter($raw);
+
+        $file = $this->mdFile("{$this->localeRoot($locale)}/{$type}/{$category}/{$slug}", $slug);
+        if ($file !== null) {
+            $raw = (string) file_get_contents($file);
+            [$fm, $body] = $this->splitFrontMatter($raw);
+
+            return [
+                'repo_path' => ltrim(str_replace($this->root, '', $file), '/'),
+                'content' => $raw,
+                'sha' => $this->headSha(),
+                'title' => $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug),
+                'locale' => $locale,
+                'exists' => true,
+                'seed' => null,
+            ];
+        }
+
+        // New translation: nothing on disk yet. Mirror the English filename; seed from English.
+        $enRaw = (string) file_get_contents($enFile);
+        $enBody = $this->splitFrontMatter($enRaw)[1];
 
         return [
-            'repo_path' => "{$type}/{$category}/{$slug}/".basename($file),
-            'content' => $raw,
+            'repo_path' => "{$locale}/{$type}/{$category}/{$slug}/".basename($enFile),
+            'content' => '',
             'sha' => $this->headSha(),
-            'title' => $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug),
+            'title' => $this->firstH1($enBody) ?? $this->humanize($slug),
+            'locale' => $locale,
+            'exists' => false,
+            'seed' => $enRaw,
         ];
     }
 

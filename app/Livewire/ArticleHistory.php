@@ -61,7 +61,7 @@ class ArticleHistory extends Component
         }
 
         $svc = app(ArticleService::class);
-        $raw = $svc->rawMarkdown($target->type, $target->category, $target->slug);
+        $raw = $svc->rawMarkdown($target->type, $target->category, $target->slug, $target->locale ?? 'en');
         if ($raw === null) {
             $this->message = "The article for edit #{$id} no longer exists on disk.";
 
@@ -80,6 +80,7 @@ class ArticleHistory extends Component
             'type' => $target->type,
             'category' => $target->category,
             'slug' => $target->slug,
+            'locale' => $target->locale ?? 'en',
             'title' => $svc->preview($restore, $target->type, $target->category, $target->slug)['title'],
             'repo_path' => $raw['repo_path'],
             'base_sha' => $raw['sha'],

@@ -7,6 +7,7 @@ use App\Models\ArticleRevision;
 use App\Services\ArticleAuthorService;
 use App\Services\ArticleIndexer;
 use App\Services\FollowerNotifier;
+use App\Support\Locales;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -58,12 +59,15 @@ class CommitArticle implements ShouldQueue
             if (! $this->writeAndCommit($rev, $root)) {
                 return;
             }
-            // Make the change visible on the live site immediately, push or not.
-            $indexer->indexOne($rev->type, $rev->category, $rev->slug);
+            // Make the change visible on the live site immediately, push or not. The locale row
+            // (en or a translation) is reindexed; facets stay on the English identity row.
+            $indexer->indexOne($rev->type, $rev->category, $rev->slug, $rev->locale ?? 'en');
 
             // Notify followers of a matching facet. A revert isn't an authored "publish/update",
-            // so it doesn't notify. Failures here must never break the commit/push, so guard it.
-            if ($rev->reverts_revision_id === null) {
+            // so it doesn't notify; nor does a translation (followers track the English identity,
+            // and a translation of an existing article isn't a new publish). Failures here must
+            // never break the commit/push, so guard it.
+            if ($rev->reverts_revision_id === null && Locales::isDefault($rev->locale ?? 'en')) {
                 $article = Article::where('type', $rev->type)->where('category', $rev->category)
                     ->where('slug', $rev->slug)->first();
                 if ($article) {

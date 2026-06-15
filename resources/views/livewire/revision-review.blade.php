@@ -24,7 +24,7 @@
             @foreach ($conflicted as $rev)
                 <article class="rev-card rev-card-conflict" wire:key="conf-{{ $rev->id }}">
                     <header class="rev-cardhead">
-                        <h2>{{ $rev->title }} <span class="rev-state rev-state-conflicted">conflicted</span></h2>
+                        <h2>{{ $rev->title }} <span class="rev-state rev-state-conflicted">conflicted</span>@unless(\App\Support\Locales::isDefault($rev->locale ?? 'en')) <span class="rev-state rev-state-locale">{{ strtoupper($rev->locale) }} translation</span>@endunless</h2>
                         <span class="rev-id">#{{ $rev->id }} · {{ $rev->repo_path }}</span>
                         <span class="rev-by">
                             by <b>{{ optional($rev->author)->displayName() ?? 'unknown' }}</b>
@@ -56,7 +56,7 @@
                         <button type="button" class="rev-reject" wire:click="reject({{ $rev->id }})"
                                 wire:confirm="Reject conflicted edit #{{ $rev->id }}?"
                                 wire:loading.attr="disabled">Reject</button>
-                        <a class="rev-link" href="/{{ $rev->type }}/{{ $rev->category }}/{{ $rev->slug }}" target="_blank" rel="noopener">View live →</a>
+                        <a class="rev-link" href="{{ $rev->url() }}" target="_blank" rel="noopener">View live →</a>
                     </div>
                 </article>
             @endforeach
@@ -66,7 +66,7 @@
     @forelse ($pending as $rev)
         <article class="rev-card" wire:key="rev-{{ $rev->id }}">
             <header class="rev-cardhead">
-                <h2>{{ $rev->title }}</h2>
+                <h2>{{ $rev->title }}@unless(\App\Support\Locales::isDefault($rev->locale ?? 'en')) <span class="rev-state rev-state-locale">{{ strtoupper($rev->locale) }} translation</span>@endunless</h2>
                 <span class="rev-id">#{{ $rev->id }} · {{ $rev->repo_path }}</span>
                 <span class="rev-by">
                     by <b>{{ optional($rev->author)->displayName() ?? 'unknown' }}</b>
@@ -98,7 +98,7 @@
                 <button type="button" class="rev-reject" wire:click="reject({{ $rev->id }})"
                         wire:confirm="Reject edit #{{ $rev->id }}?"
                         wire:loading.attr="disabled">Reject</button>
-                <a class="rev-link" href="/{{ $rev->type }}/{{ $rev->category }}/{{ $rev->slug }}" target="_blank" rel="noopener">View live →</a>
+                <a class="rev-link" href="{{ $rev->url() }}" target="_blank" rel="noopener">View live →</a>
             </div>
         </article>
     @empty
