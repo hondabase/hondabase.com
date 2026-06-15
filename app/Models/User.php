@@ -41,9 +41,9 @@ class User extends Authenticatable
         return $this->hasMany(Favorite::class);
     }
 
-    public function vehicles(): HasMany
+    public function products(): HasMany
     {
-        return $this->hasMany(UserVehicle::class);
+        return $this->hasMany(UserProduct::class);
     }
 
     public function equipment(): HasMany

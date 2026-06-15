@@ -58,9 +58,15 @@ the full path. This epic adds the semantic layer over those paths.
   - [x] Internal absolute links rewritten in 746 files; the 12 residual `/cars/electronics/...` links
         are pre-existing dead links to non-existent legacy wiki UI pages (debug-info, all-pages, ...),
         correctly left untouched. HTTP-verified: new paths 200 (en+pt), old paths 404 (no redirects).
-- [ ] **P5 - Product-centric personalization**
-  - [ ] rename `user_vehicles`->`user_products`, `UserVehicle`->`UserProduct`, Garage labels; data preserved
-  - [ ] optional `taxonomy_node_id` FK; "fits my products" filtering + node follows; localized node names
+- [x] **P5 - Product-centric personalization** *(done 2026-06-15)*
+  - [x] `user_vehicles`->`user_products` table rename (data preserved via `Schema::rename`),
+        `UserVehicle`->`UserProduct` model, `User::vehicles()`->`products()`; callers updated
+        (`Garage`, `Dashboard`). **Owner decision: member-facing UI keeps its "vehicle" wording and
+        the `/me/garage` route** - only the storage generalized.
+  - [x] nullable `taxonomy_node_id` FK (nullOnDelete) + `UserProduct::taxonomyNode()`; a node-pinned
+        product implies follows for the node's kind/slug + chassis codes (`impliedFollows()` folds in
+        `nodeFollows()`). `GarageTest` (3). Node-picker UI + "fits my products" filtering are
+        forward-looking (inert until generation metadata + a picker land) - FK + follow plumbing ready.
 
 ## Decisions (locked)
 - Adopt structured taxonomy + compatibility, but **derive facets from it** so the existing
@@ -81,6 +87,12 @@ the full path. This epic adds the semantic layer over those paths.
   those folders - the control panel ties rename to a content move, or restricts it to empty nodes.
 
 ## Changelog
+- **2026-06-15** - **P5 done: product-centric personalization. EPIC COMPLETE.** Renamed
+  `user_vehicles`->`user_products` (+ `UserVehicle`->`UserProduct`, `User::products()`), added a
+  nullable `taxonomy_node_id` FK with node-derived follows; UI/route keep "vehicle"/"garage" wording
+  per owner choice. `GarageTest` (3). 60 tests pass, Pint clean, build green, `/me/garage` 302s
+  (auth gate). All five phases (P1-P5 + P3b) done; generation-filing of content awaits the owner's
+  chassis/model metadata pass.
 - **2026-06-15** - **P4 done: content migration executed.** Re-filed all 496 articles (en + pt) out of
   the flat `cars/electronics` into the 9 tag-derived subjects; 0 generation-specific (no chassis
   metadata yet, so generation-filing is deferred). 2 no-tag articles retagged `diagnostics`, no prunes.

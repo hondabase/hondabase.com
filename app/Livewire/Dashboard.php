@@ -30,7 +30,7 @@ class Dashboard extends Component
         $user = auth()->user();
         $follows = $user->follows()->orderBy('kind')->orderBy('label')->get();
         $followed = $follows->map(fn ($f) => $f->kind.':'.$f->value)->all();
-        $vehicles = $user->vehicles()->latest()->get();
+        $vehicles = $user->products()->latest()->get();
 
         $favorites = Favorite::where('user_id', $user->id)
             ->join('articles', 'articles.id', '=', 'favorites.article_id')

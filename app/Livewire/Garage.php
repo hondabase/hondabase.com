@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use App\Models\ArticleFacet;
 use App\Models\UserEquipment;
-use App\Models\UserVehicle;
+use App\Models\UserProduct;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
@@ -66,7 +66,7 @@ class Garage extends Component
 
     public function editVehicle(int $id): void
     {
-        $v = auth()->user()->vehicles()->findOrFail($id);
+        $v = auth()->user()->products()->findOrFail($id);
         $this->vehicleId = $v->id;
         $this->nickname = $v->nickname ?? '';
         $this->year = (string) ($v->year ?? '');
@@ -94,8 +94,8 @@ class Garage extends Component
         ];
 
         $vehicle = $this->vehicleId
-            ? tap($user->vehicles()->findOrFail($this->vehicleId))->update($attrs)
-            : $user->vehicles()->create($attrs);
+            ? tap($user->products()->findOrFail($this->vehicleId))->update($attrs)
+            : $user->products()->create($attrs);
 
         $this->seedFollows($vehicle);
         $this->resetVehicle();
@@ -104,12 +104,12 @@ class Garage extends Component
 
     public function deleteVehicle(int $id): void
     {
-        auth()->user()->vehicles()->whereKey($id)->delete();
+        auth()->user()->products()->whereKey($id)->delete();
         session()->flash('garage_status', __('Vehicle removed.'));
     }
 
     /** Create follows implied by the vehicle (engine/chassis), skipping any the user already has. */
-    private function seedFollows(UserVehicle $vehicle): void
+    private function seedFollows(UserProduct $vehicle): void
     {
         $user = $vehicle->user;
         foreach ($vehicle->impliedFollows() as $f) {
@@ -180,7 +180,7 @@ class Garage extends Component
         $user = auth()->user();
 
         return view('livewire.garage', [
-            'vehicles' => $user->vehicles()->latest()->get(),
+            'vehicles' => $user->products()->latest()->get(),
             'equipment' => $user->equipment()->orderBy('kind')->orderBy('name')->get(),
             'engineList' => ArticleFacet::where('kind', 'engine')->distinct()->orderBy('label')->pluck('label')->all(),
             'kinds' => UserEquipment::KINDS,
