@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Markdown\GithubAlertExtension;
 use App\Markdown\CarouselParser;
+use App\Markdown\GithubAlertExtension;
 use App\Markdown\MarkdownNormalizer;
 use Illuminate\Support\Str;
 use League\CommonMark\Environment\Environment;

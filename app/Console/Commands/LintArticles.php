@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Markdown\MarkdownNormalizer;
 use App\Markdown\CarouselParser;
+use App\Markdown\MarkdownNormalizer;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
