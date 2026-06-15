@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\SetLocale;
 use App\Support\IdentityCookie;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -16,6 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // The cross-stack SSO cookie is HMAC-signed (not Laravel-encrypted) so the sibling
         // non-Laravel files/ app can verify it. Keep it out of cookie encryption.
         $middleware->encryptCookies(except: [IdentityCookie::NAME]);
+
+        // Resolve the UI locale (cookie → Accept-Language → default) on every web request.
+        $middleware->web(append: [SetLocale::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

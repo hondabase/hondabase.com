@@ -347,6 +347,23 @@
         font-weight: 400;
     }
 
+    /* language switcher (footer) */
+    .lang-switch {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .lang-switch a {
+        color: var(--color-muted);
+    }
+    .lang-switch a:hover {
+        color: var(--color-amber);
+    }
+    .lang-current {
+        color: var(--color-dim);
+    }
+
     /* notification bell (P5) */
     .notif {
         position: relative;

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ config('hondabase.locales.'.app()->getLocale().'.hreflang', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="@yield('description', 'Hondabase - a community-driven, GitHub-preserved technical knowledgebase for Honda and Acura vehicles.')">
-    <title>@yield('title', 'Hondabase') - Honda Knowledgebase</title>
+    <meta name="description" content="@yield('description', __('Hondabase - a community-driven, GitHub-preserved technical knowledgebase for Honda and Acura vehicles.'))">
+    <title>@yield('title', 'Hondabase') - {{ __('Honda Knowledgebase') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,24 +28,24 @@
         <div class="wrap header-wrap">
             <a href="/" class="brand" style="color:inherit">
                 <h1>Honda<b>base</b></h1>
-                <p>Community-Driven Honda Knowledgebase</p>
+                <p>{{ __('Community-Driven Honda Knowledgebase') }}</p>
             </a>
             <nav class="nav" :class="{ 'is-active': mobileMenuOpen }" x-cloak>
                 <a href="/pgmfi/">pgmfi.org</a>
-                <a href="https://files.hondabase.com">Files</a>
+                <a href="https://files.hondabase.com">{{ __('Files') }}</a>
                 @auth
-                    <a href="/me" class="nav-signin">My&nbsp;Hondabase</a>
-                    <a href="/new" class="nav-signin">New&nbsp;article</a>
+                    <a href="/me" class="nav-signin">{{ __('My Hondabase') }}</a>
+                    <a href="/new" class="nav-signin">{{ __('New article') }}</a>
                     @can('manage-articles')
-                        <a href="/admin/reviews" class="nav-signin">Reviews</a>
+                        <a href="/admin/reviews" class="nav-signin">{{ __('Reviews') }}</a>
                     @endcan
                     @can('manage-staff')
-                        <a href="/admin/staff" class="nav-signin">Staff</a>
+                        <a href="/admin/staff" class="nav-signin">{{ __('Staff') }}</a>
                     @endcan
                     <span class="nav-user">{{ auth()->user()->displayName() }}</span>
-                    <form method="POST" action="/auth/logout" class="nav-form">@csrf<button type="submit">Sign&nbsp;out</button></form>
+                    <form method="POST" action="/auth/logout" class="nav-form">@csrf<button type="submit">{{ __('Sign out') }}</button></form>
                 @else
-                    <a href="/auth/login" class="nav-signin">Sign&nbsp;in</a>
+                    <a href="/auth/login" class="nav-signin">{{ __('Sign in') }}</a>
                 @endauth
             </nav>
             <div class="header-right">
@@ -70,8 +70,17 @@
 
     <footer class="site-footer">
         <div class="wrap">
-            <span>&copy; {{ date('Y') }} <b>Hondabase</b> - open &amp; ad-free</span>
-            <span>Content preserved on <a href="https://github.com/Hondabase">GitHub</a></span>
+            <span>&copy; {{ date('Y') }} <b>Hondabase</b> - {{ __('open & ad-free') }}</span>
+            <nav class="lang-switch" aria-label="{{ __('Language') }}">
+                @foreach (config('hondabase.locales') as $code => $meta)
+                    @if ($code === app()->getLocale())
+                        <span class="lang-current" aria-current="true">{{ $meta['native'] }}</span>
+                    @else
+                        <a href="{{ route('locale.switch', $code) }}" hreflang="{{ $meta['hreflang'] }}" rel="nofollow">{{ $meta['native'] }}</a>
+                    @endif
+                @endforeach
+            </nav>
+            <span>{!! __('Content preserved on :github', ['github' => '<a href="https://github.com/Hondabase">GitHub</a>']) !!}</span>
         </div>
     </footer>
     {{-- Livewire ships its own Alpine, used by both Livewire components and standalone

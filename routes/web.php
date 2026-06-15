@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\PushSubscriptionController;
 use App\Models\Article;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('home'))->name('home');
+
+// UI language switcher: persists the chosen locale in a cookie, then returns back.
+Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');
 
 // Auth (Discord OAuth, shared application with the files app).
 Route::get('/auth/login', [AuthController::class, 'login'])->name('login');

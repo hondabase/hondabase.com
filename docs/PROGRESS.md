@@ -300,7 +300,28 @@ Living log of the Hondabase rebuild. Plan of record:
   styles them (CSS 79.7 → 84.8 kB). Remaining P7: convert the last three legacy sheets
   (`article`/`explorer`/`me`.css) + drop the var-alias block, `STYLE_GUIDE.md` (tokens as `@theme`),
   `AGENTS.md`, hardening, CI.
-- [ ] **P8 - Later: full wiki port, pgmfi subdomain, i18n**
+- [~] **P8 - Later: full wiki port, pgmfi subdomain, i18n** *(i18n started 2026-06-15)*:
+  **Scope decided (2026-06-15, user):** full **UI + content** i18n; first target locale is
+  **European Portuguese (`pt`, hreflang `pt-PT`)** alongside English (the default + fallback).
+  **i18n foundation DONE (2026-06-15):** supported-locale map in `config/hondabase.php`
+  (`locales` keyed by app code → `native` + `hreflang`); **`App\Http\Middleware\SetLocale`**
+  (appended to the `web` group) resolves the active locale per request as **cookie →
+  `Accept-Language` → app default**, honouring only declared locales; **`LocaleController@switch`**
+  + `GET /locale/{locale}` (named `locale.switch`) persists the choice in a forever cookie and
+  redirects back, ignoring unsupported codes. The shared layout now emits a dynamic
+  `<html lang="{hreflang}">`, runs its chrome strings through `__()` (nav, footer, tagline,
+  title/description), and renders a **footer language switcher** (native names, current marked,
+  `hreflang`/`rel=nofollow` on links; `.lang-switch` styles added). UI strings translated via the
+  JSON catalog **`lang/pt.json`** (European Portuguese: "Ficheiros", "A Minha Hondabase", "Equipa",
+  "Iniciar sessão", …). **Verified** end-to-end over HTTP (en default; `locale=pt` cookie flips
+  `<html lang>` + chrome to pt-PT; switch route sets the encrypted cookie + redirects; bad locale
+  ignored) and with **`tests/Feature/LocaleTest.php`** (5 tests: default, cookie, Accept-Language,
+  switch persists, bad-locale ignored). 19 tests pass; Pint clean; build green.
+  **Next i18n increments:** (1) extend `__()` coverage to the remaining Livewire views
+  (explorer/editor/dashboard/garage/review/staff); (2) **content i18n** - locale-prefixed article
+  routes (`/pt/...`), per-locale Markdown in the content repo, `hreflang` alternate links, and a
+  translation/fallback strategy (show English when a translation is missing). The locale resolver
+  will gain a URL-segment source ahead of the cookie when content routing lands.
 
 ## Design directives (2026-06-13, from user)
 - **Homepage = exploration surface ("universe" style)**, not legacy entrypoints: show ALL
@@ -355,6 +376,13 @@ Living log of the Hondabase rebuild. Plan of record:
   Visual design preserved, not redesigned.
 
 ## Changelog
+- **2026-06-15** - **P8 i18n foundation.** Decided scope (UI + content; first locale European
+  Portuguese `pt`/`pt-PT` alongside English). Built the locale plumbing: `locales` config map,
+  `SetLocale` middleware (cookie → Accept-Language → default, web group), `LocaleController` +
+  `/locale/{locale}` switcher cookie, dynamic `<html lang>`, `__()`-wrapped layout chrome + footer
+  language switcher, and the `lang/pt.json` catalog. Verified over HTTP + 5 new `LocaleTest` cases
+  (19 tests pass, Pint clean, build green). Next: `__()` the remaining Livewire views, then
+  content i18n (locale-prefixed routes, per-locale Markdown, hreflang, English fallback).
 - **2026-06-15** - **P7 closed: Pint + CI + docs.** Adopted Laravel Pint (`pint.json`, laravel
   preset, legacy `public/`/`scratch/`/`tools/`/`bin/` excluded), formatted the app source (93 files
   clean, 14 tests still green). Added GitHub Actions CI (`.github/workflows/ci.yml`): PHP tests

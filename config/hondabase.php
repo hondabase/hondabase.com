@@ -16,6 +16,15 @@ return [
     // Vehicle types = top-level content folders.
     'types' => ['cars', 'motorcycles', 'aircraft', 'common'],
 
+    // Supported UI locales. Keyed by the Laravel/app locale code (used for lang files,
+    // the `locale` cookie and, later, content paths). `hreflang` is the BCP-47 tag emitted
+    // in <html lang> and alternate links; `native` is what the language switcher shows.
+    // The first entry is the default + fallback.
+    'locales' => [
+        'en' => ['native' => 'English', 'hreflang' => 'en'],
+        'pt' => ['native' => 'Português', 'hreflang' => 'pt-PT'],
+    ],
+
     'content_repo' => 'hondabase/articles',
 
     // Google Analytics 4 measurement id (optional; forks can leave it unset).
