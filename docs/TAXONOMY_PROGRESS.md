@@ -42,9 +42,14 @@ the full path. This epic adds the semantic layer over those paths.
         nodes (path auto-computed), rename (cascades descendant paths), delete subtree, subject CRUD,
         "Rebuild article links" (reindex). Slug rename/delete blocked when articles are filed under
         the node (folder-coupling guard). Nav link added. `TaxonomyManagerTest` (7).
-- [ ] **P4 - Content migration (file under generations)**
-  - [ ] taxonomy-aware `hondabase:recategorize --dry-run` (generation-specific vs multi-fit + prune)
-  - [ ] owner approves split + prune list; execute en+pt + internal link rewrite; reindex
+- [~] **P4 - Content migration** *(tooling done 2026-06-15; execution AWAITS owner approval)*
+  - [x] `Recategorizer` + `hondabase:recategorize` (dry-run default; `--execute`, `--prune=`).
+        `RecategorizeTest` (3). Dry-run on live corpus: **0 generation-specific** (no chassis
+        metadata), all 496 re-file from `electronics` into subjects -> sensors 137, rom 119,
+        wiring 79, diagnostics 76, ecu 36, reference 23, fueling 11, tuning 11, ignition 4.
+        2 no-tag review candidates (Honda-Acura-Trouble-Codes, how-to-check-obd1-ecu-codes).
+  - [ ] **owner: approve the subject mapping/ordering + name any prune slugs**, then `--execute`
+        (git mv en+pt, rewrite absolute links, reindex). Not run yet.
 - [ ] **P5 - Product-centric personalization**
   - [ ] rename `user_vehicles`->`user_products`, `UserVehicle`->`UserProduct`, Garage labels; data preserved
   - [ ] optional `taxonomy_node_id` FK; "fits my products" filtering + node follows; localized node names
