@@ -52,6 +52,9 @@ Route::middleware(['auth', 'can:manage-articles'])->group(function () {
     Route::get('/admin/history', fn () => view('admin.history', ['type' => null, 'category' => null, 'slug' => null]))
         ->name('admin.history');
 
+    // Product taxonomy control panel (the DB is the live source of truth).
+    Route::get('/admin/taxonomy', fn () => view('admin.taxonomy'))->name('admin.taxonomy');
+
     // Granting/revoking staff is owner-only (the UI form of `php artisan hondabase:staff`).
     Route::get('/admin/staff', fn () => view('admin.staff'))
         ->middleware('can:manage-staff')

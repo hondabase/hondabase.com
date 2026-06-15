@@ -37,8 +37,11 @@ the full path. This epic adds the semantic layer over those paths.
         compatible-article cards; static listing rather than the full Explorer - simpler, can swap later)
   - [x] `BreadcrumbBuilder` -> generation/model + subject-named breadcrumbs on article/category/node
         + BreadcrumbList JSON-LD; `NodePageTest` (5); HTTP-verified node pages 200 + bad child 404
-  - [ ] **P3b - taxonomy control panel** (owner/staff, English): tree editor that edits + commits
-        `content/_data/taxonomy.json` via the article-commit machinery; tables stay derived
+  - [x] **P3b - taxonomy control panel** *(done 2026-06-15)* `/admin/taxonomy` (`manage-articles`,
+        English): `TaxonomyManager` Livewire CRUDs the DB-canonical taxonomy directly - add/edit
+        nodes (path auto-computed), rename (cascades descendant paths), delete subtree, subject CRUD,
+        "Rebuild article links" (reindex). Slug rename/delete blocked when articles are filed under
+        the node (folder-coupling guard). Nav link added. `TaxonomyManagerTest` (7).
 - [ ] **P4 - Content migration (file under generations)**
   - [ ] taxonomy-aware `hondabase:recategorize --dry-run` (generation-specific vs multi-fit + prune)
   - [ ] owner approves split + prune list; execute en+pt + internal link rewrite; reindex
@@ -65,6 +68,11 @@ the full path. This epic adds the semantic layer over those paths.
   those folders - the control panel ties rename to a content move, or restricts it to empty nodes.
 
 ## Changelog
+- **2026-06-15** - **P3b done: taxonomy control panel.** `/admin/taxonomy` (`TaxonomyManager`,
+  manage-articles, English) for direct CRUD on the DB-canonical taxonomy + subjects, with path
+  auto-compute, descendant repath on rename, subtree delete, and a folder-coupling guard
+  (rename/delete blocked when articles are filed under the node) + "Rebuild article links".
+  `TaxonomyManagerTest` (7). 54 tests pass. (Also cleared a stale route cache that was hiding new routes.)
 - **2026-06-15** - **Taxonomy pivoted to DB-canonical.** The `taxonomy_nodes`/`subjects` tables are now
   the live, control-panel-editable source of truth (better for an evolving dataset); JSON moved from
   `content/_data` to a `database/data` seed loaded once by `hondabase:taxonomy:seed`. `reindex` no

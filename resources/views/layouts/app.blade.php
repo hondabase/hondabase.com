@@ -38,6 +38,7 @@
                     <a href="/new" class="nav-signin">{{ __('New article') }}</a>
                     @can('manage-articles')
                         <a href="/admin/reviews" class="nav-signin">{{ __('Reviews') }}</a>
+                        <a href="/admin/taxonomy" class="nav-signin">Taxonomy</a>
                     @endcan
                     @can('manage-staff')
                         <a href="/admin/staff" class="nav-signin">{{ __('Staff') }}</a>
