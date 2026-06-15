@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Article;
 use App\Models\ArticleFacet;
+use App\Support\Locales;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Url;
@@ -83,13 +84,13 @@ class Explorer extends Component
         $personalize = $followed && trim($this->q) === '' && empty($this->filters) && ! $this->scopeType;
 
         return view('livewire.explorer', [
-            'articles' => $this->articles($ids, $followed, $personalize),
+            'articles' => $this->localize($this->articles($ids, $followed, $personalize)),
             'groups' => $this->facetGroups($ids),
             'activeLabels' => $this->activeLabels(),
             'total' => count($ids),
             'followed' => $followed,
             'isAuthed' => (bool) auth()->user(),
-            'forYou' => $personalize ? $this->forYou($followed) : collect(),
+            'forYou' => $personalize ? $this->localize($this->forYou($followed)) : collect(),
             'scoped' => $this->scopeType !== null,
             'scopeAll' => $this->scopeAll,
             'scopeLabel' => $this->scopeCategory
@@ -117,7 +118,10 @@ class Explorer extends Component
 
     private function baseQuery()
     {
-        $query = Article::query();
+        // The canonical result set is the default-locale rows: facets, follows and counts all
+        // hang off them. Translation rows are only consulted to broaden search and to overlay
+        // titles/summaries for display (see localize()).
+        $query = Article::query()->where('articles.locale', Locales::default());
 
         if ($this->scopeType && ! $this->scopeAll) {
             $query->where('type', $this->scopeType);
@@ -129,10 +133,28 @@ class Explorer extends Component
         $term = trim($this->q);
         if ($term !== '') {
             $like = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $term).'%';
-            $query->where(function ($w) use ($like) {
-                $w->where('title', 'like', $like)
-                    ->orWhere('summary', 'like', $like)
-                    ->orWhere('body_text', 'like', $like);
+            $locale = app()->getLocale();
+            $query->where(function ($w) use ($like, $locale) {
+                $w->where('articles.title', 'like', $like)
+                    ->orWhere('articles.summary', 'like', $like)
+                    ->orWhere('articles.body_text', 'like', $like);
+                // Under a non-default locale, also match the article's translation row so a
+                // term that only appears in the translated text still finds it.
+                if (! Locales::isDefault($locale)) {
+                    $w->orWhereExists(function ($sub) use ($like, $locale) {
+                        $sub->select(DB::raw(1))
+                            ->from('articles as t')
+                            ->whereColumn('t.type', 'articles.type')
+                            ->whereColumn('t.category', 'articles.category')
+                            ->whereColumn('t.slug', 'articles.slug')
+                            ->where('t.locale', $locale)
+                            ->where(function ($x) use ($like) {
+                                $x->where('t.title', 'like', $like)
+                                    ->orWhere('t.summary', 'like', $like)
+                                    ->orWhere('t.body_text', 'like', $like);
+                            });
+                    });
+                }
             });
         }
 
@@ -240,5 +262,38 @@ class Explorer extends Component
         }
 
         return $out;
+    }
+
+    /**
+     * For a non-default locale, overlay each canonical row with its translated title/summary
+     * (where a translation exists) and stamp the active locale so url() yields the /{locale}
+     * link. Rows without a translation keep their English text but still link to the localized
+     * URL (which falls back to English on the article page).
+     */
+    private function localize($collection)
+    {
+        $locale = app()->getLocale();
+        if (Locales::isDefault($locale) || $collection->isEmpty()) {
+            return $collection;
+        }
+
+        $slugs = $collection->pluck('slug')->unique()->all();
+        $trans = Article::query()
+            ->where('locale', $locale)
+            ->whereIn('slug', $slugs)
+            ->get(['type', 'category', 'slug', 'title', 'summary'])
+            ->keyBy(fn ($t) => "{$t->type}/{$t->category}/{$t->slug}");
+
+        foreach ($collection as $a) {
+            $a->locale = $locale;
+            if ($t = $trans->get("{$a->type}/{$a->category}/{$a->slug}")) {
+                $a->title = $t->title;
+                if ($t->summary) {
+                    $a->summary = $t->summary;
+                }
+            }
+        }
+
+        return $collection;
     }
 }

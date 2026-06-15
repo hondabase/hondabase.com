@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Locales;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -18,8 +19,16 @@ class Article extends Model
         return $this->hasMany(ArticleFacet::class);
     }
 
+    /**
+     * Public URL for this row's locale. The default locale is canonical and unprefixed; other
+     * locales get a /{locale} prefix. The explorer sets `locale` transiently on a canonical row
+     * to render its localized link, so this respects whatever locale the row currently carries.
+     */
     public function url(): string
     {
-        return "/{$this->type}/{$this->category}/{$this->slug}";
+        $locale = $this->locale ?? Locales::default();
+        $prefix = Locales::isDefault($locale) ? '' : "/{$locale}";
+
+        return "{$prefix}/{$this->type}/{$this->category}/{$this->slug}";
     }
 }

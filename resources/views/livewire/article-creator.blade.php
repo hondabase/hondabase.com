@@ -1,32 +1,31 @@
 <div class="editor" x-data="{ tab: 'edit' }">
     <nav class="crumbs" aria-label="Breadcrumb">
-        <a href="/">Home</a>
+        <a href="/">{{ __('Home') }}</a>
         <span class="sep">/</span>
-        <span class="current">New article</span>
+        <span class="current">{{ __('New article') }}</span>
     </nav>
 
     <header class="ed-head">
         <div>
-            <div class="kicker">Creating a new article</div>
-            <h1>New article</h1>
+            <div class="kicker">{{ __('Creating a new article') }}</div>
+            <h1>{{ __('New article') }}</h1>
         </div>
-        <a class="ed-cancel" href="/" wire:navigate>Cancel</a>
+        <a class="ed-cancel" href="/" wire:navigate>{{ __('Cancel') }}</a>
     </header>
 
     <p class="ed-note">
-        Choose where the article lives, then write it with the rich-text editor. The first heading is
-        the title.
+        {{ __('Choose where the article lives, then write it with the rich-text editor. The first heading is the title.') }}
         @if ($canManage)
-            As staff, your new article is <strong>published immediately</strong> (tracked and revertible from history).
+            {!! __('As staff, your new article is :published (tracked and revertible from history).', ['published' => '<strong>'.e(__('published immediately')).'</strong>']) !!}
         @else
-            Your new article is <strong>reviewed before it goes live</strong>.
+            {!! __('Your new article is :reviewed.', ['reviewed' => '<strong>'.e(__('reviewed before it goes live')).'</strong>']) !!}
         @endif
     </p>
 
     {{-- Tabs: phone-first. On a wide screen both panes show side by side and these hide. --}}
     <div class="ed-tabs" role="tablist">
-        <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'edit' }" @click="tab = 'edit'">Write</button>
-        <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'preview' }" @click="tab = 'preview'">Preview</button>
+        <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'edit' }" @click="tab = 'edit'">{{ __('Write') }}</button>
+        <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'preview' }" @click="tab = 'preview'">{{ __('Preview') }}</button>
     </div>
 
     <div class="ed-grid">
@@ -34,7 +33,7 @@
             data-asset-base="/{{ $type }}/{{ $category }}/{{ $slug }}">
             <div class="ed-locrow">
                 <div class="ed-locfield">
-                    <label class="ed-label" for="ed-type">Type</label>
+                    <label class="ed-label" for="ed-type">{{ __('Type') }}</label>
                     <select id="ed-type" class="ed-input" wire:model.live="type">
                         @foreach (app(\App\Services\ArticleService::class)->types() as $t)
                             <option value="{{ $t }}">{{ ucfirst($t) }}</option>
@@ -42,9 +41,9 @@
                     </select>
                 </div>
                 <div class="ed-locfield">
-                    <label class="ed-label" for="ed-category">Category</label>
+                    <label class="ed-label" for="ed-category">{{ __('Category') }}</label>
                     <input id="ed-category" type="text" class="ed-input" wire:model.blur="category"
-                           list="ed-categories" placeholder="e.g. electronics" autocomplete="off">
+                           list="ed-categories" placeholder="{{ __('e.g. electronics') }}" autocomplete="off">
                     <datalist id="ed-categories">
                         @foreach ($this->categoryOptions as $c)
                             <option value="{{ $c }}"></option>
@@ -53,55 +52,55 @@
                     @error('category') <p class="ed-error">{{ $message }}</p> @enderror
                 </div>
                 <div class="ed-locfield">
-                    <label class="ed-label" for="ed-slug">URL slug</label>
+                    <label class="ed-label" for="ed-slug">{{ __('URL slug') }}</label>
                     <input id="ed-slug" type="text" class="ed-input" wire:model.blur="slug"
-                           placeholder="e.g. knock-sensor" autocomplete="off">
+                           placeholder="{{ __('e.g. knock-sensor') }}" autocomplete="off">
                     @error('slug') <p class="ed-error">{{ $message }}</p> @enderror
                 </div>
             </div>
-            <p class="ed-pathpreview">URL: <code>/{{ $type }}/{{ $category ?: '…' }}/{{ $slug ?: '…' }}</code></p>
+            <p class="ed-pathpreview">{{ __('URL') }}: <code>/{{ $type }}/{{ $category ?: '…' }}/{{ $slug ?: '…' }}</code></p>
 
             @include('livewire.partials.frontmatter-fields')
 
-            <label class="ed-label">Article body</label>
+            <label class="ed-label">{{ __('Article body') }}</label>
             @include('livewire.partials.editor-canvas')
             @error('bodyMarkdown') <p class="ed-error">{{ $message }}</p> @enderror
 
-            <label class="ed-label">Images <span class="ed-opt">(optional, co-located with the article)</span></label>
+            <label class="ed-label">{{ __('Images') }} <span class="ed-opt">({{ __('optional, co-located with the article') }})</span></label>
             <input type="file" class="ed-input ed-file" wire:model="images" multiple accept="image/png,image/jpeg,image/gif,image/webp">
-            <div wire:loading wire:target="images" class="ed-rendering">Uploading…</div>
+            <div wire:loading wire:target="images" class="ed-rendering">{{ __('Uploading…') }}</div>
             @error('images.*') <p class="ed-error">{{ $message }}</p> @enderror
             @if (count($this->assetNames))
                 <ul class="ed-assets">
                     @foreach ($this->assetNames as $i => $name)
                         <li>
                             <code>{{ $name }}</code>
-                            <span class="ed-asset-snip">add to the body as an image named <code>{{ $name }}</code></span>
-                            <button type="button" class="ed-asset-rm" wire:click="removeImage({{ $i }})" aria-label="Remove image">&times;</button>
+                            <span class="ed-asset-snip">{!! __('add to the body as an image named :name', ['name' => '<code>'.e($name).'</code>']) !!}</span>
+                            <button type="button" class="ed-asset-rm" wire:click="removeImage({{ $i }})" aria-label="{{ __('Remove image') }}">&times;</button>
                         </li>
                     @endforeach
                 </ul>
-                <p class="ed-opt">Images are committed with the article once it is published.</p>
+                <p class="ed-opt">{{ __('Images are committed with the article once it is published.') }}</p>
             @endif
 
-            <label class="ed-label" for="ed-note">Note for the reviewer <span class="ed-opt">(optional)</span></label>
+            <label class="ed-label" for="ed-note">{{ __('Note for the reviewer') }} <span class="ed-opt">({{ __('optional') }})</span></label>
             <input id="ed-note" type="text" class="ed-input" wire:model="note" maxlength="500"
-                   placeholder="e.g. New article documenting the knock sensor circuit">
+                   placeholder="{{ __('e.g. New article documenting the knock sensor circuit') }}">
             @error('note') <p class="ed-error">{{ $message }}</p> @enderror
 
             <div class="ed-actions">
                 <button type="button" class="btn ed-submit" @click="save()" wire:loading.attr="disabled" wire:target="submit,images">
-                    <span wire:loading.remove wire:target="submit">{{ $canManage ? 'Publish article' : 'Submit for review' }}</span>
-                    <span wire:loading wire:target="submit">{{ $canManage ? 'Publishing...' : 'Submitting...' }}</span>
+                    <span wire:loading.remove wire:target="submit">{{ $canManage ? __('Publish article') : __('Submit for review') }}</span>
+                    <span wire:loading wire:target="submit">{{ $canManage ? __('Publishing...') : __('Submitting...') }}</span>
                 </button>
-                <a class="ed-cancel-link" href="/" wire:navigate>Discard</a>
+                <a class="ed-cancel-link" href="/" wire:navigate>{{ __('Discard') }}</a>
             </div>
         </section>
 
         <section class="ed-pane ed-previewpane" :class="{ 'is-hidden': tab !== 'preview' }" aria-live="polite">
             <div class="ed-previewbar">
-                <span>Live preview</span>
-                <span class="ed-rendering" wire:loading wire:target="bodyMarkdown">rendering...</span>
+                <span>{{ __('Live preview') }}</span>
+                <span class="ed-rendering" wire:loading wire:target="bodyMarkdown">{{ __('rendering...') }}</span>
             </div>
             <article class="article ed-previewbody">
                 <header class="article-head">

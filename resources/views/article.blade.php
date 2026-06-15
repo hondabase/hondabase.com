@@ -4,11 +4,19 @@
 @section('description', $art['seo_description'])
 
 @php
-    $canonical = route('article.show', [
-        'type' => $art['type'],
-        'category' => $art['category'],
-        'slug' => $art['slug'],
-    ]);
+    // Localized URL for this article in a given locale: canonical (unprefixed) for the default,
+    // /{locale}/... otherwise. Drives the canonical link, hreflang alternates and the switcher.
+    $localizedUrl = function (string $loc) use ($art) {
+        $params = ['type' => $art['type'], 'category' => $art['category'], 'slug' => $art['slug']];
+
+        return \App\Support\Locales::isDefault($loc)
+            ? route('article.show', $params)
+            : route('article.show.localized', ['locale' => $loc] + $params);
+    };
+    $canonical = $localizedUrl($art['locale']);
+    $categoryUrl = \App\Support\Locales::isDefault($art['locale'])
+        ? "/{$art['type']}/{$art['category']}"
+        : "/{$art['locale']}/{$art['type']}/{$art['category']}";
     $schemaAuthors = $art['authors']->map(fn ($credit) => [
         '@type' => 'Person',
         'name' => $credit->user->displayName(),
@@ -48,6 +56,10 @@
 
 @push('head')
 <link rel="canonical" href="{{ $canonical }}">
+@foreach ($art['available_locales'] as $loc)
+<link rel="alternate" hreflang="{{ \App\Support\Locales::hreflang($loc) }}" href="{{ $localizedUrl($loc) }}">
+@endforeach
+<link rel="alternate" hreflang="x-default" href="{{ $localizedUrl(\App\Support\Locales::default()) }}">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Hondabase">
 <meta property="og:title" content="{{ $art['title'] }} - Honda Knowledgebase">
@@ -68,12 +80,28 @@
 
 @section('content')
     <nav class="crumbs" aria-label="Breadcrumb">
-        <a href="/">Home</a>
+        <a href="/">{{ __('Home') }}</a>
         <span class="sep">/</span>
-        <a href="/{{ $art['type'] }}/{{ $art['category'] }}">{{ $art['category_label'] }}</a>
+        <a href="{{ $categoryUrl }}">{{ $art['category_label'] }}</a>
         <span class="sep">/</span>
         <span class="current" aria-current="page">{{ $art['title'] }}</span>
     </nav>
+
+    @if (count($art['available_locales']) > 1)
+        <nav class="article-langs" aria-label="{{ __('Language') }}">
+            @foreach ($art['available_locales'] as $loc)
+                @if ($loc === $art['locale'])
+                    <span class="article-lang is-current" aria-current="true">{{ \App\Support\Locales::all()[$loc]['native'] }}</span>
+                @else
+                    <a class="article-lang" href="{{ $localizedUrl($loc) }}" hreflang="{{ \App\Support\Locales::hreflang($loc) }}">{{ \App\Support\Locales::all()[$loc]['native'] }}</a>
+                @endif
+            @endforeach
+        </nav>
+    @endif
+
+    @if (!empty($art['is_fallback']))
+        <p class="article-fallback" role="note">{{ __('This article is not translated yet. Showing the English version.') }}</p>
+    @endif
 
     @php $at = $art['applies_to'] ?? []; @endphp
     <article class="article"
@@ -92,14 +120,14 @@
             @endif
             <p class="meta">
                 @if ($art['updated'])
-                    <time datetime="{{ $art['updated'] }}">Updated {{ \Illuminate\Support\Carbon::parse($art['updated'])->format('M j, Y') }}</time>
+                    <time datetime="{{ $art['updated'] }}">{{ __('Updated :date', ['date' => \Illuminate\Support\Carbon::parse($art['updated'])->locale(app()->getLocale())->isoFormat('LL')]) }}</time>
                 @endif
                 @if (!empty($art['complexity']))
-                    <span class="badge badge-{{ $art['complexity'] }}">{{ ucfirst($art['complexity']) }}</span>
+                    <span class="badge badge-{{ $art['complexity'] }}">{{ __(ucfirst($art['complexity'])) }}</span>
                 @endif
             </p>
             @if (!empty($art['sources']))
-                <p class="source-note">Adapted from
+                <p class="source-note">{{ __('Adapted from') }}
                     @if (str_starts_with($art['sources'][0]['url'], '/pgmfi/wiki'))
                         {{ $art['sources'][0]['name'] }}
                     @else
@@ -119,12 +147,12 @@
         <div class="article-find" x-data="articleFind()" x-cloak>
             <button type="button" class="find-toggle" @click="toggle()" :aria-expanded="open.toString()">
                 <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <span>Find in this article</span>
+                <span>{{ __('Find in this article') }}</span>
             </button>
             <div class="find-panel" x-show="open" x-transition x-cloak>
                 <input type="search" x-ref="input" x-model="q" @input.debounce.200ms="run()"
                     @keydown.enter.prevent="$event.shiftKey ? prev() : next()" @keydown.escape="close()"
-                    placeholder="Type to search this page…" aria-label="Find in this article">
+                    placeholder="{{ __('Type to search this page…') }}" aria-label="{{ __('Find in this article') }}">
                 <span class="find-count" x-text="label()" x-show="q.trim().length >= 2"></span>
                 <button type="button" class="find-nav" @click="prev()" :disabled="!count" aria-label="Previous match">&#8249;</button>
                 <button type="button" class="find-nav" @click="next()" :disabled="!count" aria-label="Next match">&#8250;</button>
@@ -138,22 +166,22 @@
 
         @if ($art['authors']->isNotEmpty() || !empty($art['sources']))
             <section class="article-attribution" aria-labelledby="article-attribution-heading">
-                <h2 id="article-attribution-heading">Credits and source</h2>
+                <h2 id="article-attribution-heading">{{ __('Credits and source') }}</h2>
                 @if ($art['authors']->isNotEmpty())
-                    <p><span class="attribution-label">Authors</span> {{ $art['authors']->map(fn ($credit) => $credit->user->displayName())->join(', ') }}</p>
+                    <p><span class="attribution-label">{{ __('Authors') }}</span> {{ $art['authors']->map(fn ($credit) => $credit->user->displayName())->join(', ') }}</p>
                 @endif
                 @foreach ($art['sources'] as $source)
                     <p>
-                        <span class="attribution-label">Source</span>
-                        @if (!empty($source['adapted'])) Adapted from @endif
+                        <span class="attribution-label">{{ __('Source') }}</span>
+                        @if (!empty($source['adapted'])) {{ __('Adapted from') }} @endif
                         @if (str_starts_with($source['url'], '/pgmfi/wiki'))
                             {{ $source['title'] ?? $source['name'] }}
                         @else
                             <a href="{{ $source['url'] }}">{{ $source['title'] ?? $source['name'] }}</a>
                         @endif
-                        on {{ $source['name'] }}.
+                        {{ __('on :name.', ['name' => $source['name']]) }}
                         @if (!empty($source['license']) && !empty($source['license_url']))
-                            Licensed under <a href="{{ $source['license_url'] }}" rel="license">{{ $source['license'] }}</a>.
+                            {!! __('Licensed under :license.', ['license' => '<a href="'.e($source['license_url']).'" rel="license">'.e($source['license']).'</a>']) !!}
                         @endif
                     </p>
                 @endforeach
@@ -162,16 +190,16 @@
 
         @if (!empty($art['attachments']))
             <section class="article-attachments">
-                <h2>Attachments & Downloads</h2>
+                <h2>{{ __('Attachments & Downloads') }}</h2>
                 <div class="attachments-grid">
                     @foreach ($art['attachments'] as $attachment)
                         <div class="attachment-card">
                             <div class="attachment-header">
                                 <span class="attachment-badge">{{ $attachment['ext'] }}</span>
-                                <a href="{{ $attachment['url'] }}" class="attachment-name" title="Download {{ $attachment['name'] }}" download>{{ $attachment['name'] }}</a>
+                                <a href="{{ $attachment['url'] }}" class="attachment-name" title="{{ __('Download :name', ['name' => $attachment['name']]) }}" download>{{ $attachment['name'] }}</a>
                             </div>
                             <div class="attachment-meta">
-                                <span>Size: {{ number_format($attachment['size'] / 1024, 1) }} KB</span>
+                                <span>{{ __('Size: :kb KB', ['kb' => number_format($attachment['size'] / 1024, 1)]) }}</span>
                             </div>
                             <div class="attachment-hash" data-hash="{{ $attachment['hash'] }}">
                                 <span>SHA-256: {{ substr($attachment['hash'], 0, 8) }}...{{ substr($attachment['hash'], -8) }}</span>
@@ -190,17 +218,15 @@
 
         <footer class="article-foot">
             @auth
-                <a class="btn edit-cta" href="/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>Edit this article</a>
+                <a class="btn edit-cta" href="/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>{{ __('Edit this article') }}</a>
                 @can('manage-articles')
-                    <a class="edit-history-link" href="/admin/history/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}">View edit history</a>
+                    <a class="edit-history-link" href="/admin/history/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}">{{ __('View edit history') }}</a>
                 @endcan
-                <p class="contribute">Spotted an error or have something to add? Suggest an edit
-                    right here.
-                    @cannot('manage-articles') Every change is reviewed before it goes live. @endcannot</p>
+                <p class="contribute">{{ __('Spotted an error or have something to add? Suggest an edit right here.') }}
+                    @cannot('manage-articles') {{ __('Every change is reviewed before it goes live.') }} @endcannot</p>
             @else
-                <a class="btn edit-cta" href="/auth/login?return={{ urlencode('https://www.hondabase.com/edit/' . $art['type'] . '/' . $art['category'] . '/' . $art['slug']) }}">Sign in to suggest an edit</a>
-                <p class="contribute">Spotted an error or have something to add? Sign in with
-                    Discord to suggest an edit. Every change is reviewed before it goes live.</p>
+                <a class="btn edit-cta" href="/auth/login?return={{ urlencode('https://www.hondabase.com/edit/' . $art['type'] . '/' . $art['category'] . '/' . $art['slug']) }}">{{ __('Sign in to suggest an edit') }}</a>
+                <p class="contribute">{{ __('Spotted an error or have something to add? Sign in with Discord to suggest an edit. Every change is reviewed before it goes live.') }}</p>
             @endauth
         </footer>
     </article>

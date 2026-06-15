@@ -44,14 +44,14 @@
         foreach ($tags as $t) {
             if (trim((string) $t) !== '') $ti[] = ['chip tag', (string) $t];
         }
-        if ($ti) $rows[] = ['Tags', $ti];
+        if ($ti) $rows[] = [__('Tags'), $ti];
     }
 @endphp
 @if ($rows)
-<aside class="facts" aria-label="Article applicability">
+<aside class="facts" aria-label="{{ __('Article applicability') }}">
     @foreach ($rows as [$label, $items])
         <div class="facts-row">
-            <span class="facts-label">{{ $label }}</span>
+            <span class="facts-label">{{ __($label) }}</span>
             <span class="facts-vals">@foreach ($items as [$cls, $txt])<span class="{{ $cls }}">{{ $txt }}</span>@endforeach</span>
         </div>
     @endforeach

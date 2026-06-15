@@ -37,16 +37,16 @@ class ArticleIndexer
      * the article no longer exists on disk it is removed from the index (so this also handles
      * deletions and reverts that delete a file).
      */
-    public function indexOne(string $type, string $category, string $slug): void
+    public function indexOne(string $type, string $category, string $slug, string $locale = 'en'): void
     {
-        DB::transaction(function () use ($type, $category, $slug) {
-            $existing = Article::where(compact('type', 'category', 'slug'))->first();
+        DB::transaction(function () use ($type, $category, $slug, $locale) {
+            $existing = Article::where(compact('type', 'category', 'slug', 'locale'))->first();
             if ($existing) {
                 ArticleFacet::where('article_id', $existing->id)->delete();
                 $existing->delete();
             }
 
-            $row = $this->articles->scanOne($type, $category, $slug);
+            $row = $this->articles->scanOne($type, $category, $slug, $locale);
             if ($row !== null) {
                 $this->persist($row);
             }
@@ -59,6 +59,7 @@ class ArticleIndexer
             'type' => $r['type'],
             'category' => $r['category'],
             'slug' => $r['slug'],
+            'locale' => $r['locale'] ?? 'en',
             'title' => $r['title'],
             'summary' => $r['summary'],
             'complexity' => $r['complexity'],

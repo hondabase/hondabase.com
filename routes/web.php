@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\PushSubscriptionController;
 use App\Models\Article;
+use App\Support\Locales;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('home'))->name('home');
@@ -64,8 +65,9 @@ Route::get('/sitemap.xml', function () {
     $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n"
         .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n"
         .'  <url><loc>https://www.hondabase.com/</loc></url>'."\n";
-    foreach (Article::orderBy('type')->orderBy('category')->orderBy('slug')->get(['type', 'category', 'slug', 'updated_at']) as $a) {
-        $loc = 'https://www.hondabase.com/'.$a->type.'/'.$a->category.'/'.$a->slug;
+    foreach (Article::orderBy('type')->orderBy('category')->orderBy('slug')->orderBy('locale')->get(['type', 'category', 'slug', 'locale', 'updated_at']) as $a) {
+        $prefix = Locales::isDefault($a->locale) ? '' : '/'.$a->locale;
+        $loc = 'https://www.hondabase.com'.$prefix.'/'.$a->type.'/'.$a->category.'/'.$a->slug;
         $xml .= '  <url><loc>'.htmlspecialchars($loc).'</loc>'
             .($a->updated_at ? '<lastmod>'.$a->updated_at->toDateString().'</lastmod>' : '')
             .'</url>'."\n";
@@ -93,3 +95,17 @@ Route::get('/{type}/{category}/{slug}', [ArticleController::class, 'show'])
 Route::get('/{type}/{category}', [ArticleController::class, 'category'])
     ->where(['type' => $types, 'category' => $seg])
     ->name('article.category');
+
+// Locale-prefixed mirrors for non-default locales (e.g. /pt/...). The {locale} constraint is
+// the declared "others" alternation, so it never shadows a content type or the unprefixed
+// (canonical, English) routes above. The default locale is always served unprefixed.
+$locales = Locales::othersPattern();
+if ($locales !== '') {
+    Route::get('/{locale}/{type}/{category}/{slug}', [ArticleController::class, 'show'])
+        ->where(['locale' => $locales, 'type' => $types, 'category' => $seg, 'slug' => $seg])
+        ->name('article.show.localized');
+
+    Route::get('/{locale}/{type}/{category}', [ArticleController::class, 'category'])
+        ->where(['locale' => $locales, 'type' => $types, 'category' => $seg])
+        ->name('article.category.localized');
+}

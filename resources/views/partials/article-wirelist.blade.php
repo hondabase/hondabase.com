@@ -3,6 +3,15 @@
     foreach ($wirelist['variants'] as $variant) {
         foreach ($variant['groups'] as $group) {
             foreach ($group['rows'] as $row) {
+                $row['steps'] = array_map(function (string $step): array {
+                    $step = trim($step);
+                    preg_match('/^(.*?)(?:\s+\(([^()]*)\))?$/', $step, $parts);
+
+                    return [
+                        'connection' => trim($parts[1] ?? $step),
+                        'signal' => trim($parts[2] ?? ''),
+                    ];
+                }, preg_split('/\s*->\s*/', $row['path']) ?: []);
                 $rows[] = $row + [
                     'variant_id' => $variant['id'],
                     'variant' => $variant['label'],
@@ -11,13 +20,18 @@
             }
         }
     }
+    $searchRows = array_map(function (array $row): array {
+        unset($row['steps']);
+
+        return $row;
+    }, $rows);
 @endphp
 <section class="wirelist"
     x-data="{
         q: '',
         variant: 'all',
         group: 'all',
-        rows: @js($rows),
+        rows: @js($searchRows),
         get groups() {
             return [...new Set(this.rows.filter(row => this.variant === 'all' || row.variant_id === this.variant).map(row => row.group))];
         },
@@ -80,10 +94,20 @@
                     <span>{{ $row['group'] }}</span>
                 </div>
                 <div class="wirelist-pin">
+                    <span>Test point</span>
                     <strong>{{ $row['pin'] }}</strong>
                     <code>{{ $row['signal'] }}</code>
                 </div>
-                <p>{{ $row['path'] }}</p>
+                <ol class="wirelist-path" aria-label="Connection path">
+                    @foreach ($row['steps'] as $step)
+                        <li>
+                            <strong>{{ $step['connection'] }}</strong>
+                            @if ($step['signal'] !== '')
+                                <code>{{ $step['signal'] }}</code>
+                            @endif
+                        </li>
+                    @endforeach
+                </ol>
                 @if ($row['note'] !== '')
                     <small>{{ $row['note'] }}</small>
                 @endif

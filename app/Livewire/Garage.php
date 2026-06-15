@@ -99,13 +99,13 @@ class Garage extends Component
 
         $this->seedFollows($vehicle);
         $this->resetVehicle();
-        session()->flash('garage_status', 'Vehicle saved.');
+        session()->flash('garage_status', __('Vehicle saved.'));
     }
 
     public function deleteVehicle(int $id): void
     {
         auth()->user()->vehicles()->whereKey($id)->delete();
-        session()->flash('garage_status', 'Vehicle removed.');
+        session()->flash('garage_status', __('Vehicle removed.'));
     }
 
     /** Create follows implied by the vehicle (engine/chassis), skipping any the user already has. */
@@ -152,13 +152,13 @@ class Garage extends Component
             : $user->equipment()->create($attrs);
 
         $this->resetEquipment();
-        session()->flash('garage_status', 'Equipment saved.');
+        session()->flash('garage_status', __('Equipment saved.'));
     }
 
     public function deleteEquipment(int $id): void
     {
         auth()->user()->equipment()->whereKey($id)->delete();
-        session()->flash('garage_status', 'Equipment removed.');
+        session()->flash('garage_status', __('Equipment removed.'));
     }
 
     private function resetVehicle(): void

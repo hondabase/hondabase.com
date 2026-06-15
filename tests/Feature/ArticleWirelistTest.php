@@ -19,7 +19,7 @@ class ArticleWirelistTest extends TestCase
     "label": "USDM P28",
     "groups": [{
       "label": "ROM socket",
-      "rows": [{"pin": "Pin 1", "signal": "VCC", "path": "ROM Pin 28", "note": ""}]
+      "rows": [{"pin": "Pin 1", "signal": "VCC", "path": "373 Pin 10 -> FT -> ROM Pin 14 (GND)", "note": ""}]
     }]
   }]
 }
@@ -53,7 +53,9 @@ JSON;
         $article = app(ArticleService::class)->find('cars', 'electronics', 'wirelist-test');
         $this->assertStringContainsString('class="wirelist"', $article['html']);
         $this->assertStringContainsString('USDM P28', $article['html']);
-        $this->assertStringContainsString('ROM Pin 28', $article['html']);
+        $this->assertStringContainsString('class="wirelist-path"', $article['html']);
+        $this->assertStringContainsString('<strong>ROM Pin 14</strong>', $article['html']);
+        $this->assertStringContainsString('<code>GND</code>', $article['html']);
         $this->assertStringNotContainsString('```wirelist', $article['html']);
     }
 }

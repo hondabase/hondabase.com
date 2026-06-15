@@ -6,6 +6,7 @@ use App\Markdown\CarouselParser;
 use App\Markdown\GithubAlertExtension;
 use App\Markdown\MarkdownNormalizer;
 use App\Markdown\WirelistParser;
+use App\Support\Locales;
 use Illuminate\Support\Str;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
@@ -72,6 +73,33 @@ class ArticleService
         return (array) config('hondabase.types', []);
     }
 
+    /** Content root for a locale: the repo root for the default locale, else a /{locale} subtree. */
+    private function localeRoot(string $locale): string
+    {
+        return Locales::isDefault($locale) ? $this->root : "{$this->root}/{$locale}";
+    }
+
+    /**
+     * Declared locales that actually have a translation file for this article on disk. The
+     * default locale is always included when the article exists. Drives hreflang alternates,
+     * the per-article language switcher, and the localized sitemap entries.
+     */
+    public function availableLocales(string $type, string $category, string $slug): array
+    {
+        if (! $this->safe($type, $category, $slug)) {
+            return [];
+        }
+        $out = [];
+        foreach (Locales::codes() as $code) {
+            $dir = "{$this->localeRoot($code)}/{$type}/{$category}/{$slug}";
+            if ($this->mdFile($dir, $slug) !== null) {
+                $out[] = $code;
+            }
+        }
+
+        return $out;
+    }
+
     public function categoryExists(string $type, string $category): bool
     {
         return $this->safe($type, $category) && is_dir("{$this->root}/{$type}/{$category}");
@@ -99,8 +127,10 @@ class ArticleService
     }
 
     /** Article stubs (slug + title) in a category. */
-    public function articlesIn(string $type, string $category): array
+    public function articlesIn(string $type, string $category, string $locale = 'en'): array
     {
+        // The canonical article set is the default-locale tree; a translation is a subset, so
+        // we iterate the default category and overlay the translated title where one exists.
         $dir = "{$this->root}/{$type}/{$category}";
         if (! $this->safe($type, $category) || ! is_dir($dir)) {
             return [];
@@ -111,6 +141,10 @@ class ArticleService
             $file = $this->mdFile($d, $slug);
             if ($file === null) {
                 continue;
+            }
+            if (! Locales::isDefault($locale)) {
+                $tfile = $this->mdFile("{$this->localeRoot($locale)}/{$type}/{$category}/{$slug}", $slug);
+                $file = $tfile ?? $file;
             }
             [$fm, $body] = $this->splitFrontMatter((string) file_get_contents($file));
             $out[] = [
@@ -123,14 +157,23 @@ class ArticleService
         return $out;
     }
 
-    /** Full rendered article, or null if not found. */
-    public function find(string $type, string $category, string $slug): ?array
+    /**
+     * Full rendered article in the requested locale, or null if not found. A missing
+     * translation falls back to the default-locale (English) bundle and flags `is_fallback`;
+     * co-located assets always resolve from the default bundle (unprefixed asset URLs).
+     */
+    public function find(string $type, string $category, string $slug, string $locale = 'en'): ?array
     {
         if (! $this->safe($type, $category, $slug)) {
             return null;
         }
-        $dir = "{$this->root}/{$type}/{$category}/{$slug}";
+        $dir = "{$this->localeRoot($locale)}/{$type}/{$category}/{$slug}";
         $file = $this->mdFile($dir, $slug);
+        $isFallback = false;
+        if ($file === null && ! Locales::isDefault($locale)) {
+            $file = $this->mdFile("{$this->root}/{$type}/{$category}/{$slug}", $slug);
+            $isFallback = true;
+        }
         if ($file === null) {
             return null;
         }
@@ -141,7 +184,7 @@ class ArticleService
 
         $assetBase = "/{$type}/{$category}/{$slug}";
         $html = $this->renderBody($body, $assetBase);
-        $rel = "{$type}/{$category}/{$slug}/".basename($file);
+        $rel = ltrim(str_replace($this->root, '', $file), '/');
 
         $attachments = [];
         $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
@@ -172,6 +215,9 @@ class ArticleService
             'type' => $type,
             'category' => $category,
             'slug' => $slug,
+            'locale' => $locale,
+            'is_fallback' => $isFallback,
+            'available_locales' => $this->availableLocales($type, $category, $slug),
             'title' => $title,
             'summary' => $fm['summary'] ?? null,
             'seo_description' => $this->seoDescription($fm['summary'] ?? null, $html, $title),
@@ -271,21 +317,28 @@ class ArticleService
         return is_file($path) ? $path : null;
     }
 
-    /** Lightweight scan of every article for indexing (no HTML render). */
+    /**
+     * Lightweight scan of every article for indexing (no HTML render). Walks the default-locale
+     * tree (locale=en rows) plus each non-default locale subtree (locale=pt rows), so the
+     * derived index carries one row per (article, locale).
+     */
     public function scan(): array
     {
         $rows = [];
-        foreach ($this->types() as $type) {
-            $tdir = "{$this->root}/{$type}";
-            if (! is_dir($tdir)) {
-                continue;
-            }
-            foreach (glob("{$tdir}/*", GLOB_ONLYDIR) as $cdir) {
-                $category = basename($cdir);
-                foreach (glob("{$cdir}/*", GLOB_ONLYDIR) as $adir) {
-                    $row = $this->scanRow($type, $category, $adir);
-                    if ($row !== null) {
-                        $rows[] = $row;
+        foreach (Locales::codes() as $locale) {
+            $root = $this->localeRoot($locale);
+            foreach ($this->types() as $type) {
+                $tdir = "{$root}/{$type}";
+                if (! is_dir($tdir)) {
+                    continue;
+                }
+                foreach (glob("{$tdir}/*", GLOB_ONLYDIR) as $cdir) {
+                    $category = basename($cdir);
+                    foreach (glob("{$cdir}/*", GLOB_ONLYDIR) as $adir) {
+                        $row = $this->scanRow($type, $category, $adir, $locale);
+                        if ($row !== null) {
+                            $rows[] = $row;
+                        }
                     }
                 }
             }
@@ -295,18 +348,22 @@ class ArticleService
     }
 
     /** Index row for a single article (same shape as scan()), or null if missing. */
-    public function scanOne(string $type, string $category, string $slug): ?array
+    public function scanOne(string $type, string $category, string $slug, string $locale = 'en'): ?array
     {
         if (! $this->safe($type, $category, $slug)) {
             return null;
         }
-        $adir = "{$this->root}/{$type}/{$category}/{$slug}";
+        $adir = "{$this->localeRoot($locale)}/{$type}/{$category}/{$slug}";
 
-        return is_dir($adir) ? $this->scanRow($type, $category, $adir) : null;
+        return is_dir($adir) ? $this->scanRow($type, $category, $adir, $locale) : null;
     }
 
-    /** Build one index row from an article directory. */
-    private function scanRow(string $type, string $category, string $adir): ?array
+    /**
+     * Build one index row from an article directory. Facets (what users follow + the explorer
+     * filters on) are language-agnostic, so they are attached to the default-locale row only;
+     * translation rows carry the same identity but no facets.
+     */
+    private function scanRow(string $type, string $category, string $adir, string $locale = 'en'): ?array
     {
         $slug = basename($adir);
         $file = $this->mdFile($adir, $slug);
@@ -314,19 +371,20 @@ class ArticleService
             return null;
         }
         [$fm, $body] = $this->splitFrontMatter((string) file_get_contents($file));
-        $rel = "{$type}/{$category}/{$slug}/".basename($file);
+        $rel = ltrim(str_replace($this->root, '', $file), '/');
 
         return [
             'type' => $type,
             'category' => $category,
             'slug' => $slug,
+            'locale' => $locale,
             'title' => $fm['title'] ?? $this->firstH1($body) ?? $this->humanize($slug),
             'summary' => $fm['summary'] ?? null,
             'complexity' => $fm['complexity'] ?? null,
             'body_text' => trim($this->markdown->normalize($this->stripFirstH1($body))),
             'repo_path' => $rel,
             'updated' => $this->lastUpdated($rel),
-            'facets' => $this->facetsFor($fm, $type, $category),
+            'facets' => Locales::isDefault($locale) ? $this->facetsFor($fm, $type, $category) : [],
         ];
     }
 

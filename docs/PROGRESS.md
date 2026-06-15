@@ -317,11 +317,42 @@ Living log of the Hondabase rebuild. Plan of record:
   `<html lang>` + chrome to pt-PT; switch route sets the encrypted cookie + redirects; bad locale
   ignored) and with **`tests/Feature/LocaleTest.php`** (5 tests: default, cookie, Accept-Language,
   switch persists, bad-locale ignored). 19 tests pass; Pint clean; build green.
-  **Next i18n increments:** (1) extend `__()` coverage to the remaining Livewire views
-  (explorer/editor/dashboard/garage/review/staff); (2) **content i18n** - locale-prefixed article
-  routes (`/pt/...`), per-locale Markdown in the content repo, `hreflang` alternate links, and a
-  translation/fallback strategy (show English when a translation is missing). The locale resolver
-  will gain a URL-segment source ahead of the cookie when content routing lands.
+  **`__()` coverage extended to the member-facing Livewire views (2026-06-15):** explorer,
+  dashboard, garage (+ its flash messages and `Garage.php`), the TipTap editor + creator and their
+  shared partials (`frontmatter-fields`, `editor-canvas`), `favorite-button`, and `notification-bell`
+  all run their UI strings through `__()`/`trans_choice` (placeholder-aware: `:label`/`:id`/`:date`,
+  `{!! __() !!}` for the few links/`<strong>` spans, pluralized article + count strings). `ArticleCreator`
+  flash/validation messages wrapped too. **Admin views stay English by decision (user, 2026-06-15):**
+  the `/admin/*` surfaces - `revision-review`, `article-history`, `staff-manager`, `revision-assets` -
+  are intentionally **not** translated (staff/owner-only tooling). The `lang/pt.json` catalog grew to
+  ~150 European-Portuguese entries; JSON valid, Pint clean, all 19 tests pass, `view:cache` compiles
+  every blade, Vite build green, `tinker` confirms the pt catalog + plural rules resolve.
+  **Content i18n DONE (2026-06-15):** article bodies are now served per locale. Translations live in
+  a **separate locale tree** (`content/pt/{type}/{category}/{slug}/{slug}.md`); a translation folder
+  holds only the `.md` and any missing non-Markdown assets **fall back to the English bundle**
+  (unprefixed, locale-agnostic asset URLs). English stays **unprefixed + canonical**; non-default
+  locales get **prefixed mirror routes** (`/{locale}/{type}/{category}/{slug}` and `…/{category}`),
+  constrained to the declared "others" alternation (`pt`) so they never shadow a content type.
+  `App\Support\Locales` centralises the locale map (default/others/hreflang/route pattern); `SetLocale`
+  gained a **leading-URL-segment source at highest precedence** (a shared `/pt/...` link renders in its
+  own language). `ArticleService` read methods (`find`/`articlesIn`/`categories`/`categoryExists`/
+  `assetPath`/`scan*`) are locale-aware with English fallback (`is_fallback` flag). **Phase B index:**
+  migration added a `locale` column (unique now `type+category+slug+locale`); `hondabase:reindex` walks
+  the `pt` subtree (en=496, pt=400 rows); facets/follows stay on the **English identity** only
+  (language-agnostic). `Explorer` overlays translated title/summary and broadens full-text search to the
+  active-locale `body_text` when the locale ≠ en, with locale-aware result links. SEO: per-locale
+  `<link rel="canonical">`, `hreflang` alternates for every available translation + `x-default`→English,
+  a **per-article language switcher** (only locales with a real translation), and a "showing the English
+  version" fallback notice. **Verified** over HTTP (`--resolve` SNI): en canonical/unprefixed with
+  `pt-PT` alternate; `/pt/...` renders the translation with a self-canonical; an untranslated `/pt/...`
+  falls back to English + notice; a co-located image on a `/pt/` page loads from the en bundle; `/xx/...`
+  404s; sitemap emits 400 `/pt/` URLs; the explorer renders `/pt/`-prefixed links under the pt locale.
+  **`tests/Feature/ContentLocaleTest.php`** (6 tests: canonical/unprefixed en, localized pt render,
+  English fallback, bad-locale 404, reindex creates a pt row, `availableLocales`). 29 tests pass; Pint
+  clean; Vite build green. **Note:** the controller reads route params **by name** (not positional
+  method args) so the extra leading `{locale}` segment never shifts `type`/`category`/`slug`.
+  **Out of scope (later, Phase C):** authoring/editing translations in the TipTap editor + creator
+  (a locale target, `CommitArticle` writing `pt/...` paths, a per-locale review queue).
 
 ## Design directives (2026-06-13, from user)
 - **Homepage = exploration surface ("universe" style)**, not legacy entrypoints: show ALL
@@ -376,6 +407,19 @@ Living log of the Hondabase rebuild. Plan of record:
   Visual design preserved, not redesigned.
 
 ## Changelog
+- **2026-06-15** - **P8 content i18n.** Article bodies now serve per locale: separate `content/pt/...`
+  tree (non-`.md` assets fall back to the en bundle), unprefixed+canonical English with prefixed
+  `/pt/...` mirror routes (constrained so they never shadow a content type), `App\Support\Locales`
+  helper, `SetLocale` URL-segment precedence, locale-aware `ArticleService` + `Explorer` overlay/search,
+  a `locale` index column (en=496/pt=400 rows via `reindex`; facets stay on the English identity),
+  per-locale canonical + `hreflang`/`x-default`, a per-article language switcher, and an English-fallback
+  notice. Controller reads route params **by name** so the leading `{locale}` segment never shifts
+  `type`/`category`/`slug`. Verified over HTTP + 6 new `ContentLocaleTest` cases (29 tests pass, Pint
+  clean, build green). Out of scope (later, Phase C): authoring translations in the TipTap editor.
+- **2026-06-15** - **P8 member-facing UI i18n.** Extended `__()`/`trans_choice` coverage to the
+  Livewire views (explorer, dashboard, garage, TipTap editor + creator, favorite-button,
+  notification-bell) with placeholder/plural awareness; admin (`/admin/*`) views intentionally stay
+  English (staff tooling). `lang/pt.json` grew to ~150 entries (19 tests pass, Pint clean, build green).
 - **2026-06-15** - **P8 i18n foundation.** Decided scope (UI + content; first locale European
   Portuguese `pt`/`pt-PT` alongside English). Built the locale plumbing: `locales` config map,
   `SetLocale` middleware (cookie → Accept-Language → default, web group), `LocaleController` +
@@ -515,4 +559,6 @@ Living log of the Hondabase rebuild. Plan of record:
   inside approval-gated, diffable, revertible article revisions. Reformatted the OBD1 ECU
   chipping wirelist into clear instructions plus 96 preserved connections. Added the
   report-only `hondabase:audit-presentation` queue across all configured locales.
-
+- **2026-06-15** - Improved wirelist readability by rendering arrow-delimited connection paths
+  as visual signal chains: vertical traces on phones and wrapping horizontal traces on wider
+  screens, with component/pin names and parenthesized signals separated for faster scanning.

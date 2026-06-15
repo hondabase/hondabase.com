@@ -116,7 +116,7 @@ class ArticleCreator extends Component
         $svc = app(ArticleService::class);
 
         if ($svc->exists($this->type, $this->category, $this->slug)) {
-            $this->addError('slug', 'An article already exists at that location. Edit it instead.');
+            $this->addError('slug', __('An article already exists at that location. Edit it instead.'));
 
             return null;
         }
@@ -147,12 +147,12 @@ class ArticleCreator extends Component
 
         if ($manage) {
             CommitArticle::dispatch($rev->id);
-            session()->flash('status', 'Created. Your new article (#'.$rev->id.') was published and committed; it can be reverted from history.');
+            session()->flash('status', __('Created. Your new article (#:id) was published and committed; it can be reverted from history.', ['id' => $rev->id]));
 
             return $this->redirect($rev->url(), navigate: true);
         }
 
-        session()->flash('status', 'Thanks. Your new article (#'.$rev->id.') was submitted for review and will go live once approved.');
+        session()->flash('status', __('Thanks. Your new article (#:id) was submitted for review and will go live once approved.', ['id' => $rev->id]));
 
         return $this->redirect('/', navigate: true);
     }

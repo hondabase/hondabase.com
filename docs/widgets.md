@@ -31,6 +31,7 @@ Rules:
 | Name          | What it does                                              | Parameters | Data source |
 | ------------- | --------------------------------------------------------- | ---------- | ----------- |
 | `error-codes` | Live keyword/number lookup of Honda OBD trouble codes.    | none yet   | `public/reference/error-codes/error-codes.json` |
+| `wideband-wiring-table` | Filters the wideband wiring overview by gauge model. | none | Trusted Blade markup |
 
 (Embedded example: `cars/electronics/Honda-Acura-Trouble-Codes`.)
 
