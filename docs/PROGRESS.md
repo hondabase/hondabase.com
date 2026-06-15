@@ -211,7 +211,7 @@ Living log of the Hondabase rebuild. Plan of record:
   (change-gated, transient tables excluded, no email PII collected) is scheduled daily at 00:00
   in `routes/console.php` and commits the `.sql` with the site repo. TODO (external/non-code):
   register the article event params as GA4 custom dimensions in the GA admin console.
-- [~] **P7 - WYSIWYG editor, Tailwind styling, docs, hardening, CI** *(scope revised 2026-06-14; started)*:
+- [x] **P7 - WYSIWYG editor, Tailwind styling, docs, hardening, CI** *(scope revised 2026-06-14; done 2026-06-15)*:
   **Foundation done (2026-06-14):** Vite/Tailwind v4 pipeline wired into the layout
   (`@vite()` replaces the static `base.css` link; bunny web-fonts dropped so builds stay
   offline). pgmfi tokens ported into `resources/css/app.css` `@theme` (colors/surfaces/fonts →
@@ -355,6 +355,12 @@ Living log of the Hondabase rebuild. Plan of record:
   Visual design preserved, not redesigned.
 
 ## Changelog
+- **2026-06-15** - **P7 closed: Pint + CI + docs.** Adopted Laravel Pint (`pint.json`, laravel
+  preset, legacy `public/`/`scratch/`/`tools/`/`bin/` excluded), formatted the app source (93 files
+  clean, 14 tests still green). Added GitHub Actions CI (`.github/workflows/ci.yml`): PHP tests
+  (SQLite), `pint --test`, and a pnpm Vite build, on push-to-main + PRs with caching. Wrote
+  `docs/STYLE_GUIDE.md` (@theme tokens, one-bundle Tailwind v4, hybrid class/utility rule) and root
+  `AGENTS.md`. Fixed a storage-ownership glitch that was failing the new carousel tests (env, not code).
 - **2026-06-14** - **P7 Tailwind CSS migration complete.** Ported the last three legacy sheets
   (`article`/`explorer`/`me`.css) into `app.css` `@layer components` on the canonical `@theme`
   tokens (ordered short-var → `--color-*` rename, `[x-cloak]` deduped into `@layer base`), deleted
@@ -386,7 +392,19 @@ Living log of the Hondabase rebuild. Plan of record:
   (85.5 kB → 17.6 kB gz). Build green; www-data ownership restored. Verified over HTTP (home +
   category + article 200, `/me` 302 anon) and that every ported class (`prose-article`, `ex-card`,
   `garage-card`, `fav-btn`, `markdown-alert`, `chip-follow`, `find-panel`) is present in the built
-  bundle and the homepage references the new hashed `app-*.css`. Remaining P7: STYLE_GUIDE, AGENTS, CI.
+  bundle and the homepage references the new hashed `app-*.css`. (Merging the two sheets surfaced a
+  real `.chip-follow` name collision - explorer's follow-star vs the dashboard's removable chip both
+  used it - since they used to live in separate per-page sheets; the dashboard variant was renamed
+  `.chip-followed`.)
+  **Pint + CI + docs DONE (2026-06-15):** adopted **Laravel Pint** (`pint.json`, laravel preset,
+  excluding legacy `public/`/`scratch/`/`tools/`/`bin/`) and ran it across the app source - 93 files
+  now style-clean; tests still green (14 passed). Added **GitHub Actions CI** (`.github/workflows/ci.yml`):
+  three jobs - PHP tests (in-memory SQLite, no MariaDB needed), `pint --test`, and a **pnpm Vite build**
+  (catches CSS/JS regressions) - on push to `main` + all PRs, with composer/pnpm caching + concurrency
+  cancel. Wrote **`docs/STYLE_GUIDE.md`** (the `@theme` token table, one-bundle Tailwind v4 setup,
+  base/components layers + the hybrid semantic-class/utility rule, `ed-`/`ex-`/`rev-`/`staff-` naming,
+  mobile-first) and root **`AGENTS.md`** (constraints, layout, conventions, run/verify commands). **P7
+  complete.**
 - **2026-06-14** - **P5 core personalization** (chosen slice; web-push deferred). Instance-local
   `favorites`/`user_vehicles`/`user_equipment` tables + models; `FavoriteButton` (article Save),
   `Garage` CRUD at `/me/garage` (vehicle save seeds engine/chassis follows), and the
