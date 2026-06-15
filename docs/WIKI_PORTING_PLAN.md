@@ -201,64 +201,59 @@ Below are the top pending articles in each category, sorted by length (approxima
 
 ---
 
-## 5. Re-categorization pass (DRAFT proposal, 2026-06-15)
 
-**Problem.** The port is content-complete, but **495 of 496 articles landed in a single flat
-`cars/electronics/` folder** (only `cars/engine` has one article). Because the category is part of
-the URL (`/cars/{category}/{slug}`) and drives the `category` facet/browse tree, the whole
-knowledgebase currently reads as one giant "electronics" bucket. The remaining content work is to
-split this into the real taxonomy the assessment above already defined.
+## 5. Re-categorization + nested taxonomy (FINAL plan, approved 2026-06-15)
 
-**Proposed `cars/` taxonomy** (derived from the section-2 categories + the actual tag vocabulary):
+**Goal.** Split the flat `cars/electronics/` bucket (495 of 496 articles) into a real, **arbitrary-depth
+nested** taxonomy, so the knowledgebase browses as a structured tree instead of one giant category.
 
-| Category | Scope | Primary tags |
-| :--- | :--- | :--- |
-| `cars/ecu` | ECU hardware, board components, chip readers, RAM/XRAM maps, comms | `ecu`, `hardware`, `microcontroller`, `serial` |
-| `cars/rom` | ROM editing, chipping, definition maps | `rom`, `chipping` |
-| `cars/tuning` | Fuel/ignition map tuning, datalogging, VTEC tuning | `tuning`, `maps`, `datalogging` |
-| `cars/sensors` | Sensors & solenoids (TPS, MAP, O2, VSS, knock, VTEC solenoid) | `sensors`, `vtec`, `knock` |
-| `cars/wiring` | Harness pinouts, OBD conversions, swaps | `wiring`, `conversion`, `pinout`, `swap` |
-| `cars/diagnostics` | Trouble codes, CEL, symptom checklists | `diagnostics`, `troubleshooting`, error codes |
-| `cars/fueling` | Injectors, fuel system | `fueling`, `injectors`, `fuel` |
-| `cars/engine` | Engine & drivetrain mechanical | `engine`, `mechanical` |
-| `cars/reference` | Glossary, history, general info, off-topic wiki pages (e.g. `wabi-sabi`) | `reference`, `education`, `history` |
+**Decisions (owner, 2026-06-15):**
+- **Arbitrary-depth nesting.** `category` becomes a path (`electronics/ecu/chipping`), any depth.
+- **Prune off-topic pages** (non-Honda wiki cruft like `wabi-sabi`); the migration's dry-run prints the
+  full delete list for owner approval before anything is removed.
+- **No redirects.** Old `/cars/electronics/{slug}` URLs will 404 after the move (accepted, despite the
+  site being indexable - the main site is crawlable; only `/pgmfi/wiki/` is `Disallow`ed and only
+  editor/admin pages carry `noindex`).
+- **Internal absolute links rewritten** during the move; **`en` + `pt` trees move in lockstep**.
+- **Facets:** one facet per **ancestor path segment** (drill-down `electronics` -> `electronics/ecu`).
 
-**Mechanical assignment rule (no per-article hand-sorting):** each article already carries
-frontmatter `tags`; assign its category by the **first match** in a priority-ordered tag→category
-table. A quick pass over the current files produces this *indicative* distribution (numbers are
-approximate - the final rule + a short manual review of the fallbacks will shift them):
+### Model change
+`category` goes from a single slug (`/^[A-Za-z0-9._-]+$/`, no slashes, fixed bundle depth
+`content/{type}/{category}/{slug}/`) to a **path**. A *bundle* is any directory whose name matches its
+`.md` (slug == folder); its `category` is the path between `{type}` and the bundle. The
+`articles.category` column already is a string - it just holds `electronics/ecu` now. The unique key
+`type+category+slug+locale` is unchanged.
 
-```
-~173 cars/tuning     ~158 cars/sensors    ~79 cars/wiring     ~36 cars/ecu
- ~28 cars/reference   ~11 cars/rom          ~9 cars/diagnostics  ~2 cars/fueling
-```
+### Touchpoints
+1. **Routing (the hard part - ambiguity).** `/cars/electronics/ecu` is ambiguous (article `ecu` in
+   `electronics`, vs a listing of `electronics/ecu`). Resolve against the **index**, not regex: a
+   catch-all `/{type}/{path}` (+ `/{locale}/{type}/{path}`) -> one resolver: article if
+   `type + path == category/slug`; else category listing if `path` prefixes any article's category;
+   else 404. Assets (final segment has a `.ext`) resolve in the same controller.
+2. **`ArticleService`:** replace the two-level `glob` walk with a **recursive bundle scan**
+   (`scanAll`/`scanOne`/`categories`/`articlesIn`/`categoryExists`/`find`/`rawMarkdown`/`assetPath`);
+   `safe()` validates the category **per segment** (split on `/`).
+3. **Facets / Explorer:** facet on each ancestor segment; category-scoped search still works.
+4. **Breadcrumbs + category pages + `BreadcrumbList` JSON-LD:** expand the single category crumb into
+   one crumb per path segment (article, category, editor views).
+5. **Editor / creator / translate routes** (`/edit/{type}/{path}`, `/{locale}/edit/{type}/{path}`):
+   category becomes a path; `ArticleCreator` category input accepts a path.
+6. **Sitemap, `ArticleRevision::url()`, history:** unchanged once `category` carries the path.
 
-Only ~7 articles have no usable tag and need a manual category (they fall back to `reference`).
+### Migration command - `hondabase:recategorize`
+One-off, `--dry-run` first: load the priority-ordered **tag->category-path map**; compute the move
+plan for every `en` bundle + mirror onto `pt`; print the ~7 no-tag fallbacks and the **prune list** for
+approval; on confirm `git mv` each bundle in both trees (assets ride along), rewrite absolute
+`/cars/electronics/...` body links, delete pruned bundles; then `hondabase:reindex`. Idempotent +
+reversible (all `git mv`).
 
-**Hard constraints (why this is a migration, not a bulk `mv`):**
+### Sequencing
+- **Phase A - engine:** nested-category support in routing + service + facets/breadcrumbs, content
+  **still flat** (`electronics` is just a one-segment path, nothing visibly changes). Ship + tests green.
+- **Phase B - content move:** build + dry-run `hondabase:recategorize`, owner approves plan + prune
+  list, execute on a branch in `hondabase/articles`, reindex.
 
-1. **URLs change** → every moved article needs a **301 redirect** from `/cars/electronics/{slug}`
-   to its new path. There is no redirect mechanism yet; this pass must introduce one
-   (`content/_data/redirects.yaml` + a redirect route/middleware, the deferred item from P2/P3).
-2. **Both locale trees move in lockstep** - `content/cars/...` **and** `content/pt/cars/...` (plus
-   each bundle's co-located assets) move together, or translations 404.
-3. **Internal links** - relative `.md` cross-links re-resolve fine, but any **absolute**
-   `/cars/electronics/...` link in body text must be rewritten to the new category.
-4. **Index + facets rebuild** - `category` facets derive from the path, so a full
-   `hondabase:reindex` follows the move (forkability invariant: the DB is derived).
-5. **Slug collisions** - slugs are currently globally unique (one folder); confirm none collide once
-   split across categories before moving.
-
-**Proposed execution (safe, reviewable):**
-- Build a one-off `hondabase:recategorize` artisan command: reads the tag→category map, computes the
-  full move plan, and (with `--dry-run` first) `git mv`s each bundle in **both** locale trees, emits
-  the `redirects.yaml` entries, and rewrites absolute internal links. Idempotent + reversible.
-- Run on a branch in `hondabase/articles`, eyeball the dry-run plan + the ~7 fallbacks, then commit
-  via the normal bot/deploy-key path. Reindex. Ship the redirect route in the same change so old
-  links keep working.
-
-**Open decisions for the owner (need your call before building the command):**
-- Final category names + whether to keep an `electronics` umbrella or drop it entirely (the draft
-  drops it in favour of `ecu`/`rom`/`sensors`/`wiring`).
-- Redirect mechanism: a generated `redirects.yaml` consumed by a route, vs nginx-level rewrites.
-- Whether off-topic wiki pages (`wabi-sabi`, etc.) move to `cars/reference` or get pruned instead.
+### Tests
+Nested routing (article vs listing, deep paths, ambiguous paths, assets), recursive scan/reindex
+counts, per-segment facets, breadcrumb expansion, the command's dry-run plan + link rewrite + both-tree
+move, and that flat articles still resolve during Phase A.
