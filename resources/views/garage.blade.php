@@ -11,8 +11,8 @@
 
     <section class="page-head">
         <h2 class="section-head">My Garage</h2>
-        <p class="page-sub">Add your vehicles and equipment. Engines and chassis you add are
-        followed automatically, so matching articles surface in your feed.</p>
+        <p class="page-sub">Add your Honda products to personalize your experience. Details like engines
+        or chassis are followed automatically, so matching articles surface in your feed.</p>
     </section>
 
     <livewire:garage />

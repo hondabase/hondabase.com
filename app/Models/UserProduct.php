@@ -14,6 +14,8 @@ use Illuminate\Support\Str;
  */
 class UserProduct extends Model
 {
+    public const TYPES = ['car', 'motorcycle', 'atv', 'sxs', 'marine', 'power_equipment'];
+
     protected $guarded = [];
 
     protected $casts = ['year' => 'int'];
@@ -45,7 +47,11 @@ class UserProduct extends Model
             $label = $label !== '' ? "{$label} ({$this->chassis})" : strtoupper($this->chassis);
         }
 
-        return $label !== '' ? $label : 'Vehicle';
+        if ($label !== '') {
+            return $label;
+        }
+
+        return __(ucfirst(str_replace('_', ' ', $this->type ?: 'product')));
     }
 
     /**

@@ -46,11 +46,6 @@ class User extends Authenticatable
         return $this->hasMany(UserProduct::class);
     }
 
-    public function equipment(): HasMany
-    {
-        return $this->hasMany(UserEquipment::class);
-    }
-
     public function articleAuthorships(): HasMany
     {
         return $this->hasMany(ArticleAuthor::class);

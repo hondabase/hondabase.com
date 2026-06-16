@@ -3,145 +3,102 @@
         <div class="flash flash-ok" role="status">{{ session('garage_status') }}</div>
     @endif
 
-    {{-- ---------- Vehicles ---------- --}}
+    {{-- ---------- Products ---------- --}}
     <section class="garage-section">
         <div class="garage-head">
-            <h2 class="section-head">{{ __('My vehicles') }}</h2>
-            @unless ($showVehicleForm)
-                <button type="button" class="btn btn-sm" wire:click="newVehicle">+ {{ __('Add vehicle') }}</button>
+            <h2 class="section-head">{{ __('My products') }}</h2>
+            @unless ($showProductForm)
+                <button type="button" class="btn btn-sm" wire:click="newProduct">+ {{ __('Add product') }}</button>
             @endunless
         </div>
 
-        @if ($showVehicleForm)
-            <form class="garage-form" wire:submit="saveVehicle">
+        @if ($showProductForm)
+            <form class="garage-form" wire:submit="saveProduct">
                 <div class="form-grid">
-                    <label>{{ __('Nickname') }} <span class="opt">({{ __('optional') }})</span>
-                        <input type="text" list="nickname-options" wire:model="nickname" placeholder="My DC2" maxlength="80">
+                    <label class="full" wire:key="field-type">{{ __('Type') }}
+                        <select wire:model.live="type">
+                            @foreach ($productTypes as $t)
+                                <option value="{{ $t }}">{{ __(ucfirst(str_replace('_', ' ', $t))) }}</option>
+                            @endforeach
+                        </select>
+                    </label>
+                    <label wire:key="field-nickname">{{ __('Nickname') }} <span class="opt">({{ __('optional') }})</span>
+                        <input type="text" list="nickname-options" wire:model="nickname" placeholder="{{ $placeholders['nickname'] }}" maxlength="80">
                         <datalist id="nickname-options">
-                            <option value="Daily">
-                            <option value="Project">
-                            <option value="Track Car">
-                            <option value="Winter Beater">
-                            <option value="Drag Car">
+                            @foreach ($nicknameList as $n)<option value="{{ $n }}">@endforeach
                         </datalist>
                     </label>
-                    <label>{{ __('Year') }}
-                        <input type="text" inputmode="numeric" list="year-options" wire:model="year" placeholder="2001" maxlength="4">
+                    <label wire:key="field-year">{{ __('Year') }}
+                        <input type="text" inputmode="numeric" list="year-options" wire:model="year" placeholder="{{ $placeholders['year'] }}" maxlength="4">
                         <datalist id="year-options">
                             @foreach (range(date('Y'), 1980) as $y)<option value="{{ $y }}">@endforeach
                         </datalist>
                     </label>
-                    <label>{{ __('Make') }}
-                        <input type="text" list="make-options" wire:model="make" placeholder="Honda" maxlength="40">
+                    <label wire:key="field-make">{{ __('Make') }}
+                        <input type="text" list="make-options" wire:model="make" placeholder="{{ $placeholders['make'] }}" maxlength="40">
                         <datalist id="make-options">
                             @foreach ($makeList as $m)<option value="{{ $m }}">@endforeach
                         </datalist>
                     </label>
-                    <label>{{ __('Model') }}
-                        <input type="text" list="model-options" wire:model="model" placeholder="Civic" maxlength="60">
+                    <label wire:key="field-model">{{ __('Model') }}
+                        <input type="text" list="model-options" wire:model="model" placeholder="{{ $placeholders['model'] }}" maxlength="60">
                         <datalist id="model-options">
                             @foreach ($modelList as $m)<option value="{{ $m }}">@endforeach
                         </datalist>
                     </label>
-                    <label>{{ __('Chassis') }} <span class="opt">({{ __('e.g. EK, DC2') }})</span>
-                        <input type="text" list="chassis-options" wire:model="chassis" placeholder="EK" maxlength="20">
-                        <datalist id="chassis-options">
-                            @foreach ($chassisList as $c)<option value="{{ $c }}">@endforeach
-                        </datalist>
-                    </label>
-                    <label>{{ __('Engine') }}
-                        <input type="text" list="engine-options" wire:model="engine" placeholder="B-Series" maxlength="40">
-                        <datalist id="engine-options">
-                            @foreach ($engineList as $e)<option value="{{ $e }}">@endforeach
-                        </datalist>
-                    </label>
+                    @if (in_array($type, ['car', 'motorcycle', 'atv', 'sxs']))
+                        <label wire:key="field-chassis">{{ __('Chassis') }} <span class="opt">({{ __('e.g. EK, DC2') }})</span>
+                            <input type="text" list="chassis-options" wire:model="chassis" placeholder="{{ $placeholders['chassis'] }}" maxlength="20">
+                            <datalist id="chassis-options">
+                                @foreach ($chassisList as $c)<option value="{{ $c }}">@endforeach
+                            </datalist>
+                        </label>
+                    @endif
+                    @if (in_array($type, ['car', 'motorcycle', 'power_equipment']))
+                        <label wire:key="field-engine">{{ __('Engine') }}
+                            <input type="text" list="engine-options" wire:model="engine" placeholder="{{ $placeholders['engine'] }}" maxlength="40">
+                            <datalist id="engine-options">
+                                @foreach ($engineList as $e)<option value="{{ $e }}">@endforeach
+                            </datalist>
+                        </label>
+                    @endif
                 </div>
                 <label class="full">{{ __('Notes') }} <span class="opt">({{ __('mods, build, anything') }})</span>
                     <textarea wire:model="notes" rows="2" maxlength="1000"></textarea>
                 </label>
                 @error('year') <p class="field-err">{{ $message }}</p> @enderror
-                <p class="hint">{{ __('Adding an engine or chassis follows it, so matching new articles show up in your feed.') }}</p>
+                @error('type') <p class="field-err">{{ $message }}</p> @enderror
+                <p class="hint">{{ __('Adding an engine or chassis (if applicable) follows it, so matching new articles show up in your feed.') }}</p>
                 <div class="form-actions">
-                    <button type="submit" class="btn">{{ $vehicleId ? __('Save changes') : __('Add to garage') }}</button>
-                    <button type="button" class="btn-link" wire:click="$set('showVehicleForm', false)">{{ __('Cancel') }}</button>
+                    <button type="submit" class="btn">{{ $productId ? __('Save changes') : __('Add to garage') }}</button>
+                    <button type="button" class="btn-link" wire:click="$set('showProductForm', false)">{{ __('Cancel') }}</button>
                 </div>
             </form>
         @endif
 
-        @forelse ($vehicles as $v)
-            <div class="garage-card" wire:key="veh-{{ $v->id }}">
+        @forelse ($products as $p)
+            <div class="garage-card" wire:key="prod-{{ $p->id }}">
                 <div class="garage-card-main">
-                    <h3>{{ $v->label() }}</h3>
+                    <h3>
+                        <span class="chip chip-kind">{{ __(ucfirst(str_replace('_', ' ', $p->type))) }}</span>
+                        {{ $p->label() }}
+                    </h3>
                     <p class="garage-meta">
-                        @if ($v->engine)<span class="chip">{{ $v->engine }}</span>@endif
-                        @if ($v->chassis)<span class="chip">{{ strtoupper($v->chassis) }}</span>@endif
-                        @if ($v->model && !$v->nickname)<span class="chip">{{ $v->make }} {{ $v->model }}</span>@endif
+                        @if ($p->engine)<span class="chip">{{ $p->engine }}</span>@endif
+                        @if ($p->chassis)<span class="chip">{{ strtoupper($p->chassis) }}</span>@endif
+                        @if ($p->model && !$p->nickname)<span class="chip">{{ $p->make }} {{ $p->model }}</span>@endif
                     </p>
-                    @if ($v->notes)<p class="garage-notes">{{ $v->notes }}</p>@endif
+                    @if ($p->notes)<p class="garage-notes">{{ $p->notes }}</p>@endif
                 </div>
                 <div class="garage-card-actions">
-                    <button type="button" class="btn-link" wire:click="editVehicle({{ $v->id }})">{{ __('Edit') }}</button>
-                    <button type="button" class="btn-link danger" wire:click="deleteVehicle({{ $v->id }})"
-                        wire:confirm="{{ __('Remove this vehicle from your garage?') }}">{{ __('Remove') }}</button>
+                    <button type="button" class="btn-link" wire:click="editProduct({{ $p->id }})">{{ __('Edit') }}</button>
+                    <button type="button" class="btn-link danger" wire:click="deleteProduct({{ $p->id }})"
+                        wire:confirm="{{ __('Remove this product from your garage?') }}">{{ __('Remove') }}</button>
                 </div>
             </div>
         @empty
-            @unless ($showVehicleForm)
-                <p class="empty">{{ __('No vehicles yet. Add one to personalize your feed.') }}</p>
-            @endunless
-        @endforelse
-    </section>
-
-    {{-- ---------- Equipment ---------- --}}
-    <section class="garage-section">
-        <div class="garage-head">
-            <h2 class="section-head">{{ __('My equipment') }}</h2>
-            @unless ($showEquipmentForm)
-                <button type="button" class="btn btn-sm" wire:click="newEquipment">+ {{ __('Add equipment') }}</button>
-            @endunless
-        </div>
-
-        @if ($showEquipmentForm)
-            <form class="garage-form" wire:submit="saveEquipment">
-                <div class="form-grid">
-                    <label>{{ __('Type') }}
-                        <select wire:model="eqKind">
-                            @foreach ($kinds as $k => $kl)<option value="{{ $k }}">{{ __($kl) }}</option>@endforeach
-                        </select>
-                    </label>
-                    <label>{{ __('Name') }}
-                        <input type="text" list="ecu-options" wire:model="eqName" placeholder="Hondata s300" maxlength="80">
-                        <datalist id="ecu-options">
-                            @foreach ($ecuList as $e)<option value="{{ $e }}">@endforeach
-                        </datalist>
-                    </label>
-                    <label class="full">{{ __('Detail') }} <span class="opt">({{ __('optional') }})</span>
-                        <input type="text" wire:model="eqDetail" placeholder="v3, firmware 4.x" maxlength="200">
-                    </label>
-                </div>
-                @error('eqName') <p class="field-err">{{ $message }}</p> @enderror
-                <div class="form-actions">
-                    <button type="submit" class="btn">{{ $equipmentId ? __('Save changes') : __('Add equipment') }}</button>
-                    <button type="button" class="btn-link" wire:click="$set('showEquipmentForm', false)">{{ __('Cancel') }}</button>
-                </div>
-            </form>
-        @endif
-
-        @forelse ($equipment as $e)
-            <div class="garage-card" wire:key="eq-{{ $e->id }}">
-                <div class="garage-card-main">
-                    <h3><span class="chip chip-kind">{{ __($e->kindLabel()) }}</span> {{ $e->name }}</h3>
-                    @if ($e->detail)<p class="garage-notes">{{ $e->detail }}</p>@endif
-                </div>
-                <div class="garage-card-actions">
-                    <button type="button" class="btn-link" wire:click="editEquipment({{ $e->id }})">{{ __('Edit') }}</button>
-                    <button type="button" class="btn-link danger" wire:click="deleteEquipment({{ $e->id }})"
-                        wire:confirm="{{ __('Remove this equipment?') }}">{{ __('Remove') }}</button>
-                </div>
-            </div>
-        @empty
-            @unless ($showEquipmentForm)
-                <p class="empty">{{ __('No equipment listed yet.') }}</p>
+            @unless ($showProductForm)
+                <p class="empty">{{ __('No products yet. Add one to personalize your feed.') }}</p>
             @endunless
         @endforelse
     </section>

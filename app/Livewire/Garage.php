@@ -15,8 +15,10 @@ use Livewire\Component;
  */
 class Garage extends Component
 {
-    // Vehicle form
-    public ?int $vehicleId = null;
+    // Product form
+    public ?int $productId = null;
+
+    public string $type = 'car';
 
     public string $nickname = '';
 
@@ -32,22 +34,12 @@ class Garage extends Component
 
     public string $notes = '';
 
-    public bool $showVehicleForm = false;
-
-    // Equipment form
-    public ?int $equipmentId = null;
-
-    public string $eqKind = 'ecu';
-
-    public string $eqName = '';
-
-    public string $eqDetail = '';
-
-    public bool $showEquipmentForm = false;
+    public bool $showProductForm = false;
 
     protected function rules(): array
     {
         return [
+            'type' => 'required|in:'.implode(',', UserProduct::TYPES),
             'nickname' => 'nullable|string|max:80',
             'year' => 'nullable|integer|min:1970|max:2030',
             'make' => 'nullable|string|max:40',
@@ -58,16 +50,17 @@ class Garage extends Component
         ];
     }
 
-    public function newVehicle(): void
+    public function newProduct(): void
     {
-        $this->resetVehicle();
-        $this->showVehicleForm = true;
+        $this->resetProduct();
+        $this->showProductForm = true;
     }
 
-    public function editVehicle(int $id): void
+    public function editProduct(int $id): void
     {
         $v = auth()->user()->products()->findOrFail($id);
-        $this->vehicleId = $v->id;
+        $this->productId = $v->id;
+        $this->type = $v->type;
         $this->nickname = $v->nickname ?? '';
         $this->year = (string) ($v->year ?? '');
         $this->make = $v->make ?? 'Honda';
@@ -75,15 +68,16 @@ class Garage extends Component
         $this->chassis = $v->chassis ?? '';
         $this->engine = $v->engine ?? '';
         $this->notes = $v->notes ?? '';
-        $this->showVehicleForm = true;
+        $this->showProductForm = true;
     }
 
-    public function saveVehicle(): void
+    public function saveProduct(): void
     {
         $data = $this->validate();
         $user = auth()->user();
 
         $attrs = [
+            'type' => $this->type,
             'nickname' => $this->nickname ?: null,
             'year' => $this->year !== '' ? (int) $this->year : null,
             'make' => $this->make ?: 'Honda',
@@ -93,26 +87,26 @@ class Garage extends Component
             'notes' => $this->notes ?: null,
         ];
 
-        $vehicle = $this->vehicleId
-            ? tap($user->products()->findOrFail($this->vehicleId))->update($attrs)
+        $product = $this->productId
+            ? tap($user->products()->findOrFail($this->productId))->update($attrs)
             : $user->products()->create($attrs);
 
-        $this->seedFollows($vehicle);
-        $this->resetVehicle();
-        session()->flash('garage_status', __('Vehicle saved.'));
+        $this->seedFollows($product);
+        $this->resetProduct();
+        session()->flash('garage_status', __('Product saved.'));
     }
 
-    public function deleteVehicle(int $id): void
+    public function deleteProduct(int $id): void
     {
         auth()->user()->products()->whereKey($id)->delete();
-        session()->flash('garage_status', __('Vehicle removed.'));
+        session()->flash('garage_status', __('Product removed.'));
     }
 
-    /** Create follows implied by the vehicle (engine/chassis), skipping any the user already has. */
-    private function seedFollows(UserProduct $vehicle): void
+    /** Create follows implied by the product (engine/chassis), skipping any the user already has. */
+    private function seedFollows(UserProduct $product): void
     {
-        $user = $vehicle->user;
-        foreach ($vehicle->impliedFollows() as $f) {
+        $user = $product->user;
+        foreach ($product->impliedFollows() as $f) {
             $exists = $user->follows()->where('kind', $f['kind'])->where('value', $f['value'])->exists();
             if (! $exists) {
                 $label = ArticleFacet::where('kind', $f['kind'])->where('value', $f['value'])->value('label') ?: $f['label'];
@@ -121,57 +115,10 @@ class Garage extends Component
         }
     }
 
-    public function newEquipment(): void
+    private function resetProduct(): void
     {
-        $this->resetEquipment();
-        $this->showEquipmentForm = true;
-    }
-
-    public function editEquipment(int $id): void
-    {
-        $e = auth()->user()->equipment()->findOrFail($id);
-        $this->equipmentId = $e->id;
-        $this->eqKind = $e->kind;
-        $this->eqName = $e->name;
-        $this->eqDetail = $e->detail ?? '';
-        $this->showEquipmentForm = true;
-    }
-
-    public function saveEquipment(): void
-    {
-        $this->validate([
-            'eqKind' => 'required|in:'.implode(',', array_keys(UserEquipment::KINDS)),
-            'eqName' => 'required|string|max:80',
-            'eqDetail' => 'nullable|string|max:200',
-        ]);
-        $user = auth()->user();
-        $attrs = ['kind' => $this->eqKind, 'name' => $this->eqName, 'detail' => $this->eqDetail ?: null];
-
-        $this->equipmentId
-            ? $user->equipment()->findOrFail($this->equipmentId)->update($attrs)
-            : $user->equipment()->create($attrs);
-
-        $this->resetEquipment();
-        session()->flash('garage_status', __('Equipment saved.'));
-    }
-
-    public function deleteEquipment(int $id): void
-    {
-        auth()->user()->equipment()->whereKey($id)->delete();
-        session()->flash('garage_status', __('Equipment removed.'));
-    }
-
-    private function resetVehicle(): void
-    {
-        $this->reset(['vehicleId', 'nickname', 'year', 'model', 'chassis', 'engine', 'notes', 'showVehicleForm']);
+        $this->reset(['productId', 'type', 'nickname', 'year', 'model', 'chassis', 'engine', 'notes', 'showProductForm']);
         $this->make = 'Honda';
-        $this->resetValidation();
-    }
-
-    private function resetEquipment(): void
-    {
-        $this->reset(['equipmentId', 'eqName', 'eqDetail', 'showEquipmentForm']);
-        $this->eqKind = 'ecu';
         $this->resetValidation();
     }
 
@@ -179,25 +126,71 @@ class Garage extends Component
     {
         $user = auth()->user();
 
+        $defaults = match ($this->type) {
+            'motorcycle' => [
+                'models' => ['CBR600RR', 'CBR1000RR', 'Grom', 'Monkey', 'Africa Twin', 'Gold Wing', 'Rebel', 'Shadow'],
+                'engines' => ['PC40E', 'SC59E'],
+                'chassis' => ['PC40', 'SC59'],
+                'nicknames' => ['Track Bike', 'Commuter', 'Trail', 'Cruiser'],
+            ],
+            'atv' => [
+                'models' => ['FourTrax Recon', 'Rancher', 'Foreman', 'Rubicon', 'TRX250X', 'TRX450R', 'TRX400EX'],
+                'engines' => [],
+                'chassis' => [],
+                'nicknames' => ['Mud Toy', 'Workhorse', 'Dune Runner'],
+            ],
+            'sxs' => [
+                'models' => ['Talon 1000R', 'Talon 1000X', 'Pioneer 1000', 'Pioneer 700', 'Pioneer 500'],
+                'engines' => [],
+                'chassis' => [],
+                'nicknames' => ['Trail Rig', 'Farm SxS', 'Rock Crawler'],
+            ],
+            'marine' => [
+                'models' => ['BF2.3', 'BF5', 'BF8', 'BF15', 'BF20', 'BF115', 'BF150', 'BF200', 'BF250'],
+                'engines' => [],
+                'chassis' => [],
+                'nicknames' => ['Kicker', 'Main Outboard', 'Trolling Motor'],
+            ],
+            'power_equipment' => [
+                'models' => ['EU1000i', 'EU2200i', 'EU3000is', 'EU7000is', 'HRX217', 'HSS219'],
+                'engines' => ['GX120', 'GX160', 'GX200', 'GX270', 'GX390', 'GCV170', 'GCV200'],
+                'chassis' => [],
+                'nicknames' => ['Camping Genny', 'Backup Power', 'Lawn Mower'],
+            ],
+            default => [ // car
+                'models' => ['Civic', 'Integra', 'Accord', 'CRX', 'Prelude', 'NSX', 'S2000', 'RSX', 'Del Sol'],
+                'engines' => ['B16', 'B18', 'B20', 'D15', 'D16', 'K20', 'K24', 'H22', 'F20C', 'F22C'],
+                'chassis' => ['EF', 'EG', 'EK', 'EM', 'EP', 'ES', 'DC2', 'DC5', 'AP1', 'AP2', 'NA1', 'NA2', 'BB6'],
+                'nicknames' => ['Daily', 'Project', 'Track Car', 'Winter Beater', 'Drag Car', 'My DC2'],
+            ],
+        };
+
+        $placeholders = [
+            'nickname' => \Illuminate\Support\Arr::random($defaults['nicknames']),
+            'year' => (string) rand(1990, (int) date('Y')),
+            'make' => 'Honda',
+            'model' => \Illuminate\Support\Arr::random($defaults['models'] ?: ['Model']),
+            'chassis' => $defaults['chassis'] ? \Illuminate\Support\Arr::random($defaults['chassis']) : '',
+            'engine' => $defaults['engines'] ? \Illuminate\Support\Arr::random($defaults['engines']) : '',
+        ];
+
         return view('livewire.garage', [
-            'vehicles' => $user->products()->latest()->get(),
-            'equipment' => $user->equipment()->orderBy('kind')->orderBy('name')->get(),
+            'placeholders' => $placeholders,
+            'nicknameList' => $defaults['nicknames'],
+            'products' => $user->products()->latest()->get(),
+            'productTypes' => UserProduct::TYPES,
             'makeList' => ArticleFacet::where('kind', 'make')->distinct()->orderBy('label')->pluck('label')
                 ->concat(['Honda', 'Acura'])
                 ->map(fn($l) => \Illuminate\Support\Str::headline($l))->unique()->values()->all(),
             'modelList' => ArticleFacet::where('kind', 'model')->distinct()->orderBy('label')->pluck('label')
-                ->concat(['Civic', 'Integra', 'Accord', 'CRX', 'Prelude', 'NSX', 'S2000', 'RSX', 'Del Sol'])
+                ->concat($defaults['models'])
                 ->map(fn($l) => \Illuminate\Support\Str::headline($l))->unique()->values()->all(),
             'chassisList' => ArticleFacet::where('kind', 'chassis')->distinct()->orderBy('label')->pluck('label')
-                ->concat(['EF', 'EG', 'EK', 'EM', 'EP', 'ES', 'DC2', 'DC5', 'AP1', 'AP2', 'NA1', 'NA2', 'BB6'])
+                ->concat($defaults['chassis'])
                 ->map(fn($l) => strtoupper($l))->unique()->values()->all(),
             'engineList' => ArticleFacet::where('kind', 'engine')->distinct()->orderBy('label')->pluck('label')
-                ->concat(['B16', 'B18', 'B20', 'D15', 'D16', 'K20', 'K24', 'H22', 'F20C', 'F22C'])
+                ->concat($defaults['engines'])
                 ->unique()->values()->all(),
-            'ecuList' => ArticleFacet::where('kind', 'ecu')->distinct()->orderBy('label')->pluck('label')
-                ->concat(['Hondata S300', 'K-Pro', 'Neptune', 'AEM Infinity', 'Haltech', 'Link', 'AEM UEGO', 'Innovate MTX-L', 'TunerStudio', 'Crome', 'eCtune'])
-                ->unique()->values()->all(),
-            'kinds' => UserEquipment::KINDS,
         ]);
     }
 }

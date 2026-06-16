@@ -24,9 +24,9 @@ class GarageTest extends TestCase
         $user = User::factory()->create();
 
         Livewire::actingAs($user)->test(Garage::class)
-            ->call('newVehicle')
+            ->call('newProduct')
             ->set('model', 'Integra')->set('chassis', 'DC2')->set('engine', 'B18C')
-            ->call('saveVehicle')->assertHasNoErrors();
+            ->call('saveProduct')->assertHasNoErrors();
 
         $this->assertDatabaseHas('user_products', ['user_id' => $user->id, 'model' => 'Integra', 'chassis' => 'DC2']);
         $this->assertTrue($user->follows()->where('kind', 'engine')->where('value', 'b18c')->exists());
@@ -38,7 +38,7 @@ class GarageTest extends TestCase
         $user = User::factory()->create();
         $product = $user->products()->create(['make' => 'Honda', 'model' => 'Civic']);
 
-        Livewire::actingAs($user)->test(Garage::class)->call('deleteVehicle', $product->id);
+        Livewire::actingAs($user)->test(Garage::class)->call('deleteProduct', $product->id);
 
         $this->assertDatabaseMissing('user_products', ['id' => $product->id]);
     }
