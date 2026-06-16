@@ -182,7 +182,21 @@ class Garage extends Component
         return view('livewire.garage', [
             'vehicles' => $user->products()->latest()->get(),
             'equipment' => $user->equipment()->orderBy('kind')->orderBy('name')->get(),
-            'engineList' => ArticleFacet::where('kind', 'engine')->distinct()->orderBy('label')->pluck('label')->all(),
+            'makeList' => ArticleFacet::where('kind', 'make')->distinct()->orderBy('label')->pluck('label')
+                ->concat(['Honda', 'Acura'])
+                ->map(fn($l) => \Illuminate\Support\Str::headline($l))->unique()->values()->all(),
+            'modelList' => ArticleFacet::where('kind', 'model')->distinct()->orderBy('label')->pluck('label')
+                ->concat(['Civic', 'Integra', 'Accord', 'CRX', 'Prelude', 'NSX', 'S2000', 'RSX', 'Del Sol'])
+                ->map(fn($l) => \Illuminate\Support\Str::headline($l))->unique()->values()->all(),
+            'chassisList' => ArticleFacet::where('kind', 'chassis')->distinct()->orderBy('label')->pluck('label')
+                ->concat(['EF', 'EG', 'EK', 'EM', 'EP', 'ES', 'DC2', 'DC5', 'AP1', 'AP2', 'NA1', 'NA2', 'BB6'])
+                ->map(fn($l) => strtoupper($l))->unique()->values()->all(),
+            'engineList' => ArticleFacet::where('kind', 'engine')->distinct()->orderBy('label')->pluck('label')
+                ->concat(['B16', 'B18', 'B20', 'D15', 'D16', 'K20', 'K24', 'H22', 'F20C', 'F22C'])
+                ->unique()->values()->all(),
+            'ecuList' => ArticleFacet::where('kind', 'ecu')->distinct()->orderBy('label')->pluck('label')
+                ->concat(['Hondata S300', 'K-Pro', 'Neptune', 'AEM Infinity', 'Haltech', 'Link', 'AEM UEGO', 'Innovate MTX-L', 'TunerStudio', 'Crome', 'eCtune'])
+                ->unique()->values()->all(),
             'kinds' => UserEquipment::KINDS,
         ]);
     }
