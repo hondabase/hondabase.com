@@ -14,7 +14,7 @@ return [
     ],
 
     // Vehicle types = top-level content folders.
-    'types' => ['cars', 'motorcycles', 'aircraft', 'common'],
+    'types' => ['cars', 'motorcycles', 'engines', 'aircraft', 'common'],
 
     // Supported UI locales. Keyed by the Laravel/app locale code (used for lang files,
     // the `locale` cookie and, later, content paths). `hreflang` is the BCP-47 tag emitted

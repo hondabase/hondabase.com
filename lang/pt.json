@@ -228,5 +228,21 @@
     "Displacement": "Cilindrada",
     "Systems": "Sistemas",
     "Years": "Anos",
-    "Scope": "Âmbito"
+    "Scope": "Âmbito",
+    "Page Not Found": "Página não encontrada",
+    "The page you are looking for does not exist or has been moved.": "A página que procura não existe ou foi movida.",
+    "Back to Home": "Voltar ao início",
+    "Access Forbidden": "Acesso proibido",
+    "You do not have permission to access this resource.": "Não tem permissão para aceder a este recurso.",
+    "Server Error": "Erro do servidor",
+    "Something went wrong on our servers. Diagnostic system is investigating.": "Ocorreu um erro nos nossos servidores. O sistema de diagnóstico está a investigar.",
+    "Service Unavailable": "Serviço indisponível",
+    "The server is temporarily down for maintenance or overloaded. Please try again later.": "O servidor está temporariamente indisponível para manutenção ou sobrecarregado. Por favor, tente mais tarde.",
+    "Page Expired": "Página expirada",
+    "The page has expired due to inactivity. Please refresh and try again.": "A página expirou devido a inatividade. Por favor, recarregue e tente novamente.",
+    "Too Many Requests": "Demasiados pedidos",
+    "You have sent too many requests. Diagnostic port is temporarily throttled.": "Enviou demasiados pedidos. A porta de diagnóstico está temporariamente limitada.",
+    "Unauthorized": "Não autorizado",
+    "Authentication is required to access this resource.": "É necessária autenticação para aceder a este recurso.",
+    "Error": "Erro"
 }

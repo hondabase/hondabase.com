@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * One node in the product taxonomy (a make, model, generation, trim, family, ...). DERIVED from
- * content/_data/taxonomy.json by the sync. `path` is the materialized type+slug chain
- * (cars/honda/civic/eg) so a category path can be matched to a node with one lookup.
+ * One node in the product taxonomy (a make, model, generation, trim, family, ...). DB-canonical;
+ * `path` is the materialized type+slug chain (cars/honda/civic/eg) so a category path can be
+ * matched to a node with one lookup.
  */
 class TaxonomyNode extends Model
 {

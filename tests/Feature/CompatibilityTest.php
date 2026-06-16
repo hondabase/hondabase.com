@@ -7,14 +7,13 @@ use App\Models\Compatibility;
 use App\Models\TaxonomyNode;
 use App\Services\ArticleIndexer;
 use App\Services\ArticleService;
-use App\Services\TaxonomySync;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 /**
- * P2: the sync links articles to taxonomy nodes three ways - inherited (folder location), explicit
+ * the sync links articles to taxonomy nodes three ways - inherited (folder location), explicit
  * (`fits:`), and the legacy `applies_to` bridge - and derives make/model/generation facets from the
  * linked nodes. A purely generic article links to nothing.
  */
@@ -29,21 +28,12 @@ class CompatibilityTest extends TestCase
         parent::setUp();
 
         $this->root = storage_path('framework/testing-compat-'.uniqid());
-        File::ensureDirectoryExists($this->root.'/_data');
-        File::put($this->root.'/_data/taxonomy.json', json_encode([
-            'cars' => [
-                'honda' => [
-                    'kind' => 'make', 'name' => 'Honda', 'children' => [
-                        'civic' => ['kind' => 'model', 'name' => 'Civic', 'children' => [
-                            'eg' => ['kind' => 'generation', 'name' => '5th Gen (EG)', 'meta' => ['chassis_codes' => ['eg', 'eh']]],
-                        ]],
-                        'integra' => ['kind' => 'model', 'name' => 'Integra', 'children' => [
-                            'dc2' => ['kind' => 'generation', 'name' => '3rd Gen (DC2)', 'meta' => ['chassis_codes' => ['dc2', 'db8']]],
-                        ]],
-                    ],
-                ],
-            ],
-        ]));
+
+        $honda = TaxonomyNode::create(['type' => 'cars', 'kind' => 'make', 'slug' => 'honda', 'name' => 'Honda', 'path' => 'cars/honda']);
+        $civic = TaxonomyNode::create(['parent_id' => $honda->id, 'type' => 'cars', 'kind' => 'model', 'slug' => 'civic', 'name' => 'Civic', 'path' => 'cars/honda/civic']);
+        TaxonomyNode::create(['parent_id' => $civic->id, 'type' => 'cars', 'kind' => 'generation', 'slug' => 'eg', 'name' => '5th Gen (EG)', 'path' => 'cars/honda/civic/eg', 'meta' => ['chassis_codes' => ['eg', 'eh']]]);
+        $integra = TaxonomyNode::create(['parent_id' => $honda->id, 'type' => 'cars', 'kind' => 'model', 'slug' => 'integra', 'name' => 'Integra', 'path' => 'cars/honda/integra']);
+        TaxonomyNode::create(['parent_id' => $integra->id, 'type' => 'cars', 'kind' => 'generation', 'slug' => 'dc2', 'name' => '3rd Gen (DC2)', 'path' => 'cars/honda/integra/dc2', 'meta' => ['chassis_codes' => ['dc2', 'db8']]]);
 
         // 1. inherited - physically under the EG generation folder
         $this->seedFile('cars/honda/civic/eg/engine/d15-timing/d15-timing.md', "# D15 Timing\n\nBelt routing for the D15.\n");
@@ -56,7 +46,6 @@ class CompatibilityTest extends TestCase
 
         config(['hondabase.content_path' => $this->root]);
         $this->app->forgetInstance(ArticleService::class);
-        $this->app->make(TaxonomySync::class)->import($this->root.'/_data/taxonomy.json', $this->root.'/_data/subjects.json');
         $this->app->make(ArticleIndexer::class)->indexAll();
     }
 

@@ -5,11 +5,12 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Product taxonomy + subject vocabulary, both DERIVED (rebuilt by the sync from content/_data/
- * taxonomy.json + subjects.json), so the forkability invariant holds: migrate:fresh + reindex
- * restores them. The taxonomy spans ALL Honda/Acura product lines (cars, motorcycles, marine,
- * power equipment, aircraft, ...), so `kind` is a free string driven by the JSON, not a fixed
- * car-only enum. `path` is the materialized type+slug chain (e.g. cars/honda/civic/eg).
+ * Product taxonomy + subject vocabulary, both DB-CANONICAL (initially seeded from JSON but now
+ * edited exclusively via the /admin/taxonomy control panel). The public SQL dump in the site repo
+ * provides the forkability path: migrate:fresh + sql-import + reindex restores the site state.
+ * The taxonomy spans ALL Honda/Acura product lines (cars, motorcycles, marine, power equipment,
+ * aircraft, ...), so `kind` is a free string. `path` is the materialized type+slug chain
+ * (e.g. cars/honda/civic/eg).
  */
 return new class extends Migration
 {

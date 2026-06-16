@@ -31,9 +31,7 @@ a separate repo for forkability; the database is a *derived, rebuildable* index.
    HTML↔Markdown round-trip must stay **lossless** — it is the only edit path. Custom
    constructs (`::: widget :::`, `{{> partial }}`, relative `.md` cross-links) must
    survive a round-trip. See the round-trip harnesses below.
-6. **DB-canonical taxonomy & subjects.** The taxonomy (`taxonomy_nodes`) and subjects are DB-canonical
-   and editable directly via the control panel at `/admin/taxonomy`. They are bootstrapped once
-   via `php artisan hondabase:taxonomy:seed` and not overwritten by `reindex`.
+6. **DB-canonical taxonomy & subjects.** The taxonomy (`taxonomy_nodes`) and subjects are DB-canonical and editable directly via the control panel at `/admin/taxonomy`. The initial JSON seed files and the `hondabase:taxonomy:seed` command have been removed; use the public SQL dump (`database/dumps/hondabase.sql`) to bootstrap the taxonomy on fresh installs. `hondabase:reindex` does not touch the taxonomy.
 7. **Multi-locale content moves.** Articles exist in both `en` (unprefixed) and `pt` (Portuguese,
    in `content/pt/...`) locales. Any recategorization or folder moves must be executed across
    both locale trees (e.g. using `hondabase:recategorize`) and internal absolute links rewritten.

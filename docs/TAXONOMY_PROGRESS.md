@@ -86,6 +86,9 @@ the full path. This epic adds the semantic layer over those paths.
   those folders - the control panel ties rename to a content move, or restricts it to empty nodes.
 
 ## Changelog
+- **2026-06-16** - **Removal of seeding logic.** Following the transition to a DB-canonical taxonomy, the `TaxonomySync` service and `hondabase:taxonomy:seed` command have been removed. `Subject::ensure()` now handles on-the-fly subject registration.
+- **2026-06-16** - **Transition to DB-canonical taxonomy.** Following the exhaustive catalog expansion, the `database/data/taxonomy.json` and `subjects.json` seed files have been removed. The database (`taxonomy_nodes` and `subjects` tables) is now the sole source of truth for the product taxonomy, edited via the Livewire control panel. The public SQL dump in the site repo provides the forkability path.
+- **2026-06-16** - **Comprehensive Honda/Acura catalog expansion.** Researched and added a wide range of missing models and generations to `database/data/taxonomy.json`, including Fit, CR-V, HR-V, Pilot, Odyssey, Legend, and several Acura models (TL, TSX, MDX, RDX, TLX). Seeded 81 nodes into the DB (up from 36) via `hondabase:taxonomy:seed --force` and reindexed (992 articles, 6177 compatibility links). This provides a modern foundation for future content beyond the initial wiki corpus.
 - **2026-06-16** - **Generation filling executed.** Ran `hondabase:recategorize --execute` after the owner enriched the content frontmatter with chassis/model metadata. This moved 16 bundles (8 en + 8 pt) into their specific generation folders (`honda/civic/eg/...` and `honda/civic/ek/...`) and successfully rewrote absolute links in 12 files. Reindexed (992 articles, 6177 compatibility links).
 - **2026-06-15** - **P5 done: product-centric personalization. EPIC COMPLETE.** Renamed
   `user_vehicles`->`user_products` (+ `UserVehicle`->`UserProduct`, `User::products()`), added a

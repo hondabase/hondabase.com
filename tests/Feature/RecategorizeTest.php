@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\TaxonomyNode;
 use App\Services\ArticleService;
 use App\Services\Recategorizer;
-use App\Services\TaxonomySync;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
@@ -26,14 +26,10 @@ class RecategorizeTest extends TestCase
         parent::setUp();
 
         $this->root = storage_path('framework/testing-recat-'.uniqid());
-        File::ensureDirectoryExists($this->root.'/_data');
-        File::put($this->root.'/_data/taxonomy.json', json_encode([
-            'cars' => ['honda' => ['kind' => 'make', 'name' => 'Honda', 'children' => [
-                'civic' => ['kind' => 'model', 'name' => 'Civic', 'children' => [
-                    'eg' => ['kind' => 'generation', 'name' => 'EG', 'meta' => ['chassis_codes' => ['eg']]],
-                ]],
-            ]]],
-        ]));
+
+        $honda = TaxonomyNode::create(['type' => 'cars', 'kind' => 'make', 'slug' => 'honda', 'name' => 'Honda', 'path' => 'cars/honda']);
+        $civic = TaxonomyNode::create(['parent_id' => $honda->id, 'type' => 'cars', 'kind' => 'model', 'slug' => 'civic', 'name' => 'Civic', 'path' => 'cars/honda/civic']);
+        TaxonomyNode::create(['parent_id' => $civic->id, 'type' => 'cars', 'kind' => 'generation', 'slug' => 'eg', 'name' => 'EG', 'path' => 'cars/honda/civic/eg', 'meta' => ['chassis_codes' => ['eg']]]);
 
         $this->seedFile('cars/electronics/tps-sensor/tps-sensor.md', "---\ntags: [sensors]\n---\n# TPS Sensor\n\nText.\n");
         $this->seedFile('cars/electronics/ecu-pinout/ecu-pinout.md', "---\ntags: [ecu]\n---\n# ECU Pinout\n\nSee [TPS](/cars/electronics/tps-sensor).\n");
@@ -44,7 +40,6 @@ class RecategorizeTest extends TestCase
 
         config(['hondabase.content_path' => $this->root]);
         $this->app->forgetInstance(ArticleService::class);
-        $this->app->make(TaxonomySync::class)->import($this->root.'/_data/taxonomy.json', $this->root.'/_data/subjects.json');
 
         foreach ([['git', 'init', '-q'], ['git', '-c', 'user.name=t', '-c', 'user.email=t@t', 'add', '-A'], ['git', '-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '-m', 's']] as $cmd) {
             Process::path($this->root)->run($cmd);

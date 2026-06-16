@@ -67,6 +67,19 @@ class CompatibilityResolver
                 $bridge($node, 'applies_to.trims');
             }
         }
+        foreach ((array) ($at['engines'] ?? []) as $e) {
+            $slug = Str::slug((string) $e);
+            // Match engine families (e.g. "b-series") or specific engines (e.g. "b18")
+            $matches = $this->nodes()->filter(function (TaxonomyNode $n) use ($slug) {
+                return $n->type === 'engines' && (
+                    ($n->kind === 'engine_family' && $n->slug === $slug) ||
+                    ($n->kind === 'engine' && str_starts_with($slug, $n->slug))
+                );
+            });
+            foreach ($matches as $node) {
+                $bridge($node, 'applies_to.engines');
+            }
+        }
 
         // Facets: every linked node plus its ancestors becomes a (kind, slug, name) facet so the
         // article surfaces under make/model/generation drill-down.
@@ -115,7 +128,19 @@ class CompatibilityResolver
     {
         $code = strtolower(trim($code));
 
-        return $this->nodes()->filter(fn (TaxonomyNode $n) => $n->type === $type && in_array($code, $n->chassisCodes(), true))->values();
+        return $this->nodes()->filter(function (TaxonomyNode $n) use ($type, $code) {
+            if ($n->type !== $type) {
+                return false;
+            }
+
+            foreach ($n->chassisCodes() as $c) {
+                if ($code === $c || (strlen($c) >= 2 && str_starts_with($code, $c))) {
+                    return true;
+                }
+            }
+
+            return false;
+        })->values();
     }
 
     /** @return Collection<int, TaxonomyNode> */

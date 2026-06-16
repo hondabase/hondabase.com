@@ -2,9 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Subject;
+use App\Models\TaxonomyNode;
 use App\Services\ArticleIndexer;
 use App\Services\ArticleService;
-use App\Services\TaxonomySync;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
@@ -25,26 +26,17 @@ class NodePageTest extends TestCase
         parent::setUp();
 
         $this->root = storage_path('framework/testing-node-'.uniqid());
-        File::ensureDirectoryExists($this->root.'/_data');
-        File::put($this->root.'/_data/taxonomy.json', json_encode([
-            'cars' => [
-                'honda' => [
-                    'kind' => 'make', 'name' => 'Honda', 'children' => [
-                        'civic' => ['kind' => 'model', 'name' => 'Civic', 'children' => [
-                            'eg' => ['kind' => 'generation', 'name' => '5th Gen (EG)', 'meta' => ['chassis_codes' => ['eg'], 'start_year' => 1992, 'end_year' => 1995]],
-                        ]],
-                    ],
-                ],
-            ],
-        ]));
-        File::put($this->root.'/_data/subjects.json', json_encode(['subjects' => ['engine' => 'Engine & Drivetrain']]));
+
+        $honda = TaxonomyNode::create(['type' => 'cars', 'kind' => 'make', 'slug' => 'honda', 'name' => 'Honda', 'path' => 'cars/honda']);
+        $civic = TaxonomyNode::create(['parent_id' => $honda->id, 'type' => 'cars', 'kind' => 'model', 'slug' => 'civic', 'name' => 'Civic', 'path' => 'cars/honda/civic']);
+        TaxonomyNode::create(['parent_id' => $civic->id, 'type' => 'cars', 'kind' => 'generation', 'slug' => 'eg', 'name' => '5th Gen (EG)', 'path' => 'cars/honda/civic/eg', 'meta' => ['chassis_codes' => ['eg'], 'start_year' => 1992, 'end_year' => 1995]]);
+        Subject::create(['slug' => 'engine', 'name' => 'Engine & Drivetrain']);
 
         $this->seedFile('cars/honda/civic/eg/engine/d15-timing/d15-timing.md', "# D15 Timing\n\nBelt routing.\n");
         $this->seedFile('cars/electronics/obd1-pinout/obd1-pinout.md', "# OBD1 Pinout\n\nGeneric pinout.\n");
 
         config(['hondabase.content_path' => $this->root]);
         $this->app->forgetInstance(ArticleService::class);
-        $this->app->make(TaxonomySync::class)->import($this->root.'/_data/taxonomy.json', $this->root.'/_data/subjects.json');
         $this->app->make(ArticleIndexer::class)->indexAll();
     }
 

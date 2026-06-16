@@ -24,7 +24,7 @@ class ArticleIndexer
     ) {}
 
     /** Rebuild the derived index (articles, facets, compatibilities). The taxonomy itself is NOT
-     *  touched here - it is durable, control-panel-edited state, seeded once by hondabase:taxonomy:seed. */
+     *  touched here - it is durable, control-panel-edited state. */
     public function indexAll(): array
     {
         $this->compatibility->forget(); // fresh node cache for this run

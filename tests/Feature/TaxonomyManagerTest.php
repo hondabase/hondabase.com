@@ -50,6 +50,19 @@ class TaxonomyManagerTest extends TestCase
         $this->assertSame($honda->id, $civic->parent_id);
     }
 
+    public function test_configured_type_tabs_render_even_when_no_nodes_exist(): void
+    {
+        TaxonomyNode::create(['type' => 'cars', 'kind' => 'make', 'slug' => 'honda', 'name' => 'Honda', 'path' => 'cars/honda']);
+
+        Livewire::actingAs($this->staff())->test(TaxonomyManager::class)
+            ->assertSee('Cars')
+            ->assertSee('Motorcycles')
+            ->assertSee('Aircraft')
+            ->assertSee('Common')
+            ->assertSee('No taxonomy nodes defined for motorcycles.')
+            ->assertSee('No taxonomy nodes defined for aircraft.');
+    }
+
     public function test_edit_metadata_sets_chassis_and_years(): void
     {
         $eg = TaxonomyNode::create(['type' => 'cars', 'kind' => 'generation', 'slug' => 'eg', 'name' => 'EG', 'path' => 'cars/eg']);
@@ -113,5 +126,18 @@ class TaxonomyManagerTest extends TestCase
         $id = Subject::where('slug', 'suspension')->value('id');
         Livewire::actingAs($this->staff())->test(TaxonomyManager::class)->call('deleteSubject', $id);
         $this->assertDatabaseMissing('subjects', ['slug' => 'suspension']);
+    }
+
+    public function test_subject_edit_can_be_cancelled(): void
+    {
+        $subject = Subject::create(['slug' => 'engine', 'name' => 'Engine']);
+
+        Livewire::actingAs($this->staff())->test(TaxonomyManager::class)
+            ->call('editSubject', $subject->id)
+            ->assertSet('subjectSlug', 'engine')
+            ->call('cancelSubject')
+            ->assertSet('subjectId', null)
+            ->assertSet('subjectSlug', '')
+            ->assertSet('subjectName', '');
     }
 }

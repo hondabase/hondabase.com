@@ -111,3 +111,5 @@ if ($locales !== '') {
 Route::get('/{type}/{path}', [ArticleController::class, 'resolve'])
     ->where(['type' => $types, 'path' => $pathTail])
     ->name('article.show');
+
+Route::fallback(fn () => abort(404));

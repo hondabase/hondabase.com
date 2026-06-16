@@ -31,6 +31,8 @@ class TaxonomyManager extends Component
 
     public ?int $nodeParentId = null;
 
+    public ?string $nodeParentPath = null;
+
     public string $nodeKind = 'model';
 
     public string $nodeSlug = '';
@@ -63,8 +65,10 @@ class TaxonomyManager extends Component
     public function newNode(string $type, ?int $parentId = null): void
     {
         $this->resetNodeForm();
-        $this->nodeType = $parentId ? TaxonomyNode::find($parentId)?->type ?? $type : $type;
+        $parent = $parentId ? TaxonomyNode::find($parentId) : null;
+        $this->nodeType = $parent?->type ?? $type;
         $this->nodeParentId = $parentId;
+        $this->nodeParentPath = $parent?->path;
         $this->showNodeForm = true;
     }
 
@@ -74,6 +78,7 @@ class TaxonomyManager extends Component
         $this->nodeId = $node->id;
         $this->nodeType = $node->type;
         $this->nodeParentId = $node->parent_id;
+        $this->nodeParentPath = $node->parent?->path;
         $this->nodeKind = $node->kind;
         $this->nodeSlug = $node->slug;
         $this->nodeName = $node->name;
@@ -183,6 +188,11 @@ class TaxonomyManager extends Component
         $this->reset(['subjectId', 'subjectSlug', 'subjectName']);
     }
 
+    public function cancelSubject(): void
+    {
+        $this->reset(['subjectId', 'subjectSlug', 'subjectName']);
+    }
+
     public function editSubject(int $id): void
     {
         $s = Subject::findOrFail($id);
@@ -213,7 +223,7 @@ class TaxonomyManager extends Component
 
     private function resetNodeForm(): void
     {
-        $this->reset(['nodeId', 'nodeParentId', 'nodeSlug', 'nodeName', 'nodeChassis', 'nodeStartYear', 'nodeEndYear', 'showNodeForm']);
+        $this->reset(['nodeId', 'nodeParentId', 'nodeParentPath', 'nodeSlug', 'nodeName', 'nodeChassis', 'nodeStartYear', 'nodeEndYear', 'showNodeForm']);
         $this->nodeKind = 'model';
     }
 
@@ -246,6 +256,11 @@ class TaxonomyManager extends Component
         return view('livewire.taxonomy-manager', [
             'nodesByType' => TaxonomyNode::orderBy('path')->get()->groupBy('type'),
             'subjects' => Subject::orderBy('slug')->get(),
+            'stats' => [
+                'nodes' => TaxonomyNode::count(),
+                'subjects' => Subject::count(),
+                'articles' => Article::count(),
+            ],
         ]);
     }
 }
