@@ -79,15 +79,15 @@ class Explorer extends Component
 
     public function render(): View
     {
-        $ids = $this->matchingIds();
+        $query = $this->baseQuery();
         $followed = $this->followedSet();
         $personalize = $followed && trim($this->q) === '' && empty($this->filters) && ! $this->scopeType;
 
         return view('livewire.explorer', [
-            'articles' => $this->localize($this->articles($ids, $followed, $personalize)),
-            'groups' => $this->facetGroups($ids),
+            'articles' => $this->localize($this->articles(clone $query, $followed, $personalize)),
+            'groups' => $this->facetGroups(clone $query),
             'activeLabels' => $this->activeLabels(),
-            'total' => count($ids),
+            'total' => (clone $query)->count(),
             'followed' => $followed,
             'isAuthed' => (bool) auth()->user(),
             'forYou' => $personalize ? $this->localize($this->forYou($followed)) : collect(),
@@ -109,11 +109,6 @@ class Explorer extends Component
 
         return $user->follows()->get(['kind', 'value'])
             ->map(fn ($f) => $f->kind.':'.$f->value)->all();
-    }
-
-    private function matchingIds(): array
-    {
-        return $this->baseQuery()->pluck('articles.id')->all();
     }
 
     private function baseQuery()
@@ -177,13 +172,8 @@ class Explorer extends Component
         return $query;
     }
 
-    private function articles(array $ids, array $followed, bool $personalize)
+    private function articles($query, array $followed, bool $personalize)
     {
-        if (empty($ids)) {
-            return collect();
-        }
-        $query = Article::query()->whereIn('id', $ids);
-
         if ($personalize && $followed) {
             $place = implode(',', array_fill(0, count($followed), '?'));
             $query->selectRaw(
@@ -219,14 +209,11 @@ class Explorer extends Component
     }
 
     /** Facet groups + counts over the current result set (this is the content shift). */
-    private function facetGroups(array $ids): array
+    private function facetGroups($query): array
     {
-        if (empty($ids)) {
-            return [];
-        }
         $rows = ArticleFacet::query()
             ->select('kind', 'value', 'label', DB::raw('COUNT(*) as c'))
-            ->whereIn('article_id', $ids)
+            ->whereIn('article_id', $query->select('articles.id'))
             ->groupBy('kind', 'value', 'label')
             ->orderByDesc('c')
             ->get();
