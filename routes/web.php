@@ -83,7 +83,7 @@ Route::get('/sitemap.xml', function () {
 
 // Knowledgebase. Types are constrained to the content top-level folders so these
 // patterns never shadow other app routes or the legacy /pgmfi, /guides, /reference paths.
-$types = 'cars|motorcycles|aircraft|common';
+$types = 'cars|motorcycles|engines|aircraft|common';
 $seg = '[A-Za-z0-9._-]+';
 // A category is an arbitrary-depth path (electronics/ecu/...), so the article/category path tail
 // may contain slashes. One catch-all per locale resolves it in the controller (article vs category
@@ -96,6 +96,11 @@ $pathTail = '[A-Za-z0-9._/-]+';
 // always served unprefixed.
 $locales = Locales::othersPattern();
 if ($locales !== '') {
+    // Localized homepage (e.g. /pt)
+    Route::get('/{locale}', fn () => view('home'))
+        ->where('locale', $locales)
+        ->name('home.localized');
+
     // Translation authoring (auth-gated): the literal `edit` segment keeps it distinct from the
     // localized resolve catch-all below (which requires segment 2 to be a content type).
     Route::get('/{locale}/edit/{type}/{path}', fn (string $locale, string $type, string $path) => view('translate', ['locale' => $locale, 'type' => $type] + ArticleService::splitPath($path)))

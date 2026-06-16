@@ -130,19 +130,23 @@
                             $hasChildren = isset($pathsWithChildren[$node->path]);
                         @endphp
                         <div class="taxman-node"
-                             data-name="{{ $node->name }}"
-                             data-slug="{{ $node->slug }}"
-                             data-chassis="{{ strtoupper(implode(', ', $node->chassisCodes())) }}"
-                             data-kind="{{ $node->kind }}"
-                             data-path="{{ $node->path }}"
-                             x-show="searchQuery ? matchesSearch($el.dataset.name, $el.dataset.slug, $el.dataset.chassis, $el.dataset.kind, $el.dataset.path) : !isCollapsed($el.dataset.path)"
+                             x-data="{ 
+                                name: '{{ $node->name }}',
+                                slug: '{{ $node->slug }}',
+                                chassis: '{{ strtoupper(implode(', ', $node->chassisCodes())) }}',
+                                kind: '{{ $node->kind }}',
+                                path: '{{ $node->path }}'
+                             }"
+                             x-show="searchQuery ? matchesSearch(name, slug, chassis, kind, path) : !isCollapsed(path)"
                              wire:key="node-{{ $node->id }}">
 
                             {{-- Visual Nesting Connectors --}}
                             <div class="taxman-indent-spacer" x-show="!searchQuery">
-                                @for ($i = 0; $i < $depth; $i++)
-                                    <div class="taxman-indent-col"></div>
-                                @endfor
+                                @foreach (range(1, $depth) as $i)
+                                    @if ($depth > 0)
+                                        <div class="taxman-indent-col"></div>
+                                    @endif
+                                @endforeach
                             </div>
 
                             <div class="taxman-node-body">
