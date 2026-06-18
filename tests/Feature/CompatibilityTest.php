@@ -43,6 +43,8 @@ class CompatibilityTest extends TestCase
         $this->seedFile('cars/electronics/dc2-brakes/dc2-brakes.md', "---\napplies_to:\n  chassis: [dc2]\n---\n# DC2 Brakes\n\nBig brake notes.\n");
         // 4. generic - no fit signal at all
         $this->seedFile('cars/electronics/generic-sensor/generic-sensor.md', "---\napplies_to:\n  obd: [1]\n---\n# Generic Sensor\n\nWorks on anything.\n");
+        // 5. dense bridge - model + chassis links, like broad ECU reference articles
+        $this->seedFile('cars/electronics/io/io.md', "---\napplies_to:\n  models: [civic, integra]\n  chassis: [eg, dc2]\n---\n# IO\n\nPort notes.\n");
 
         config(['hondabase.content_path' => $this->root]);
         $this->app->forgetInstance(ArticleService::class);
@@ -106,5 +108,19 @@ class CompatibilityTest extends TestCase
     public function test_generic_article_links_to_nothing(): void
     {
         $this->assertCount(0, $this->compatFor('generic-sensor'));
+    }
+
+    public function test_article_applies_to_groups_generation_links_under_models(): void
+    {
+        $this->get('/cars/electronics/io')
+            ->assertOk()
+            ->assertSee('class="article-nodes article-applies"', false)
+            ->assertSee('<a class="apply-card-title" href="/cars/honda/civic">Civic</a>', false)
+            ->assertSee('<a class="apply-linked-node" href="/cars/honda/civic/eg">', false)
+            ->assertSee('5th Gen (EG)')
+            ->assertSee('EG, EH')
+            ->assertSee('<a class="apply-card-title" href="/cars/honda/integra">Integra</a>', false)
+            ->assertSee('3rd Gen (DC2)')
+            ->assertDontSee('class="node-chip"', false);
     }
 }

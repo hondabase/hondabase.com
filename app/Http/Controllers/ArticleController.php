@@ -10,11 +10,14 @@ use App\Services\ArticleService;
 use App\Support\BreadcrumbBuilder;
 use App\Support\Locales;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ArticleController extends Controller
 {
+    private const COMPATIBILITY_ROOT_KINDS = ['model', 'family', 'engine_family'];
+
     public function __construct(private ArticleService $articles, private BreadcrumbBuilder $crumbs) {}
 
     // The knowledgebase serves arbitrary-depth category paths (electronics/ecu/...), which route
@@ -47,8 +50,17 @@ class ArticleController extends Controller
         if ($category !== '') {
             $art = $this->articles->find($type, $category, $slug, $locale);
             if ($art) {
+                // Fetch the DB identity (always English) to pull its linked taxonomy nodes.
+                $dbArt = Article::where([
+                    'type' => $type,
+                    'category' => $category,
+                    'slug' => $slug,
+                    'locale' => Locales::default(),
+                ])->first();
+
                 return view('article', [
                     'art' => $art,
+                    'compatibilityGroups' => $this->compatibilityGroups($dbArt),
                     'crumbs' => $this->crumbs->forCategory($type, $category, $locale),
                 ]);
             }
@@ -74,6 +86,158 @@ class ArticleController extends Controller
         }
 
         abort(404);
+    }
+
+    /** Group linked taxonomy nodes for the article "Applies to" block. */
+    private function compatibilityGroups(?Article $article): Collection
+    {
+        if (! $article) {
+            return collect();
+        }
+
+        $nodeIds = $article->compatibilities()->pluck('taxonomy_node_id');
+        if ($nodeIds->isEmpty()) {
+            return collect();
+        }
+
+        $linkedNodes = TaxonomyNode::whereIn('id', $nodeIds)->get();
+        if ($linkedNodes->isEmpty()) {
+            return collect();
+        }
+
+        $ancestorPaths = $linkedNodes
+            ->flatMap(fn (TaxonomyNode $node) => $this->taxonomyAncestorPaths($node->path))
+            ->unique()
+            ->values();
+        $nodesByPath = TaxonomyNode::whereIn('path', $ancestorPaths)->get()->keyBy('path');
+
+        return $linkedNodes
+            ->sortBy(fn (TaxonomyNode $node) => $this->taxonomySortKey($node))
+            ->groupBy('type')
+            ->map(function (Collection $typeNodes, string $type) use ($nodesByPath) {
+                $branches = $typeNodes
+                    ->groupBy(fn (TaxonomyNode $node) => $this->taxonomyBranchKey($node))
+                    ->map(fn (Collection $branchNodes, string $branchKey) => $this->compatibilityBranch($branchNodes, $branchKey, $nodesByPath))
+                    ->sortBy('sort')
+                    ->values();
+
+                return [
+                    'key' => $type,
+                    'label' => $this->taxonomyLabel($type),
+                    'count' => $typeNodes->count(),
+                    'branches' => $branches,
+                    'sort' => $this->typeSortKey($type),
+                ];
+            })
+            ->sortBy('sort')
+            ->values();
+    }
+
+    private function compatibilityBranch(Collection $branchNodes, string $branchKey, Collection $nodesByPath): array
+    {
+        $first = $branchNodes->first();
+        $branchNode = $first ? $nodesByPath->get($first->type.'/'.$branchKey) : null;
+
+        $cards = $branchNodes
+            ->groupBy(fn (TaxonomyNode $node) => $this->compatibilityRoot($node, $nodesByPath)->path)
+            ->map(function (Collection $cardNodes, string $rootPath) use ($nodesByPath) {
+                $root = $nodesByPath->get($rootPath) ?? $cardNodes->first();
+                $children = $cardNodes
+                    ->reject(fn (TaxonomyNode $node) => $node->path === $root->path)
+                    ->sortBy(fn (TaxonomyNode $node) => $this->taxonomySortKey($node))
+                    ->map(fn (TaxonomyNode $node) => $this->compatibilityNode($node))
+                    ->values();
+
+                return [
+                    'root' => $this->compatibilityNode($root),
+                    'direct' => $cardNodes->contains(fn (TaxonomyNode $node) => $node->path === $root->path),
+                    'children' => $children,
+                ];
+            })
+            ->sortBy(fn (array $card) => $card['root']['sort'])
+            ->values();
+
+        return [
+            'key' => $branchKey,
+            'label' => $branchNode?->name ?? $this->taxonomyLabel($branchKey),
+            'count' => $branchNodes->count(),
+            'cards' => $cards,
+            'sort' => $branchNode ? $this->taxonomySortKey($branchNode) : $this->taxonomySortKey($first),
+        ];
+    }
+
+    private function compatibilityRoot(TaxonomyNode $node, Collection $nodesByPath): TaxonomyNode
+    {
+        foreach (array_reverse($this->taxonomyAncestorPaths($node->path)) as $path) {
+            $candidate = $nodesByPath->get($path);
+            if ($candidate && in_array($candidate->kind, self::COMPATIBILITY_ROOT_KINDS, true)) {
+                return $candidate;
+            }
+        }
+
+        return $node;
+    }
+
+    private function compatibilityNode(TaxonomyNode $node): array
+    {
+        $meta = [];
+        if ($node->yearRange()) {
+            $meta[] = $node->yearRange();
+        }
+
+        $chassis = collect($node->chassisCodes())->map(fn (string $code) => strtoupper($code))->unique()->join(', ');
+        if ($chassis !== '') {
+            $meta[] = $chassis;
+        }
+
+        return [
+            'kind' => $this->taxonomyLabel($node->kind),
+            'name' => $node->name,
+            'url' => $node->url(),
+            'meta' => $meta,
+            'sort' => $this->taxonomySortKey($node),
+        ];
+    }
+
+    private function taxonomyBranchKey(TaxonomyNode $node): string
+    {
+        $parts = explode('/', trim($node->path, '/'));
+
+        return $parts[1] ?? 'general';
+    }
+
+    /** @return list<string> */
+    private function taxonomyAncestorPaths(string $path): array
+    {
+        $parts = explode('/', trim($path, '/'));
+        $paths = [];
+
+        for ($i = 2; $i <= count($parts); $i++) {
+            $paths[] = implode('/', array_slice($parts, 0, $i));
+        }
+
+        return $paths;
+    }
+
+    private function taxonomySortKey(?TaxonomyNode $node): string
+    {
+        if (! $node) {
+            return '99:';
+        }
+
+        return $this->typeSortKey($node->type).':'.$node->path;
+    }
+
+    private function typeSortKey(string $type): string
+    {
+        $idx = array_search($type, config('hondabase.types', []), true);
+
+        return str_pad((string) ($idx === false ? 99 : $idx), 2, '0', STR_PAD_LEFT);
+    }
+
+    private function taxonomyLabel(string $value): string
+    {
+        return Str::headline(str_replace(['-', '_'], ' ', $value));
     }
 
     /** Render a taxonomy node landing page: its metadata, child nodes, and the articles that fit

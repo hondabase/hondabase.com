@@ -167,6 +167,64 @@
             {!! $art['html'] !!}
         </div>
 
+        @php $compatibilityGroups = $compatibilityGroups ?? collect(); @endphp
+        @if ($compatibilityGroups->isNotEmpty())
+            <section class="article-nodes article-applies" aria-labelledby="article-applies-heading">
+                <div class="apply-head">
+                    <h2 id="article-applies-heading" class="section-head">{{ __('Applies to') }}</h2>
+                    <span class="apply-count">
+                        {{ trans_choice(':count taxonomy link|:count taxonomy links', $compatibilityGroups->sum('count'), ['count' => $compatibilityGroups->sum('count')]) }}
+                    </span>
+                </div>
+                @foreach ($compatibilityGroups as $typeGroup)
+                    <div class="apply-type">
+                        <div class="apply-type-label">
+                            <span>{{ $typeGroup['label'] }}</span>
+                            <span>{{ trans_choice(':count link|:count links', $typeGroup['count'], ['count' => $typeGroup['count']]) }}</span>
+                        </div>
+                        <div class="apply-branches">
+                            @foreach ($typeGroup['branches'] as $branch)
+                                <section class="apply-branch" aria-label="{{ $branch['label'] }}">
+                                    <div class="apply-branch-head">
+                                        <h3>{{ $branch['label'] }}</h3>
+                                        <span>{{ trans_choice(':count link|:count links', $branch['count'], ['count' => $branch['count']]) }}</span>
+                                    </div>
+                                    <div class="apply-card-grid">
+                                        @foreach ($branch['cards'] as $card)
+                                            <article class="apply-card">
+                                                <div class="apply-card-main">
+                                                    <span class="apply-card-kind">{{ $card['root']['kind'] }}</span>
+                                                    <a class="apply-card-title" href="{{ $card['root']['url'] }}">{{ $card['root']['name'] }}</a>
+                                                    @if ($card['root']['meta'])
+                                                        <span class="apply-node-meta">{{ implode(' / ', $card['root']['meta']) }}</span>
+                                                    @endif
+                                                </div>
+                                                @if ($card['children']->isNotEmpty())
+                                                    <div class="apply-child-list">
+                                                        @foreach ($card['children'] as $child)
+                                                            <a class="apply-linked-node" href="{{ $child['url'] }}">
+                                                                <span class="apply-linked-kind">{{ $child['kind'] }}</span>
+                                                                <span class="apply-linked-name">{{ $child['name'] }}</span>
+                                                                @if ($child['meta'])
+                                                                    <span class="apply-node-meta">{{ implode(' / ', $child['meta']) }}</span>
+                                                                @endif
+                                                            </a>
+                                                        @endforeach
+                                                    </div>
+                                                @elseif ($card['direct'])
+                                                    <span class="apply-card-note">{{ __('Direct taxonomy match') }}</span>
+                                                @endif
+                                            </article>
+                                        @endforeach
+                                    </div>
+                                </section>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </section>
+        @endif
+
         @if ($art['authors']->isNotEmpty() || !empty($art['sources']))
             <section class="article-attribution" aria-labelledby="article-attribution-heading">
                 <h2 id="article-attribution-heading">{{ __('Credits and source') }}</h2>
