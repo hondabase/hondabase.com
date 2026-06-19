@@ -6,7 +6,7 @@
     <section class="hero compact-hero">
         <div class="tag">Honda &amp; Acura · Technical Knowledgebase</div>
         <h2>Explore the <span class="accent">whole</span> catalog.</h2>
-        <p>Search every article and filter by category, OBD generation, engine family, chassis
+        <p>Search every article and filter by category, OBD tag, engine family, chassis
         and more. Type to reshape the results.</p>
     </section>
 

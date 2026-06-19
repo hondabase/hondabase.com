@@ -101,6 +101,9 @@ trait EditsFrontmatter
         }
         $rows = [];
         foreach ($at as $key => $v) {
+            if ((string) $key === 'obd') {
+                continue;
+            }
             $isList = is_array($v);
             $vals = $isList ? $v : [$v];
             $rows[] = [
@@ -119,7 +122,7 @@ trait EditsFrontmatter
         foreach ($this->fmAppliesTo as $row) {
             $key = trim((string) ($row['key'] ?? ''));
             $raw = trim((string) ($row['value'] ?? ''));
-            if ($key === '' || $raw === '') {
+            if ($key === '' || $key === 'obd' || $raw === '') {
                 continue;
             }
             $vals = $this->splitCsv($raw);

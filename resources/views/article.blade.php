@@ -53,6 +53,7 @@
         '@type' => 'BreadcrumbList',
         'itemListElement' => $crumbItems,
     ];
+    $obdTags = array_values(array_filter($art['tags'], fn ($tag) => preg_match('/^obd(?:\d[a-z]?|)$/i', (string) $tag)));
 @endphp
 
 @push('head')
@@ -112,7 +113,7 @@
         data-ga-category="{{ $art['category'] }}"
         data-ga-type="{{ $art['type'] }}"
         data-ga-complexity="{{ $art['complexity'] }}"
-        data-ga-obd="{{ implode(',', (array) ($at['obd'] ?? [])) }}"
+        data-ga-obd="{{ implode(',', $obdTags) }}"
         data-ga-engine="{{ implode(',', (array) ($at['engines'] ?? [])) }}"
         data-ga-tags="{{ implode(',', $art['tags']) }}">
         <header class="article-head">

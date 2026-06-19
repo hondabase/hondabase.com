@@ -29,7 +29,8 @@ and so on.
 
 The `article_view` parameters come from `data-ga-*` attributes on the `<article>` element,
 set in `resources/views/article.blade.php` from the article's frontmatter (`applies_to`,
-`tags`, `complexity`, etc.).
+`tags`, `complexity`, etc.). The `obd` parameter is derived from OBD tags (`obd0`, `obd1`,
+`obd2`, etc.), not from `applies_to`.
 
 ## Register custom dimensions (required to report on article params)
 

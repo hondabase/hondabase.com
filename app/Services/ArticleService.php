@@ -479,7 +479,8 @@ class ArticleService
 
     /**
      * Derive [ [kind, value, label], ... ] facets from frontmatter + path. Flexible: type,
-     * category, every tag, and every applies_to field (engine families, OBD, chassis, ...).
+     * category, every tag, and every applies_to field (engine families, chassis, ...).
+     * OBD is intentionally tag-only; stale applies_to.obd values are ignored.
      */
     public function facetsFor(array $fm, string $type, string $category): array
     {
@@ -507,7 +508,7 @@ class ArticleService
                 }
                 $v = trim((string) $v);
                 if ($kind === 'obd') {
-                    $f[] = ['obd', $v, 'OBD'.$v];
+                    continue;
                 } elseif ($kind === 'engine' && ! preg_match('/\d/', $v)) {
                     $lbl = strtoupper(preg_replace('/[-_ ]?series$/i', '', strtolower($v))).'-Series';
                     $f[] = ['engine', Str::slug($lbl), $lbl];

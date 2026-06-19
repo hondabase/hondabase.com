@@ -33,7 +33,7 @@ class Explorer extends Component
     public bool $scopeAll = false;
 
     private const KIND_LABELS = [
-        'category' => 'Categories', 'engine' => 'Engine family', 'obd' => 'OBD',
+        'category' => 'Categories', 'engine' => 'Engine family',
         'tag' => 'Tags', 'chassis' => 'Chassis', 'ecu' => 'ECUs', 'model' => 'Models',
         'brand' => 'Brand', 'scope' => 'Scope', 'system' => 'Systems', 'year' => 'Years',
     ];
@@ -46,6 +46,7 @@ class Explorer extends Component
 
     public function toggleFilter(string $kv): void
     {
+        $kv = $this->normalizeFilter($kv);
         $this->filters = in_array($kv, $this->filters, true)
             ? array_values(array_diff($this->filters, [$kv]))
             : array_values([...$this->filters, $kv]);
@@ -79,6 +80,8 @@ class Explorer extends Component
 
     public function render(): View
     {
+        $this->filters = $this->normalizeFilters($this->filters);
+
         $query = $this->baseQuery();
         $followed = $this->followedSet();
         $personalize = $followed && trim($this->q) === '' && empty($this->filters) && ! $this->scopeType;
@@ -159,7 +162,7 @@ class Explorer extends Component
         }
 
         foreach ($this->filters as $kv) {
-            [$kind, $value] = array_pad(explode(':', $kv, 2), 2, '');
+            [$kind, $value] = array_pad(explode(':', $this->normalizeFilter($kv), 2), 2, '');
             $query->whereExists(function ($sub) use ($kind, $value) {
                 $sub->select(DB::raw(1))
                     ->from('article_facets')
@@ -228,7 +231,7 @@ class Explorer extends Component
             unset($byKind['category']);
         }
 
-        $order = ['category', 'engine', 'obd', 'tag', 'chassis', 'ecu', 'model', 'brand', 'scope', 'system', 'year'];
+        $order = ['category', 'engine', 'tag', 'chassis', 'ecu', 'model', 'brand', 'scope', 'system', 'year'];
         $limits = ['tag' => 18];
         $groups = [];
         foreach ([...$order, ...array_diff(array_keys($byKind), $order)] as $kind) {
@@ -248,6 +251,7 @@ class Explorer extends Component
     {
         $out = [];
         foreach ($this->filters as $kv) {
+            $kv = $this->normalizeFilter($kv);
             [$kind, $value] = array_pad(explode(':', $kv, 2), 2, '');
             $label = ArticleFacet::where('kind', $kind)->where('value', $value)->value('label');
             $out[$kv] = $label ?: $value;
@@ -287,5 +291,25 @@ class Explorer extends Component
         }
 
         return $collection;
+    }
+
+    private function normalizeFilters(array $filters): array
+    {
+        return array_values(array_unique(array_map(fn ($kv) => $this->normalizeFilter((string) $kv), $filters)));
+    }
+
+    private function normalizeFilter(string $kv): string
+    {
+        [$kind, $value] = array_pad(explode(':', $kv, 2), 2, '');
+        if ($kind !== 'obd') {
+            return $kv;
+        }
+
+        $value = strtolower(trim($value));
+        if ($value === '') {
+            return $kv;
+        }
+
+        return 'tag:'.(str_starts_with($value, 'obd') ? $value : 'obd'.$value);
     }
 }

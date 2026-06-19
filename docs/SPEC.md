@@ -60,13 +60,14 @@ applies_to:
   chassis: [EG, EK, DC2]
   engines: [B-Series, B18C]   # no-digit value = whole family; with a digit = specific engine
   ecus: [P28, P30, PM6]
-  obd: [0, 1]                 # OBD generation(s)
 complexity: beginner
 tags: [ecu, obd1, diagnostics]
 ```
 
-Every `applies_to` field renders in the article's "Applies to" panel (OBD generations and
-engine families get badges; everything else shows as chips). `last_updated` is git-derived.
+Every `applies_to` field renders in the article's "Applies to" panel (engine families get
+badges; everything else shows as chips). OBD belongs in `tags` only (`obd0`, `obd1`,
+`obd2`, etc.) because it is too ECU-specific to be a global applicability axis.
+`last_updated` is git-derived.
 
 Authoring/style rules and source-faithful porting rules are in
 `content/docs/article-format.md`; contribution overview in `content/CONTRIBUTING.md`.
@@ -95,7 +96,8 @@ Routes (in `routes/web.php`), all type-constrained so they never shadow legacy p
   - `articles` (type, category, slug, title, summary, complexity, body_text [FULLTEXT],
     repo_path, updated_at).
   - `article_facets` (`kind`, `value`, `label`): a **flexible facet** per type, category,
-    tag, and every `applies_to` field (engine families normalized, OBD as `OBD1`, etc.).
+    tag, and every supported `applies_to` field (engine families normalized). OBD is indexed
+    only through tags.
 - Forkability invariant: drop the DB, `migrate`, `reindex` and the dynamic site is fully
   restored from the repos.
 
@@ -104,7 +106,7 @@ Routes (in `routes/web.php`), all type-constrained so they never shadow legacy p
 `app/Livewire/Explorer.php` + `resources/views/livewire/explorer.blade.php`:
 - **Content-shifting search (not autocomplete):** the query re-renders the whole surface
   (article cards + facet groups + counts) in place.
-- **Facet groups** with live counts (Categories, Engine family, OBD, Tags, ECUs, ...);
+- **Facet groups** with live counts (Categories, Engine family, Tags, ECUs, ...);
   clicking a facet filters (AND across active filters).
 - **Context-aware scope:** on a category page the same component is scoped to that category
   (`<livewire:explorer type=... category=... />`) with an "Everything" toggle.
@@ -124,7 +126,7 @@ Routes (in `routes/web.php`), all type-constrained so they never shadow legacy p
 ## 9. Follows and the opinionated homepage
 
 - A signed-in user can **follow any facet** (a star on every facet chip) - category, tag,
-  engine family, OBD generation, ECU, chassis, etc. This is the "interests" mechanism.
+  engine family, ECU, chassis, etc. This is the "interests" mechanism.
   Stored in `follows` (`user_id`, `kind`, `value`, `label`).
 - The homepage becomes **opinionated** for that user: a "For you" row of recent articles
   matching their follows, and the main grid is re-ordered by how many follows each article

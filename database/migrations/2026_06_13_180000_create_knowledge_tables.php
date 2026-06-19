@@ -39,7 +39,7 @@ return new class extends Migration
             $t->index(['kind', 'value']);
         });
 
-        // A user follows a facet (category, tag, engine family, OBD gen, chassis, ...).
+        // A user follows a facet (category, tag, engine family, chassis, ...).
         Schema::create('follows', function (Blueprint $t) {
             $t->id();
             $t->foreignId('user_id')->constrained()->cascadeOnDelete();

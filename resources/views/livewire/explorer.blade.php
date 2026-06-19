@@ -52,7 +52,7 @@
                             <span class="chipwrap">
                                 <button type="button" wire:key="f-{{ $kv }}"
                                         wire:click="toggleFilter('{{ $kv }}')"
-                                        class="chip {{ in_array($kv, $filters, true) ? 'chip-active' : '' }}{{ $kind === 'obd' ? ' chip-obd' : ($kind === 'engine' ? ' chip-series' : '') }}">
+                                        class="chip {{ in_array($kv, $filters, true) ? 'chip-active' : '' }}{{ $kind === 'engine' ? ' chip-series' : '' }}">
                                     {{ $facet->label }} <span class="chip-c">{{ $facet->c }}</span>
                                 </button>
                                 @if ($isAuthed)

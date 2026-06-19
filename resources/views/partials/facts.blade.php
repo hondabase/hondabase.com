@@ -12,11 +12,11 @@
     $labels = [
         'brand' => 'Brand', 'models' => 'Models', 'model' => 'Model', 'chassis' => 'Chassis',
         'trims' => 'Trims', 'trim' => 'Trim', 'engines' => 'Engines', 'engine' => 'Engine',
-        'displacement' => 'Displacement', 'ecus' => 'ECUs', 'obd' => 'OBD', 'systems' => 'Systems',
+        'displacement' => 'Displacement', 'ecus' => 'ECUs', 'systems' => 'Systems',
         'years' => 'Years', 'scope' => 'Scope',
     ];
     $order = ['brand', 'models', 'model', 'chassis', 'trims', 'trim', 'engines', 'engine',
-              'displacement', 'ecus', 'obd', 'systems', 'years', 'scope'];
+              'displacement', 'ecus', 'systems', 'years', 'scope'];
 
     $keys = array_merge(
         array_values(array_filter($order, fn ($k) => array_key_exists($k, $at))),
@@ -25,12 +25,14 @@
 
     $rows = [];
     foreach ($keys as $k) {
+        if ($k === 'obd') {
+            continue;
+        }
         $items = [];
         foreach ((array) $at[$k] as $v) {
             if (!is_scalar($v) || trim((string) $v) === '') continue;
             $v = trim((string) $v);
-            if ($k === 'obd')                            $items[] = ['badge obd', 'OBD' . $v];
-            elseif ($k === 'engines' || $k === 'engine') $items[] = $isFamily($v) ? ['badge series', $familyLabel($v)] : ['chip', $v];
+            if ($k === 'engines' || $k === 'engine')     $items[] = $isFamily($v) ? ['badge series', $familyLabel($v)] : ['chip', $v];
             elseif ($k === 'scope')                      $items[] = ['chip', ucwords(str_replace('-', ' ', $v))];
             elseif ($k === 'brand')                      $items[] = ['chip', ucfirst($v)];
             else                                         $items[] = ['chip', $v];

@@ -43,7 +43,6 @@
             <datalist id="applies-fields">
                 <option value="engines"></option>
                 <option value="ecus"></option>
-                <option value="obd"></option>
                 <option value="chassis"></option>
                 <option value="models"></option>
                 <option value="years"></option>
