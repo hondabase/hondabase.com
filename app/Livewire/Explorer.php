@@ -135,49 +135,32 @@ class Explorer extends Component
 
         $term = trim($this->q);
         if ($term !== '') {
-            $like = $this->like($term);
             $terms = $this->searchTerms($term);
             $locale = app()->getLocale();
-            $query->where(function ($w) use ($like, $terms, $locale) {
-                $w->where(function ($phrase) use ($like) {
-                    $this->whereArticleMatches($phrase, $like, 'articles');
-                });
-                if ($terms !== []) {
-                    $w->orWhere(function ($tokens) use ($terms) {
-                        foreach ($terms as $word) {
-                            $tokens->where(function ($x) use ($word) {
-                                $this->whereArticleMatches($x, $this->like($word), 'articles');
+            $query->where(function ($all) use ($terms, $locale) {
+                foreach ($terms as $word) {
+                    $all->where(function ($one) use ($word, $locale) {
+                        $like = $this->like($word);
+                        $this->whereSearchTermMatches($one, $like);
+                        if (! Locales::isDefault($locale)) {
+                            $one->orWhereExists(function ($sub) use ($like, $locale) {
+                                $sub->select(DB::raw(1))
+                                    ->from('articles as t')
+                                    ->whereColumn('t.type', 'articles.type')
+                                    ->whereColumn('t.category', 'articles.category')
+                                    ->whereColumn('t.slug', 'articles.slug')
+                                    ->where('t.locale', $locale)
+                                    ->where(function ($t) use ($like) {
+                                        $this->whereArticleMatches($t, $like, 't');
+                                    });
                             });
                         }
                     });
                 }
-                // Under a non-default locale, also match the article's translation row so a
-                // term that only appears in the translated text still finds it.
-                if (! Locales::isDefault($locale)) {
-                    $w->orWhereExists(function ($sub) use ($like, $terms, $locale) {
-                        $sub->select(DB::raw(1))
-                            ->from('articles as t')
-                            ->whereColumn('t.type', 'articles.type')
-                            ->whereColumn('t.category', 'articles.category')
-                            ->whereColumn('t.slug', 'articles.slug')
-                            ->where('t.locale', $locale)
-                            ->where(function ($x) use ($like, $terms) {
-                                $x->where(function ($phrase) use ($like) {
-                                    $this->whereArticleMatches($phrase, $like, 't');
-                                });
-                                if ($terms !== []) {
-                                    $x->orWhere(function ($tokens) use ($terms) {
-                                        foreach ($terms as $word) {
-                                            $tokens->where(function ($token) use ($word) {
-                                                $this->whereArticleMatches($token, $this->like($word), 't');
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                    });
-                }
             });
+
+            [$scoreSql, $scoreBindings] = $this->searchScore($term, $terms, $locale);
+            $query->addSelect('articles.*')->selectRaw($scoreSql.' as search_score', $scoreBindings);
         }
 
         foreach ($this->filters as $kv) {
@@ -206,11 +189,39 @@ class Explorer extends Component
         }
 
         return $query
+            ->when(trim($this->q) !== '', fn ($q) => $q->orderByDesc('search_score'))
             ->orderByDesc('view_count')
             ->orderByRaw('updated_at IS NULL, updated_at DESC')
             ->orderBy('title')
             ->limit(60)
             ->get();
+    }
+
+    private function whereSearchTermMatches($query, string $like): void
+    {
+        $this->whereArticleMatches($query, $like, 'articles');
+        $query->orWhereExists(function ($sub) use ($like) {
+            $sub->select(DB::raw(1))
+                ->from('article_facets as sf')
+                ->whereColumn('sf.article_id', 'articles.id')
+                ->where(function ($facet) use ($like) {
+                    $facet->where('sf.kind', 'like', $like)
+                        ->orWhere('sf.value', 'like', $like)
+                        ->orWhere('sf.label', 'like', $like);
+                });
+        })->orWhereExists(function ($sub) use ($like) {
+            $sub->select(DB::raw(1))
+                ->from('compatibilities as sc')
+                ->join('taxonomy_nodes as st', 'st.id', '=', 'sc.taxonomy_node_id')
+                ->whereColumn('sc.article_id', 'articles.id')
+                ->where(function ($tax) use ($like) {
+                    $tax->where('st.kind', 'like', $like)
+                        ->orWhere('st.slug', 'like', $like)
+                        ->orWhere('st.name', 'like', $like)
+                        ->orWhere('st.path', 'like', $like)
+                        ->orWhere('st.meta', 'like', $like);
+                });
+        });
     }
 
     private function whereArticleMatches($query, string $like, string $table): void
@@ -219,7 +230,66 @@ class Explorer extends Component
             ->orWhere("{$table}.summary", 'like', $like)
             ->orWhere("{$table}.body_text", 'like', $like)
             ->orWhere("{$table}.slug", 'like', $like)
-            ->orWhere("{$table}.category", 'like', $like);
+            ->orWhere("{$table}.category", 'like', $like)
+            ->orWhere("{$table}.type", 'like', $like)
+            ->orWhere("{$table}.complexity", 'like', $like)
+            ->orWhere("{$table}.repo_path", 'like', $like);
+    }
+
+    /** @return array{0: string, 1: list<string>} */
+    private function searchScore(string $phrase, array $terms, string $locale): array
+    {
+        $parts = [];
+        $bindings = [];
+        $add = function (string $sql, array $values = []) use (&$parts, &$bindings): void {
+            $parts[] = $sql;
+            array_push($bindings, ...$values);
+        };
+
+        $phraseLike = $this->like($phrase);
+        foreach ([
+            ['articles.title', 120],
+            ['articles.slug', 90],
+            ['articles.category', 70],
+            ['articles.summary', 55],
+            ['articles.body_text', 25],
+        ] as [$column, $weight]) {
+            $add("CASE WHEN {$column} LIKE ? THEN {$weight} ELSE 0 END", [$phraseLike]);
+        }
+        $add('CASE WHEN EXISTS (SELECT 1 FROM article_facets sp WHERE sp.article_id = articles.id AND (sp.kind LIKE ? OR sp.value LIKE ? OR sp.label LIKE ?)) THEN 70 ELSE 0 END', [$phraseLike, $phraseLike, $phraseLike]);
+        $add('CASE WHEN EXISTS (SELECT 1 FROM compatibilities scp JOIN taxonomy_nodes stp ON stp.id = scp.taxonomy_node_id WHERE scp.article_id = articles.id AND (stp.kind LIKE ? OR stp.slug LIKE ? OR stp.name LIKE ? OR stp.path LIKE ? OR stp.meta LIKE ?)) THEN 70 ELSE 0 END', [$phraseLike, $phraseLike, $phraseLike, $phraseLike, $phraseLike]);
+
+        foreach ($terms as $word) {
+            $like = $this->like($word);
+            foreach ([
+                ['articles.title', 30],
+                ['articles.slug', 26],
+                ['articles.category', 22],
+                ['articles.summary', 16],
+                ['articles.type', 10],
+                ['articles.complexity', 8],
+                ['articles.repo_path', 8],
+                ['articles.body_text', 5],
+            ] as [$column, $weight]) {
+                $add("CASE WHEN {$column} LIKE ? THEN {$weight} ELSE 0 END", [$like]);
+            }
+            $add('CASE WHEN EXISTS (SELECT 1 FROM article_facets sfp WHERE sfp.article_id = articles.id AND (sfp.kind LIKE ? OR sfp.value LIKE ? OR sfp.label LIKE ?)) THEN 20 ELSE 0 END', [$like, $like, $like]);
+            $add('CASE WHEN EXISTS (SELECT 1 FROM compatibilities sct JOIN taxonomy_nodes stt ON stt.id = sct.taxonomy_node_id WHERE sct.article_id = articles.id AND (stt.kind LIKE ? OR stt.slug LIKE ? OR stt.name LIKE ? OR stt.path LIKE ? OR stt.meta LIKE ?)) THEN 18 ELSE 0 END', [$like, $like, $like, $like, $like]);
+
+            if (! Locales::isDefault($locale)) {
+                foreach ([
+                    ['title', 24],
+                    ['slug', 20],
+                    ['category', 16],
+                    ['summary', 14],
+                    ['body_text', 5],
+                ] as [$column, $weight]) {
+                    $add("CASE WHEN EXISTS (SELECT 1 FROM articles tr WHERE tr.type = articles.type AND tr.category = articles.category AND tr.slug = articles.slug AND tr.locale = ? AND tr.{$column} LIKE ?) THEN {$weight} ELSE 0 END", [$locale, $like]);
+                }
+            }
+        }
+
+        return ['('.implode(' + ', $parts).')', $bindings];
     }
 
     /** @return list<string> */
@@ -227,7 +297,9 @@ class Explorer extends Component
     {
         preg_match_all('/[[:alnum:]]+/u', mb_strtolower($term), $matches);
 
-        return array_values(array_unique(array_filter($matches[0] ?? [], fn (string $word) => $word !== '')));
+        $terms = array_values(array_unique(array_filter($matches[0] ?? [], fn (string $word) => $word !== '')));
+
+        return $terms !== [] ? $terms : [$term];
     }
 
     private function like(string $term): string

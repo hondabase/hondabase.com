@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Livewire\Explorer;
 use App\Models\Article;
 use App\Models\ArticleFacet;
+use App\Models\Compatibility;
+use App\Models\TaxonomyNode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -59,6 +61,84 @@ class ExplorerSearchTest extends TestCase
         Livewire::test(Explorer::class)
             ->set('q', 'wiring')
             ->assertSeeInOrder(['High View Article', 'Low View Article']);
+    }
+
+    public function test_search_matches_all_words_across_body_facets_and_taxonomy(): void
+    {
+        $match = Article::create([
+            'type' => 'cars',
+            'category' => 'tuning',
+            'slug' => 'cn2-datalogging',
+            'locale' => 'en',
+            'title' => 'CN2 Datalogging Header',
+            'summary' => 'ECU interface setup',
+            'body_text' => 'Serial setup for Honda ECU telemetry.',
+            'repo_path' => 'cars/tuning/cn2-datalogging/cn2-datalogging.md',
+        ]);
+        ArticleFacet::create([
+            'article_id' => $match->id,
+            'kind' => 'tag',
+            'value' => 'datalogging',
+            'label' => 'datalogging',
+        ]);
+        $civic = TaxonomyNode::create([
+            'type' => 'cars',
+            'kind' => 'model',
+            'slug' => 'civic',
+            'name' => 'Civic',
+            'path' => 'cars/honda/civic',
+        ]);
+        Compatibility::create([
+            'article_id' => $match->id,
+            'taxonomy_node_id' => $civic->id,
+            'source' => 'explicit',
+        ]);
+
+        Article::create([
+            'type' => 'cars',
+            'category' => 'tuning',
+            'slug' => 'generic-datalogging',
+            'locale' => 'en',
+            'title' => 'Generic Datalogging',
+            'summary' => 'ECU interface setup',
+            'body_text' => 'Serial setup for Honda ECU telemetry.',
+            'repo_path' => 'cars/tuning/generic-datalogging/generic-datalogging.md',
+        ]);
+
+        Livewire::test(Explorer::class)
+            ->set('q', 'civic serial datalogging')
+            ->assertSee('CN2 Datalogging Header')
+            ->assertDontSee('Generic Datalogging');
+    }
+
+    public function test_better_search_match_sorts_before_popularity(): void
+    {
+        Article::create([
+            'type' => 'cars',
+            'category' => 'tuning',
+            'slug' => 'generic-popular-note',
+            'locale' => 'en',
+            'title' => 'Generic Popular Note',
+            'summary' => 'A popular article',
+            'body_text' => 'Civic serial references appear deep in the body.',
+            'repo_path' => 'cars/tuning/generic-popular-note/generic-popular-note.md',
+            'view_count' => 1000,
+        ]);
+        Article::create([
+            'type' => 'cars',
+            'category' => 'tuning',
+            'slug' => 'civic-serial-communication',
+            'locale' => 'en',
+            'title' => 'Civic Serial Communication',
+            'summary' => 'Focused article',
+            'body_text' => 'Focused article.',
+            'repo_path' => 'cars/tuning/civic-serial-communication/civic-serial-communication.md',
+            'view_count' => 1,
+        ]);
+
+        Livewire::test(Explorer::class)
+            ->set('q', 'civic serial')
+            ->assertSeeInOrder(['Civic Serial Communication', 'Generic Popular Note']);
     }
 
     public function test_serial_communication_filter_matches_current_serial_tag(): void
