@@ -205,6 +205,7 @@ class Explorer extends Component
         }
 
         return $query
+            ->orderByDesc('view_count')
             ->orderByRaw('updated_at IS NULL, updated_at DESC')
             ->orderBy('title')
             ->limit(60)
@@ -246,10 +247,11 @@ class Explorer extends Component
                 "EXISTS (SELECT 1 FROM article_facets af WHERE af.article_id = articles.id AND CONCAT(af.kind, ':', af.value) IN ($place))",
                 $followed
             )
+            ->orderByDesc('view_count')
             ->orderByRaw('updated_at IS NULL, updated_at DESC')
             ->orderBy('title')
             ->limit(12)
-            ->get(['id', 'type', 'category', 'slug', 'title', 'summary', 'updated_at']);
+            ->get(['id', 'type', 'category', 'slug', 'title', 'summary', 'updated_at', 'view_count']);
     }
 
     /** Facet groups + counts over the current result set (this is the content shift). */
