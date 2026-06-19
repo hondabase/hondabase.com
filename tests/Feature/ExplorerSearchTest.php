@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Livewire\Explorer;
 use App\Models\Article;
+use App\Models\ArticleFacet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -58,5 +59,31 @@ class ExplorerSearchTest extends TestCase
         Livewire::test(Explorer::class)
             ->set('q', 'wiring')
             ->assertSeeInOrder(['High View Article', 'Low View Article']);
+    }
+
+    public function test_serial_communication_filter_matches_current_serial_tag(): void
+    {
+        $article = Article::create([
+            'type' => 'cars',
+            'category' => 'tuning',
+            'slug' => 'serial-communication',
+            'locale' => 'en',
+            'title' => 'Honda ECU Serial Datalogging (`CN2` TTL Header)',
+            'summary' => 'Serial communication guide',
+            'body_text' => 'Serial communication is used for ECU datalogging.',
+            'repo_path' => 'cars/tuning/serial-communication/serial-communication.md',
+        ]);
+        ArticleFacet::create([
+            'article_id' => $article->id,
+            'kind' => 'tag',
+            'value' => 'serial',
+            'label' => 'serial',
+        ]);
+
+        Livewire::withQueryParams([
+            'q' => 'Serial communication',
+            'filters' => ['tag:serial-communication'],
+        ])->test(Explorer::class)
+            ->assertSee('Honda ECU Serial Datalogging');
     }
 }

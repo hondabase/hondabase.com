@@ -182,12 +182,13 @@ class Explorer extends Component
 
         foreach ($this->filters as $kv) {
             [$kind, $value] = array_pad(explode(':', $this->normalizeFilter($kv), 2), 2, '');
-            $query->whereExists(function ($sub) use ($kind, $value) {
+            $values = $this->filterValues($kind, $value);
+            $query->whereExists(function ($sub) use ($kind, $values) {
                 $sub->select(DB::raw(1))
                     ->from('article_facets')
                     ->whereColumn('article_facets.article_id', 'articles.id')
                     ->where('kind', $kind)
-                    ->where('value', $value);
+                    ->whereIn('value', $values);
             });
         }
 
@@ -354,5 +355,15 @@ class Explorer extends Component
         }
 
         return 'tag:'.(str_starts_with($value, 'obd') ? $value : 'obd'.$value);
+    }
+
+    /** @return list<string> */
+    private function filterValues(string $kind, string $value): array
+    {
+        if ($kind === 'tag' && $value === 'serial-communication') {
+            return ['serial-communication', 'serial', 'serial communication'];
+        }
+
+        return [$value];
     }
 }
