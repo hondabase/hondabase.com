@@ -290,24 +290,38 @@
                 @endforeach
                 @can('manage-articles')
                     <a class="edit-history-link" href="/admin/history/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}">{{ __('View edit history') }}</a>
-                    @foreach (\App\Support\Locales::others() as $loc)
-                        @if (in_array($loc, $art['available_locales'], true))
-                            @php $native = \App\Support\Locales::all()[$loc]['native']; @endphp
-                            <form method="POST" action="/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}"
-                                  onsubmit="return confirm('Delete the {{ $native }} translation permanently? This cannot be undone.')">
-                                @csrf
-                                @method('DELETE')
-                                <input type="hidden" name="locale" value="{{ $loc }}">
-                                <button type="submit" class="btn btn-danger">{{ __('Delete :language translation', ['language' => $native]) }}</button>
-                            </form>
-                        @endif
-                    @endforeach
-                    <form method="POST" action="/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}"
-                          onsubmit="return confirm('Delete this article and all translations permanently? This cannot be undone.')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">{{ __('Delete article') }}</button>
-                    </form>
+                    @if (!\App\Support\Locales::isDefault($art['locale']))
+                        {{-- Viewing a translation: dropdown with per-locale or full delete --}}
+                        @php $native = \App\Support\Locales::all()[$art['locale']]['native']; @endphp
+                        <div class="delete-dropdown" x-data="{ open: false }" @keydown.escape.window="open = false">
+                            <button type="button" class="btn btn-danger" @click="open = !open" :aria-expanded="open.toString()">
+                                {{ __('Delete') }} &#9660;
+                            </button>
+                            <div class="delete-dropdown-menu" x-show="open" x-cloak @click.outside="open = false">
+                                <form method="POST" action="/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}"
+                                      onsubmit="return confirm('Delete the {{ $native }} translation permanently? This cannot be undone.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="hidden" name="locale" value="{{ $art['locale'] }}">
+                                    <button type="submit">{{ __('Delete :language translation', ['language' => $native]) }}</button>
+                                </form>
+                                <form method="POST" action="/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}"
+                                      onsubmit="return confirm('Delete this article and all translations permanently? This cannot be undone.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit">{{ __('Delete article (all languages)') }}</button>
+                                </form>
+                            </div>
+                        </div>
+                    @else
+                        {{-- Viewing English: one button, deletes everything --}}
+                        <form method="POST" action="/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}"
+                              onsubmit="return confirm('Delete this article and all translations permanently? This cannot be undone.')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">{{ __('Delete article') }}</button>
+                        </form>
+                    @endif
                 @endcan
                 <p class="contribute">{{ __('Spotted an error or have something to add? Suggest an edit right here.') }}
                     @cannot('manage-articles') {{ __('Every change is reviewed before it goes live.') }} @endcannot</p>

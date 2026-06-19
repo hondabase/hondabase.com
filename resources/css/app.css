@@ -1169,6 +1169,12 @@
 .article-foot form { display: inline; }
 .btn-danger { border-color: #ef4444; color: #ef4444; }
 .btn-danger:hover { background: #ef4444; color: #fff; }
+.delete-dropdown { display: inline-block; position: relative; margin-top: 0.5rem; }
+.delete-dropdown-menu { position: absolute; top: 100%; left: 0; z-index: 50; min-width: 220px; background: var(--color-bg); border: 1px solid #ef4444; margin-top: 2px; }
+.delete-dropdown-menu form { display: block; }
+.delete-dropdown-menu button { display: block; width: 100%; padding: 0.55rem 1rem; text-align: left; font-family: var(--font-mono); font-size: 0.8rem; color: #ef4444; background: none; border: none; cursor: pointer; }
+.delete-dropdown-menu button:hover { background: #ef4444; color: #fff; }
+.delete-dropdown-menu form + form button { border-top: 1px solid var(--color-border); }
 
 .article-attribution {
   max-width: 72ch;
