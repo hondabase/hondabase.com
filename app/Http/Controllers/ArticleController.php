@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleLinkClick;
 use App\Models\ArticleRevision;
 use App\Models\Compatibility;
 use App\Models\TaxonomyNode;
+use App\Services\ArticleClickCounter;
 use App\Services\ArticleService;
 use App\Support\BreadcrumbBuilder;
 use App\Support\Locales;
@@ -18,7 +20,11 @@ class ArticleController extends Controller
 {
     private const COMPATIBILITY_ROOT_KINDS = ['model', 'family', 'engine_family'];
 
-    public function __construct(private ArticleService $articles, private BreadcrumbBuilder $crumbs) {}
+    public function __construct(
+        private ArticleService $articles,
+        private BreadcrumbBuilder $crumbs,
+        private ArticleClickCounter $clicks,
+    ) {}
 
     // The knowledgebase serves arbitrary-depth category paths (electronics/ecu/...), which route
     // regex can't disambiguate, so a single catch-all `/{type}/{path}` (+ /{locale}/ mirror) lands
@@ -57,6 +63,16 @@ class ArticleController extends Controller
                     'slug' => $slug,
                     'locale' => Locales::default(),
                 ])->first();
+                $viewArt = Article::where([
+                    'type' => $type,
+                    'category' => $category,
+                    'slug' => $slug,
+                    'locale' => ! empty($art['is_fallback']) ? Locales::default() : $art['locale'],
+                ])->first();
+                $this->clicks->countArticleView($viewArt, $request);
+                $art['view_count'] = (int) ($viewArt?->view_count ?? 0);
+                $decorated = $this->clicks->decorate($art);
+                $art['html'] = $decorated['html'];
 
                 return view('article', [
                     'art' => $art,
@@ -271,5 +287,12 @@ class ArticleController extends Controller
         abort_unless($path, 404);
 
         return response()->file($path, ['Cache-Control' => 'private, no-store']);
+    }
+
+    public function clickLink(ArticleLinkClick $counter, Request $request)
+    {
+        $this->clicks->countLinkClick($counter, $request);
+
+        return response()->noContent();
     }
 }

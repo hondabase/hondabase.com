@@ -129,6 +129,7 @@
                 @if (!empty($art['complexity']))
                     <span class="badge badge-{{ $art['complexity'] }}">{{ __(ucfirst($art['complexity'])) }}</span>
                 @endif
+                <span class="article-view-count" title="{{ trans_choice(':count view|:count views', (int) ($art['view_count'] ?? 0), ['count' => number_format((int) ($art['view_count'] ?? 0))]) }}" aria-label="{{ trans_choice(':count view|:count views', (int) ($art['view_count'] ?? 0), ['count' => number_format((int) ($art['view_count'] ?? 0))]) }}">{{ number_format((int) ($art['view_count'] ?? 0)) }}</span>
             </p>
             @if (!empty($art['sources']))
                 <p class="source-note">{{ __('Adapted from') }}

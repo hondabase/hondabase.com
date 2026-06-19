@@ -77,6 +77,8 @@ class Dump extends Command
             'follows' => 'created_at',
             'article_revisions' => 'updated_at',
             'article_authors' => 'updated_at',
+            'articles' => 'last_viewed_at',
+            'article_link_clicks' => 'updated_at',
         ] as $table => $col) {
             if (DB::table($table)->where($col, '>=', $today)->exists()) {
                 return true;

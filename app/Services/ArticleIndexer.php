@@ -32,11 +32,18 @@ class ArticleIndexer
         $rows = $this->articles->scan();
 
         DB::transaction(function () use ($rows) {
+            $viewCounts = Article::query()
+                ->get(['type', 'category', 'slug', 'locale', 'view_count', 'last_viewed_at'])
+                ->mapWithKeys(fn (Article $article) => [$this->articleKey($article->type, $article->category, $article->slug, $article->locale) => [
+                    'view_count' => (int) $article->view_count,
+                    'last_viewed_at' => $article->last_viewed_at,
+                ]]);
             Compatibility::query()->delete();
             ArticleFacet::query()->delete();
             Article::query()->delete();
             foreach ($rows as $r) {
-                $this->persist($r);
+                $counts = $viewCounts[$this->articleKey($r['type'], $r['category'], $r['slug'], $r['locale'] ?? 'en')] ?? [];
+                $this->persist($r, (int) ($counts['view_count'] ?? 0), $counts['last_viewed_at'] ?? null);
             }
         });
 
@@ -58,6 +65,8 @@ class ArticleIndexer
     {
         DB::transaction(function () use ($type, $category, $slug, $locale) {
             $existing = Article::where(compact('type', 'category', 'slug', 'locale'))->first();
+            $viewCount = (int) ($existing?->view_count ?? 0);
+            $lastViewedAt = $existing?->last_viewed_at;
             if ($existing) {
                 ArticleFacet::where('article_id', $existing->id)->delete();
                 $existing->delete();
@@ -65,12 +74,12 @@ class ArticleIndexer
 
             $row = $this->articles->scanOne($type, $category, $slug, $locale);
             if ($row !== null) {
-                $this->persist($row);
+                $this->persist($row, $viewCount, $lastViewedAt);
             }
         });
     }
 
-    private function persist(array $r): void
+    private function persist(array $r, int $viewCount = 0, mixed $lastViewedAt = null): void
     {
         $article = Article::create([
             'type' => $r['type'],
@@ -83,6 +92,8 @@ class ArticleIndexer
             'body_text' => $r['body_text'],
             'repo_path' => $r['repo_path'],
             'updated_at' => $r['updated'],
+            'view_count' => $viewCount,
+            'last_viewed_at' => $lastViewedAt,
         ]);
 
         // Resolve node compatibility (default-locale identity only) and fold the node-derived
@@ -123,5 +134,10 @@ class ArticleIndexer
         if ($compat) {
             Compatibility::insert($compat);
         }
+    }
+
+    private function articleKey(string $type, string $category, string $slug, string $locale): string
+    {
+        return "{$type}|{$category}|{$slug}|{$locale}";
     }
 }

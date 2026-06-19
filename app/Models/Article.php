@@ -12,11 +12,16 @@ class Article extends Model
 
     protected $guarded = [];
 
-    protected $casts = ['updated_at' => 'datetime', 'view_count' => 'int'];
+    protected $casts = ['updated_at' => 'datetime', 'view_count' => 'int', 'last_viewed_at' => 'datetime'];
 
     public function facets(): HasMany
     {
         return $this->hasMany(ArticleFacet::class);
+    }
+
+    public function compatibilities(): HasMany
+    {
+        return $this->hasMany(Compatibility::class);
     }
 
     /**

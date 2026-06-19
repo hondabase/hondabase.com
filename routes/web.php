@@ -81,6 +81,10 @@ Route::get('/sitemap.xml', function () {
     return response($xml, 200, ['Content-Type' => 'application/xml']);
 })->name('sitemap');
 
+Route::post('/_click/article-links/{counter}', [ArticleController::class, 'clickLink'])
+    ->whereNumber('counter')
+    ->name('article-link-clicks.store');
+
 // Knowledgebase. Types are constrained to the content top-level folders so these
 // patterns never shadow other app routes or the legacy /pgmfi, /guides, /reference paths.
 $types = 'cars|motorcycles|engines|aircraft|common';

@@ -1066,6 +1066,38 @@
   font-size: .85rem;
 }
 .prose-article pre code { background: none; border: 0; padding: 0; color: var(--color-txt); }
+.article-view-count,
+.article-click-count {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  line-height: 1;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+.article-view-count::before {
+  content: "views";
+  color: var(--color-dim);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.article-click-count {
+  margin-left: .22rem;
+  padding: .12rem .32rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-panel) 86%, transparent);
+  vertical-align: .12em;
+}
+.article-click-count::after {
+  content: "clicks";
+  color: var(--color-dim);
+  font-size: .58rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
 .prose-article blockquote {
   border-left: 2px solid var(--color-red);
   background: rgba(255,255,255,.03);

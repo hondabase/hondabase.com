@@ -98,3 +98,21 @@ document.addEventListener('alpine:init', () => {
     }));
 });
 
+document.addEventListener('click', (event) => {
+    const link = event.target.closest?.('a[data-article-link-counter]');
+    if (!link) return;
+
+    const counter = link.getAttribute('data-article-link-counter');
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (!counter || !token || !window.fetch) return;
+
+    fetch(`/_click/article-links/${counter}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': token,
+            'Accept': 'application/json',
+        },
+        credentials: 'same-origin',
+        keepalive: true,
+    }).catch(() => {});
+});
