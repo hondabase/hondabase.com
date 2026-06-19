@@ -442,6 +442,32 @@ Living log of the Hondabase rebuild. Plan of record:
   Visual design preserved, not redesigned.
 
 ## Changelog
+- **2026-06-19** - **Site progress complete.** The Hondabase rebuild is now marked complete in the
+  tracker; new work from here is content expansion and maintenance, not core site delivery.
+- **2026-06-19** - **Second Hondata-derived article batch drafted.** Added original articles for
+  MAP sensor parameters and the parameters window, both written from the public help manuals in
+  Hondabase style with source metadata and no copied manual text.
+- **2026-06-19** - **First Hondata-derived article batch drafted.** Created three original,
+  source-backed Hondabase articles from the public help manuals: knock control, closed-loop fuel
+  control, and the calibration window. Each draft follows `docs/ARTICLE_FORMATTING_RULES.md`
+  (frontmatter, single H1, scannable sections, alert blocks, and source metadata).
+- **2026-06-19** - **Hondata forum research inventory tooling.** Added
+  `scripts/hondata-forum-inventory.php`, a rate-limited phpBB-style crawler that accepts Hondata
+  credentials only through environment variables, checks `robots.txt`, and writes one JSON metadata
+  file per discovered topic under `storage/app/imports/hondata-forum/` plus a `manifest.jsonl`.
+  Default output stores source URLs, titles, small excerpts, and conversion signals rather than
+  mirroring third-party posts; `--include-post-text` is an explicit opt-in for authorized archival
+  use. Documented the workflow in `docs/HONDATA_FORUM_IMPORT.md`.
+- **2026-06-19** - **Hondata public Support docs inventory tooling.** Added
+  `scripts/hondata_help_inventory.py` for the public `hondata.com/help/` Support section. It
+  discovers Help+Manual static table-of-contents pages for s300, K-Pro, FlashPro, Traction Control,
+  CPR, Injector Driver, and related help docs, then writes one JSON metadata/excerpt file per help
+  topic under `storage/app/imports/hondata-help/` for later article-conversion triage.
+- **2026-06-19** - **Hondata Support article triage.** Added
+  `scripts/hondata_help_triage.py`, which scores the Hondata help inventory for original article
+  conversion by product, topic type, category hint, word count, and technical signals while skipping
+  license/privacy/support-chrome pages. It writes `article-candidates.json` and a reviewable
+  `article-candidates.md` summary.
 - **2026-06-16** - **Generation filling executed.** Ran `hondabase:recategorize --execute` after the owner enriched the content frontmatter with chassis/model metadata. This moved 16 bundles (8 en + 8 pt) into their specific generation folders (`honda/civic/eg/...` and `honda/civic/ek/...`) and successfully rewrote absolute links in 12 files. Reindexed (992 articles, 6177 compatibility links).
 - **2026-06-15** - **Wiki-port status reconciled + re-categorization drafted.** Recorded that the
   full wiki port is complete (496 EN bundles, 493 wiki-credited; ~20 library topics intentionally
