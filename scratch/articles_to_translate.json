@@ -1,0 +1,3474 @@
+[
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "japanese-domestic-market-p30d12-modification",
+    "file": "japanese-domestic-market-p30d12-modification.md",
+    "rel_src": "cars/electronics/japanese-domestic-market-p30d12-modification/japanese-domestic-market-p30d12-modification.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p2n",
+    "file": "p2n.md",
+    "rel_src": "cars/electronics/p2n/p2n.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pulse-width-modulation",
+    "file": "pulse-width-modulation.md",
+    "rel_src": "cars/electronics/pulse-width-modulation/pulse-width-modulation.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "latches",
+    "file": "latches.md",
+    "rel_src": "cars/electronics/latches/latches.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "how-to-use-wiki",
+    "file": "how-to-use-wiki.md",
+    "rel_src": "cars/electronics/how-to-use-wiki/how-to-use-wiki.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "begginers-faq",
+    "file": "begginers-faq.md",
+    "rel_src": "cars/electronics/begginers-faq/begginers-faq.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "automatic-transmission-lockup-solenoid",
+    "file": "automatic-transmission-lockup-solenoid.md",
+    "rel_src": "cars/electronics/automatic-transmission-lockup-solenoid/automatic-transmission-lockup-solenoid.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "source-forge",
+    "file": "source-forge.md",
+    "rel_src": "cars/electronics/source-forge/source-forge.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "sim",
+    "file": "sim.md",
+    "rel_src": "cars/electronics/sim/sim.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "electronic-air-control-vale",
+    "file": "electronic-air-control-vale.md",
+    "rel_src": "cars/electronics/electronic-air-control-vale/electronic-air-control-vale.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "wabi-sabi",
+    "file": "wabi-sabi.md",
+    "rel_src": "cars/electronics/wabi-sabi/wabi-sabi.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p0c",
+    "file": "p0c.md",
+    "rel_src": "cars/electronics/p0c/p0c.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "howto-add-extra-features-in-crome",
+    "file": "howto-add-extra-features-in-crome.md",
+    "rel_src": "cars/electronics/howto-add-extra-features-in-crome/howto-add-extra-features-in-crome.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "atmospheric-pressure",
+    "file": "atmospheric-pressure.md",
+    "rel_src": "cars/electronics/atmospheric-pressure/atmospheric-pressure.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "disable-vtec-vss-check-p72",
+    "file": "disable-vtec-vss-check-p72.md",
+    "rel_src": "cars/electronics/disable-vtec-vss-check-p72/disable-vtec-vss-check-p72.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p0a",
+    "file": "p0a.md",
+    "rel_src": "cars/electronics/p0a/p0a.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "saturated-injectors",
+    "file": "saturated-injectors.md",
+    "rel_src": "cars/electronics/saturated-injectors/saturated-injectors.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-oki66207-reader-dip64",
+    "file": "obd1-oki66207-reader-dip64.md",
+    "rel_src": "cars/electronics/obd1-oki66207-reader-dip64/obd1-oki66207-reader-dip64.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "electronic-advance-distributors",
+    "file": "electronic-advance-distributors.md",
+    "rel_src": "cars/electronics/electronic-advance-distributors/electronic-advance-distributors.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "remove-a-knock-sensor",
+    "file": "remove-a-knock-sensor.md",
+    "rel_src": "cars/electronics/remove-a-knock-sensor/remove-a-knock-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "desoldering-tips",
+    "file": "desoldering-tips.md",
+    "rel_src": "cars/electronics/desoldering-tips/desoldering-tips.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1cn2",
+    "file": "obd1cn2.md",
+    "rel_src": "cars/electronics/obd1cn2/obd1cn2.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "user-preferences",
+    "file": "user-preferences.md",
+    "rel_src": "cars/electronics/user-preferences/user-preferences.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p1j",
+    "file": "p1j.md",
+    "rel_src": "cars/electronics/p1j/p1j.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ideal-gas-law",
+    "file": "ideal-gas-law.md",
+    "rel_src": "cars/electronics/ideal-gas-law/ideal-gas-law.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-sensors",
+    "file": "ecu-sensors.md",
+    "rel_src": "cars/electronics/ecu-sensors/ecu-sensors.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p5p",
+    "file": "p5p.md",
+    "rel_src": "cars/electronics/p5p/p5p.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-code-compatibility",
+    "file": "ecu-code-compatibility.md",
+    "rel_src": "cars/electronics/ecu-code-compatibility/ecu-code-compatibility.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p04",
+    "file": "p04.md",
+    "rel_src": "cars/electronics/p04/p04.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pcn",
+    "file": "pcn.md",
+    "rel_src": "cars/electronics/pcn/pcn.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "crome-faq",
+    "file": "crome-faq.md",
+    "rel_src": "cars/electronics/crome-faq/crome-faq.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "turbo",
+    "file": "turbo.md",
+    "rel_src": "cars/electronics/turbo/turbo.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "adding-pages",
+    "file": "adding-pages.md",
+    "rel_src": "cars/electronics/adding-pages/adding-pages.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "g-spot",
+    "file": "g-spot.md",
+    "rel_src": "cars/electronics/g-spot/g-spot.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "cruise-control-switch",
+    "file": "cruise-control-switch.md",
+    "rel_src": "cars/electronics/cruise-control-switch/cruise-control-switch.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "batronix-usb-programmer",
+    "file": "batronix-usb-programmer.md",
+    "rel_src": "cars/electronics/batronix-usb-programmer/batronix-usb-programmer.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "tuning-concepts",
+    "file": "tuning-concepts.md",
+    "rel_src": "cars/electronics/tuning-concepts/tuning-concepts.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "hex2-bin",
+    "file": "hex2-bin.md",
+    "rel_src": "cars/electronics/hex2-bin/hex2-bin.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "new-markup-test-page",
+    "file": "new-markup-test-page.md",
+    "rel_src": "cars/electronics/new-markup-test-page/new-markup-test-page.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "get-rid-of-cruise-control-upshift-light",
+    "file": "get-rid-of-cruise-control-upshift-light.md",
+    "rel_src": "cars/electronics/get-rid-of-cruise-control-upshift-light/get-rid-of-cruise-control-upshift-light.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dual-maps",
+    "file": "dual-maps.md",
+    "rel_src": "cars/electronics/dual-maps/dual-maps.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p72-debug-mode",
+    "file": "p72-debug-mode.md",
+    "rel_src": "cars/electronics/p72-debug-mode/p72-debug-mode.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0-civic-integra-routines",
+    "file": "obd0-civic-integra-routines.md",
+    "rel_src": "cars/electronics/obd0-civic-integra-routines/obd0-civic-integra-routines.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0-vtec-ec-us",
+    "file": "obd0-vtec-ec-us.md",
+    "rel_src": "cars/electronics/obd0-vtec-ec-us/obd0-vtec-ec-us.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "kehein-indiana-precision-technology",
+    "file": "kehein-indiana-precision-technology.md",
+    "rel_src": "cars/electronics/kehein-indiana-precision-technology/kehein-indiana-precision-technology.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "real-time-programming",
+    "file": "real-time-programming.md",
+    "rel_src": "cars/electronics/real-time-programming/real-time-programming.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "basic-concepts",
+    "file": "basic-concepts.md",
+    "rel_src": "cars/electronics/basic-concepts/basic-concepts.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "cylinder-position-sensor",
+    "file": "cylinder-position-sensor.md",
+    "rel_src": "cars/electronics/cylinder-position-sensor/cylinder-position-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "nokia-cable-datalogging",
+    "file": "nokia-cable-datalogging.md",
+    "rel_src": "cars/electronics/nokia-cable-datalogging/nokia-cable-datalogging.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "find-page",
+    "file": "find-page.md",
+    "rel_src": "cars/electronics/find-page/find-page.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pr4",
+    "file": "pr4.md",
+    "rel_src": "cars/electronics/pr4/pr4.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pt5",
+    "file": "pt5.md",
+    "rel_src": "cars/electronics/pt5/pt5.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "usb-to-serial-converter-second-gen",
+    "file": "usb-to-serial-converter-second-gen.md",
+    "rel_src": "cars/electronics/usb-to-serial-converter-second-gen/usb-to-serial-converter-second-gen.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "accord-auto-obd2-obd1",
+    "file": "accord-auto-obd2-obd1.md",
+    "rel_src": "cars/electronics/accord-auto-obd2-obd1/accord-auto-obd2-obd1.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "inter-wiki-map",
+    "file": "inter-wiki-map.md",
+    "rel_src": "cars/electronics/inter-wiki-map/inter-wiki-map.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "fuel-octane",
+    "file": "fuel-octane.md",
+    "rel_src": "cars/electronics/fuel-octane/fuel-octane.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "electronic-boost-controller",
+    "file": "electronic-boost-controller.md",
+    "rel_src": "cars/electronics/electronic-boost-controller/electronic-boost-controller.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "little-endian",
+    "file": "little-endian.md",
+    "rel_src": "cars/electronics/little-endian/little-endian.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "throttle-position-sensor-adjustment",
+    "file": "throttle-position-sensor-adjustment.md",
+    "rel_src": "cars/electronics/throttle-position-sensor-adjustment/throttle-position-sensor-adjustment.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "full-throttle-shift",
+    "file": "full-throttle-shift.md",
+    "rel_src": "cars/electronics/full-throttle-shift/full-throttle-shift.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "spark-plug",
+    "file": "spark-plug.md",
+    "rel_src": "cars/electronics/spark-plug/spark-plug.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd08-bit-rev",
+    "file": "obd08-bit-rev.md",
+    "rel_src": "cars/electronics/obd08-bit-rev/obd08-bit-rev.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "common-te-problems",
+    "file": "common-te-problems.md",
+    "rel_src": "cars/electronics/common-te-problems/common-te-problems.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "vehicle-speed-sensor",
+    "file": "vehicle-speed-sensor.md",
+    "rel_src": "cars/electronics/vehicle-speed-sensor/vehicle-speed-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "like-pages",
+    "file": "like-pages.md",
+    "rel_src": "cars/electronics/like-pages/like-pages.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "erm",
+    "file": "erm.md",
+    "rel_src": "cars/electronics/erm/erm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "how-to-check-obd1-ecu-codes",
+    "file": "how-to-check-obd1-ecu-codes.md",
+    "rel_src": "cars/electronics/how-to-check-obd1-ecu-codes/how-to-check-obd1-ecu-codes.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "adjust-pr4-pa-sensor",
+    "file": "adjust-pr4-pa-sensor.md",
+    "rel_src": "cars/electronics/adjust-pr4-pa-sensor/adjust-pr4-pa-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "eeprom",
+    "file": "eeprom.md",
+    "rel_src": "cars/electronics/eeprom/eeprom.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "super-pro-z",
+    "file": "super-pro-z.md",
+    "rel_src": "cars/electronics/super-pro-z/super-pro-z.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1j1",
+    "file": "obd1j1.md",
+    "rel_src": "cars/electronics/obd1j1/obd1j1.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "o2-input-mod",
+    "file": "o2-input-mod.md",
+    "rel_src": "cars/electronics/o2-input-mod/o2-input-mod.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "uncorked",
+    "file": "uncorked.md",
+    "rel_src": "cars/electronics/uncorked/uncorked.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-definition-codes",
+    "file": "ecu-definition-codes.md",
+    "rel_src": "cars/electronics/ecu-definition-codes/ecu-definition-codes.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "one-wire-to4-wire-o2-sensor",
+    "file": "one-wire-to4-wire-o2-sensor.md",
+    "rel_src": "cars/electronics/one-wire-to4-wire-o2-sensor/one-wire-to4-wire-o2-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "6260a-testing",
+    "file": "6260a-testing.md",
+    "rel_src": "cars/electronics/6260a-testing/6260a-testing.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "honda-error-codes",
+    "file": "honda-error-codes.md",
+    "rel_src": "cars/electronics/honda-error-codes/honda-error-codes.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rtfm",
+    "file": "rtfm.md",
+    "rel_src": "cars/electronics/rtfm/rtfm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p51",
+    "file": "p51.md",
+    "rel_src": "cars/electronics/p51/p51.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pcf",
+    "file": "pcf.md",
+    "rel_src": "cars/electronics/pcf/pcf.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-conversion-formulae",
+    "file": "obd1-conversion-formulae.md",
+    "rel_src": "cars/electronics/obd1-conversion-formulae/obd1-conversion-formulae.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-families",
+    "file": "ecu-families.md",
+    "rel_src": "cars/electronics/ecu-families/ecu-families.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "hex-file",
+    "file": "hex-file.md",
+    "rel_src": "cars/electronics/hex-file/hex-file.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pg7",
+    "file": "pg7.md",
+    "rel_src": "cars/electronics/pg7/pg7.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd2k",
+    "file": "obd2k.md",
+    "rel_src": "cars/electronics/obd2k/obd2k.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "boost-controller",
+    "file": "boost-controller.md",
+    "rel_src": "cars/electronics/boost-controller/boost-controller.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "learning-to-solder",
+    "file": "learning-to-solder.md",
+    "rel_src": "cars/electronics/learning-to-solder/learning-to-solder.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "o2-heater-circuit",
+    "file": "o2-heater-circuit.md",
+    "rel_src": "cars/electronics/o2-heater-circuit/o2-heater-circuit.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p27",
+    "file": "p27.md",
+    "rel_src": "cars/electronics/p27/p27.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "iab",
+    "file": "iab.md",
+    "rel_src": "cars/electronics/iab/iab.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pre-ignition",
+    "file": "pre-ignition.md",
+    "rel_src": "cars/electronics/pre-ignition/pre-ignition.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p13",
+    "file": "p13.md",
+    "rel_src": "cars/electronics/p13/p13.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "blue-loctite",
+    "file": "blue-loctite.md",
+    "rel_src": "cars/electronics/blue-loctite/blue-loctite.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "d16z6-4g-swapnotes",
+    "file": "d16z6-4g-swapnotes.md",
+    "rel_src": "cars/electronics/d16z6-4g-swapnotes/d16z6-4g-swapnotes.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "what-you-need",
+    "file": "what-you-need.md",
+    "rel_src": "cars/electronics/what-you-need/what-you-need.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "check8",
+    "file": "check8.md",
+    "rel_src": "cars/electronics/check8/check8.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "real-time-programmable-boards",
+    "file": "real-time-programmable-boards.md",
+    "rel_src": "cars/electronics/real-time-programmable-boards/real-time-programmable-boards.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "boost",
+    "file": "boost.md",
+    "rel_src": "cars/electronics/boost/boost.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "disable-vtec-vss-check-p30-203",
+    "file": "disable-vtec-vss-check-p30-203.md",
+    "rel_src": "cars/electronics/disable-vtec-vss-check-p30-203/disable-vtec-vss-check-p30-203.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "lego-zoo",
+    "file": "lego-zoo.md",
+    "rel_src": "cars/electronics/lego-zoo/lego-zoo.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "internal-rom",
+    "file": "internal-rom.md",
+    "rel_src": "cars/electronics/internal-rom/internal-rom.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rom-maps",
+    "file": "rom-maps.md",
+    "rel_src": "cars/electronics/rom-maps/rom-maps.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "magic-php-wiki-ur-ls",
+    "file": "magic-php-wiki-ur-ls.md",
+    "rel_src": "cars/electronics/magic-php-wiki-ur-ls/magic-php-wiki-ur-ls.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rom-editor",
+    "file": "rom-editor.md",
+    "rel_src": "cars/electronics/rom-editor/rom-editor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pw0",
+    "file": "pw0.md",
+    "rel_src": "cars/electronics/pw0/pw0.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "91pm6-target-idle",
+    "file": "91pm6-target-idle.md",
+    "rel_src": "cars/electronics/91pm6-target-idle/91pm6-target-idle.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "uber-data-erm",
+    "file": "uber-data-erm.md",
+    "rel_src": "cars/electronics/uber-data-erm/uber-data-erm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pm8",
+    "file": "pm8.md",
+    "rel_src": "cars/electronics/pm8/pm8.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "column-multiplier",
+    "file": "column-multiplier.md",
+    "rel_src": "cars/electronics/column-multiplier/column-multiplier.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "02d01720-1500",
+    "file": "02d01720-1500.md",
+    "rel_src": "cars/electronics/02d01720-1500/02d01720-1500.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dec-at-addy",
+    "file": "dec-at-addy.md",
+    "rel_src": "cars/electronics/dec-at-addy/dec-at-addy.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "api",
+    "file": "api.md",
+    "rel_src": "cars/electronics/api/api.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "proposed-datalogging-protocol",
+    "file": "proposed-datalogging-protocol.md",
+    "rel_src": "cars/electronics/proposed-datalogging-protocol/proposed-datalogging-protocol.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "mcu",
+    "file": "mcu.md",
+    "rel_src": "cars/electronics/mcu/mcu.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "volumetric-efficiency",
+    "file": "volumetric-efficiency.md",
+    "rel_src": "cars/electronics/volumetric-efficiency/volumetric-efficiency.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "detonation-frequency",
+    "file": "detonation-frequency.md",
+    "rel_src": "cars/electronics/detonation-frequency/detonation-frequency.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "tuning-for-smog",
+    "file": "tuning-for-smog.md",
+    "rel_src": "cars/electronics/tuning-for-smog/tuning-for-smog.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd2a",
+    "file": "obd2a.md",
+    "rel_src": "cars/electronics/obd2a/obd2a.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "iacv-circuit-fix-r58-r59",
+    "file": "iacv-circuit-fix-r58-r59.md",
+    "rel_src": "cars/electronics/iacv-circuit-fix-r58-r59/iacv-circuit-fix-r58-r59.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "otp",
+    "file": "otp.md",
+    "rel_src": "cars/electronics/otp/otp.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "super-chips",
+    "file": "super-chips.md",
+    "rel_src": "cars/electronics/super-chips/super-chips.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ac-switch",
+    "file": "ac-switch.md",
+    "rel_src": "cars/electronics/ac-switch/ac-switch.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "515x-high-side-switch",
+    "file": "515x-high-side-switch.md",
+    "rel_src": "cars/electronics/515x-high-side-switch/515x-high-side-switch.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dual-roms",
+    "file": "dual-roms.md",
+    "rel_src": "cars/electronics/dual-roms/dual-roms.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pl2",
+    "file": "pl2.md",
+    "rel_src": "cars/electronics/pl2/pl2.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "82c55",
+    "file": "82c55.md",
+    "rel_src": "cars/electronics/82c55/82c55.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-8bit-low-cam-rpm",
+    "file": "obd1-8bit-low-cam-rpm.md",
+    "rel_src": "cars/electronics/obd1-8bit-low-cam-rpm/obd1-8bit-low-cam-rpm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-troubleshooting",
+    "file": "ecu-troubleshooting.md",
+    "rel_src": "cars/electronics/ecu-troubleshooting/ecu-troubleshooting.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "desoldering-tool",
+    "file": "desoldering-tool.md",
+    "rel_src": "cars/electronics/desoldering-tool/desoldering-tool.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-civic-integra-auto-manual",
+    "file": "obd1-civic-integra-auto-manual.md",
+    "rel_src": "cars/electronics/obd1-civic-integra-auto-manual/obd1-civic-integra-auto-manual.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "jdm",
+    "file": "jdm.md",
+    "rel_src": "cars/electronics/jdm/jdm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "php-wiki",
+    "file": "php-wiki.md",
+    "rel_src": "cars/electronics/php-wiki/php-wiki.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "difference-us-can-pm6",
+    "file": "difference-us-can-pm6.md",
+    "rel_src": "cars/electronics/difference-us-can-pm6/difference-us-can-pm6.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p73",
+    "file": "p73.md",
+    "rel_src": "cars/electronics/p73/p73.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p75",
+    "file": "p75.md",
+    "rel_src": "cars/electronics/p75/p75.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd2-oki66507-reader-nico",
+    "file": "obd2-oki66507-reader-nico.md",
+    "rel_src": "cars/electronics/obd2-oki66507-reader-nico/obd2-oki66507-reader-nico.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "electrical-load-detector",
+    "file": "electrical-load-detector.md",
+    "rel_src": "cars/electronics/electrical-load-detector/electrical-load-detector.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "74hc373",
+    "file": "74hc373.md",
+    "rel_src": "cars/electronics/74hc373/74hc373.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0-stock-datalogging",
+    "file": "obd0-stock-datalogging.md",
+    "rel_src": "cars/electronics/obd0-stock-datalogging/obd0-stock-datalogging.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ps9",
+    "file": "ps9.md",
+    "rel_src": "cars/electronics/ps9/ps9.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "edm",
+    "file": "edm.md",
+    "rel_src": "cars/electronics/edm/edm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0pr4",
+    "file": "obd0pr4.md",
+    "rel_src": "cars/electronics/obd0pr4/obd0pr4.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "vtec-crossover-point",
+    "file": "vtec-crossover-point.md",
+    "rel_src": "cars/electronics/vtec-crossover-point/vtec-crossover-point.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "disable-vtec-vss-check-p28",
+    "file": "disable-vtec-vss-check-p28.md",
+    "rel_src": "cars/electronics/disable-vtec-vss-check-p28/disable-vtec-vss-check-p28.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "popol-vuh",
+    "file": "popol-vuh.md",
+    "rel_src": "cars/electronics/popol-vuh/popol-vuh.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "vacuum-advance",
+    "file": "vacuum-advance.md",
+    "rel_src": "cars/electronics/vacuum-advance/vacuum-advance.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "crankshaft-position-sensor",
+    "file": "crankshaft-position-sensor.md",
+    "rel_src": "cars/electronics/crankshaft-position-sensor/crankshaft-position-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p61",
+    "file": "p61.md",
+    "rel_src": "cars/electronics/p61/p61.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "throttle-body",
+    "file": "throttle-body.md",
+    "rel_src": "cars/electronics/throttle-body/throttle-body.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pj7",
+    "file": "pj7.md",
+    "rel_src": "cars/electronics/pj7/pj7.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pcb",
+    "file": "pcb.md",
+    "rel_src": "cars/electronics/pcb/pcb.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "multi-meter",
+    "file": "multi-meter.md",
+    "rel_src": "cars/electronics/multi-meter/multi-meter.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "waste-gate",
+    "file": "waste-gate.md",
+    "rel_src": "cars/electronics/waste-gate/waste-gate.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p84",
+    "file": "p84.md",
+    "rel_src": "cars/electronics/p84/p84.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p14-to-p13",
+    "file": "p14-to-p13.md",
+    "rel_src": "cars/electronics/p14-to-p13/p14-to-p13.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "91pm6",
+    "file": "91pm6.md",
+    "rel_src": "cars/electronics/91pm6/91pm6.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu",
+    "file": "ecu.md",
+    "rel_src": "cars/electronics/ecu/ecu.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "a143",
+    "file": "a143.md",
+    "rel_src": "cars/electronics/a143/a143.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-8bit-fuel",
+    "file": "obd1-8bit-fuel.md",
+    "rel_src": "cars/electronics/obd1-8bit-fuel/obd1-8bit-fuel.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "doc-ecu-school",
+    "file": "doc-ecu-school.md",
+    "rel_src": "cars/electronics/doc-ecu-school/doc-ecu-school.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "flash",
+    "file": "flash.md",
+    "rel_src": "cars/electronics/flash/flash.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "28c256",
+    "file": "28c256.md",
+    "rel_src": "cars/electronics/28c256/28c256.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-8bit-high-cam-rpm",
+    "file": "obd1-8bit-high-cam-rpm.md",
+    "rel_src": "cars/electronics/obd1-8bit-high-cam-rpm/obd1-8bit-high-cam-rpm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "absolute-pressure",
+    "file": "absolute-pressure.md",
+    "rel_src": "cars/electronics/absolute-pressure/absolute-pressure.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rpm",
+    "file": "rpm.md",
+    "rel_src": "cars/electronics/rpm/rpm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p08",
+    "file": "p08.md",
+    "rel_src": "cars/electronics/p08/p08.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "recent-edits",
+    "file": "recent-edits.md",
+    "rel_src": "cars/electronics/recent-edits/recent-edits.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p2t",
+    "file": "p2t.md",
+    "rel_src": "cars/electronics/p2t/p2t.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rtp",
+    "file": "rtp.md",
+    "rel_src": "cars/electronics/rtp/rtp.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pgmfi-admin",
+    "file": "pgmfi-admin.md",
+    "rel_src": "cars/electronics/pgmfi-admin/pgmfi-admin.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pk2",
+    "file": "pk2.md",
+    "rel_src": "cars/electronics/pk2/pk2.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dual-tables",
+    "file": "dual-tables.md",
+    "rel_src": "cars/electronics/dual-tables/dual-tables.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "91pm6-ecu-led-cel",
+    "file": "91pm6-ecu-led-cel.md",
+    "rel_src": "cars/electronics/91pm6-ecu-led-cel/91pm6-ecu-led-cel.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "auto-or-manual",
+    "file": "auto-or-manual.md",
+    "rel_src": "cars/electronics/auto-or-manual/auto-or-manual.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pe7",
+    "file": "pe7.md",
+    "rel_src": "cars/electronics/pe7/pe7.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "vtec-solenoid",
+    "file": "vtec-solenoid.md",
+    "rel_src": "cars/electronics/vtec-solenoid/vtec-solenoid.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p30",
+    "file": "p30.md",
+    "rel_src": "cars/electronics/p30/p30.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "uv-erase",
+    "file": "uv-erase.md",
+    "rel_src": "cars/electronics/uv-erase/uv-erase.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "maf-sensor",
+    "file": "maf-sensor.md",
+    "rel_src": "cars/electronics/maf-sensor/maf-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0vtec",
+    "file": "obd0vtec.md",
+    "rel_src": "cars/electronics/obd0vtec/obd0vtec.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "auto-to-manual",
+    "file": "auto-to-manual.md",
+    "rel_src": "cars/electronics/auto-to-manual/auto-to-manual.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "02d011f0-1500",
+    "file": "02d011f0-1500.md",
+    "rel_src": "cars/electronics/02d011f0-1500/02d011f0-1500.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "Honda-Acura-Trouble-Codes",
+    "file": "Honda-Acura-Trouble-Codes.md",
+    "rel_src": "cars/electronics/Honda-Acura-Trouble-Codes/Honda-Acura-Trouble-Codes.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ac-cut-routine",
+    "file": "ac-cut-routine.md",
+    "rel_src": "cars/electronics/ac-cut-routine/ac-cut-routine.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "bin-file",
+    "file": "bin-file.md",
+    "rel_src": "cars/electronics/bin-file/bin-file.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "easy-rtp-v10",
+    "file": "easy-rtp-v10.md",
+    "rel_src": "cars/electronics/easy-rtp-v10/easy-rtp-v10.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "27sf256",
+    "file": "27sf256.md",
+    "rel_src": "cars/electronics/27sf256/27sf256.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "tps-sensor",
+    "file": "tps-sensor.md",
+    "rel_src": "cars/electronics/tps-sensor/tps-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "low-cam",
+    "file": "low-cam.md",
+    "rel_src": "cars/electronics/low-cam/low-cam.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "hi-res-p72",
+    "file": "hi-res-p72.md",
+    "rel_src": "cars/electronics/hi-res-p72/hi-res-p72.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-code-compatibility",
+    "file": "obd1-code-compatibility.md",
+    "rel_src": "cars/electronics/obd1-code-compatibility/obd1-code-compatibility.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0-code-compatibility",
+    "file": "obd0-code-compatibility.md",
+    "rel_src": "cars/electronics/obd0-code-compatibility/obd0-code-compatibility.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pm7",
+    "file": "pm7.md",
+    "rel_src": "cars/electronics/pm7/pm7.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-nitrous-control",
+    "file": "ecu-nitrous-control.md",
+    "rel_src": "cars/electronics/ecu-nitrous-control/ecu-nitrous-control.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "conversion",
+    "file": "conversion.md",
+    "rel_src": "cars/electronics/conversion/conversion.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "fuel-cut",
+    "file": "fuel-cut.md",
+    "rel_src": "cars/electronics/fuel-cut/fuel-cut.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "exhaust-gas-temp-sensor",
+    "file": "exhaust-gas-temp-sensor.md",
+    "rel_src": "cars/electronics/exhaust-gas-temp-sensor/exhaust-gas-temp-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pj1",
+    "file": "pj1.md",
+    "rel_src": "cars/electronics/pj1/pj1.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "sand-box",
+    "file": "sand-box.md",
+    "rel_src": "cars/electronics/sand-box/sand-box.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "knock-board",
+    "file": "knock-board.md",
+    "rel_src": "cars/electronics/knock-board/knock-board.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0-edit",
+    "file": "obd0-edit.md",
+    "rel_src": "cars/electronics/obd0-edit/obd0-edit.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "turbo-compressor-map",
+    "file": "turbo-compressor-map.md",
+    "rel_src": "cars/electronics/turbo-compressor-map/turbo-compressor-map.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "multiprocessor-mode",
+    "file": "multiprocessor-mode.md",
+    "rel_src": "cars/electronics/multiprocessor-mode/multiprocessor-mode.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rom",
+    "file": "rom.md",
+    "rel_src": "cars/electronics/rom/rom.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "vtec",
+    "file": "vtec.md",
+    "rel_src": "cars/electronics/vtec/vtec.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "how-does-data-logging-work",
+    "file": "how-does-data-logging-work.md",
+    "rel_src": "cars/electronics/how-does-data-logging-work/how-does-data-logging-work.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dual-runner-manifold",
+    "file": "dual-runner-manifold.md",
+    "rel_src": "cars/electronics/dual-runner-manifold/dual-runner-manifold.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "66207",
+    "file": "66207.md",
+    "rel_src": "cars/electronics/66207/66207.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1",
+    "file": "obd1.md",
+    "rel_src": "cars/electronics/obd1/obd1.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "c-carry-bit",
+    "file": "c-carry-bit.md",
+    "rel_src": "cars/electronics/c-carry-bit/c-carry-bit.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "oki6260a",
+    "file": "oki6260a.md",
+    "rel_src": "cars/electronics/oki6260a/oki6260a.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "digi-key",
+    "file": "digi-key.md",
+    "rel_src": "cars/electronics/digi-key/digi-key.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rover",
+    "file": "rover.md",
+    "rel_src": "cars/electronics/rover/rover.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dohc",
+    "file": "dohc.md",
+    "rel_src": "cars/electronics/dohc/dohc.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dac",
+    "file": "dac.md",
+    "rel_src": "cars/electronics/dac/dac.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "high-impedance-injectors",
+    "file": "high-impedance-injectors.md",
+    "rel_src": "cars/electronics/high-impedance-injectors/high-impedance-injectors.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p05",
+    "file": "p05.md",
+    "rel_src": "cars/electronics/p05/p05.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ignitor-replacement",
+    "file": "ignitor-replacement.md",
+    "rel_src": "cars/electronics/ignitor-replacement/ignitor-replacement.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "data-logging",
+    "file": "data-logging.md",
+    "rel_src": "cars/electronics/data-logging/data-logging.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "octal",
+    "file": "octal.md",
+    "rel_src": "cars/electronics/octal/octal.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "desoldering-braid",
+    "file": "desoldering-braid.md",
+    "rel_src": "cars/electronics/desoldering-braid/desoldering-braid.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "java-script",
+    "file": "java-script.md",
+    "rel_src": "cars/electronics/java-script/java-script.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "resistor-box",
+    "file": "resistor-box.md",
+    "rel_src": "cars/electronics/resistor-box/resistor-box.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "oz-dm",
+    "file": "oz-dm.md",
+    "rel_src": "cars/electronics/oz-dm/oz-dm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pr3",
+    "file": "pr3.md",
+    "rel_src": "cars/electronics/pr3/pr3.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "chipping-obd0pm6",
+    "file": "chipping-obd0pm6.md",
+    "rel_src": "cars/electronics/chipping-obd0pm6/chipping-obd0pm6.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "serial-adapter",
+    "file": "serial-adapter.md",
+    "rel_src": "cars/electronics/serial-adapter/serial-adapter.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "more-about-mechanics",
+    "file": "more-about-mechanics.md",
+    "rel_src": "cars/electronics/more-about-mechanics/more-about-mechanics.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "future-active",
+    "file": "future-active.md",
+    "rel_src": "cars/electronics/future-active/future-active.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "limp-mode",
+    "file": "limp-mode.md",
+    "rel_src": "cars/electronics/limp-mode/limp-mode.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "uber-data-faq",
+    "file": "uber-data-faq.md",
+    "rel_src": "cars/electronics/uber-data-faq/uber-data-faq.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "vss",
+    "file": "vss.md",
+    "rel_src": "cars/electronics/vss/vss.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pm6",
+    "file": "pm6.md",
+    "rel_src": "cars/electronics/pm6/pm6.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pr7",
+    "file": "pr7.md",
+    "rel_src": "cars/electronics/pr7/pr7.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "injector-test-circuit",
+    "file": "injector-test-circuit.md",
+    "rel_src": "cars/electronics/injector-test-circuit/injector-test-circuit.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "02d01980-1500",
+    "file": "02d01980-1500.md",
+    "rel_src": "cars/electronics/02d01980-1500/02d01980-1500.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0ecuautotomanualwithoutremoveanyhardware",
+    "file": "obd0ecuautotomanualwithoutremoveanyhardware.md",
+    "rel_src": "cars/electronics/obd0ecuautotomanualwithoutremoveanyhardware/obd0ecuautotomanualwithoutremoveanyhardware.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "wiki-wiki-web",
+    "file": "wiki-wiki-web.md",
+    "rel_src": "cars/electronics/wiki-wiki-web/wiki-wiki-web.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "distributors",
+    "file": "distributors.md",
+    "rel_src": "cars/electronics/distributors/distributors.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd",
+    "file": "obd.md",
+    "rel_src": "cars/electronics/obd/obd.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "upd7004c",
+    "file": "upd7004c.md",
+    "rel_src": "cars/electronics/upd7004c/upd7004c.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "boost-cut",
+    "file": "boost-cut.md",
+    "rel_src": "cars/electronics/boost-cut/boost-cut.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dlc",
+    "file": "dlc.md",
+    "rel_src": "cars/electronics/dlc/dlc.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-tuning",
+    "file": "ecu-tuning.md",
+    "rel_src": "cars/electronics/ecu-tuning/ecu-tuning.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "wide-band-o2",
+    "file": "wide-band-o2.md",
+    "rel_src": "cars/electronics/wide-band-o2/wide-band-o2.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pj0",
+    "file": "pj0.md",
+    "rel_src": "cars/electronics/pj0/pj0.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-8bit-tps",
+    "file": "obd1-8bit-tps.md",
+    "rel_src": "cars/electronics/obd1-8bit-tps/obd1-8bit-tps.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pp5",
+    "file": "pp5.md",
+    "rel_src": "cars/electronics/pp5/pp5.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "chipping-obd1-big-case",
+    "file": "chipping-obd1-big-case.md",
+    "rel_src": "cars/electronics/chipping-obd1-big-case/chipping-obd1-big-case.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-hardware",
+    "file": "ecu-hardware.md",
+    "rel_src": "cars/electronics/ecu-hardware/ecu-hardware.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "revolutions-per-minute",
+    "file": "revolutions-per-minute.md",
+    "rel_src": "cars/electronics/revolutions-per-minute/revolutions-per-minute.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "knock-sensor",
+    "file": "knock-sensor.md",
+    "rel_src": "cars/electronics/knock-sensor/knock-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "parts-for-ec-us",
+    "file": "parts-for-ec-us.md",
+    "rel_src": "cars/electronics/parts-for-ec-us/parts-for-ec-us.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "chipping-obd2",
+    "file": "chipping-obd2.md",
+    "rel_src": "cars/electronics/chipping-obd2/chipping-obd2.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "add-a-knock-sensor",
+    "file": "add-a-knock-sensor.md",
+    "rel_src": "cars/electronics/add-a-knock-sensor/add-a-knock-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "intel8051",
+    "file": "intel8051.md",
+    "rel_src": "cars/electronics/intel8051/intel8051.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "text-formatting-rules",
+    "file": "text-formatting-rules.md",
+    "rel_src": "cars/electronics/text-formatting-rules/text-formatting-rules.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "full-duplex-datalogging",
+    "file": "full-duplex-datalogging.md",
+    "rel_src": "cars/electronics/full-duplex-datalogging/full-duplex-datalogging.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "recent-visitors",
+    "file": "recent-visitors.md",
+    "rel_src": "cars/electronics/recent-visitors/recent-visitors.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "66k-assembler-routines",
+    "file": "66k-assembler-routines.md",
+    "rel_src": "cars/electronics/66k-assembler-routines/66k-assembler-routines.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "29c256",
+    "file": "29c256.md",
+    "rel_src": "cars/electronics/29c256/29c256.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "5050s",
+    "file": "5050s.md",
+    "rel_src": "cars/electronics/5050s/5050s.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "tuning-timing",
+    "file": "tuning-timing.md",
+    "rel_src": "cars/electronics/tuning-timing/tuning-timing.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p07",
+    "file": "p07.md",
+    "rel_src": "cars/electronics/p07/p07.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "29c010",
+    "file": "29c010.md",
+    "rel_src": "cars/electronics/29c010/29c010.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0cn3",
+    "file": "obd0cn3.md",
+    "rel_src": "cars/electronics/obd0cn3/obd0cn3.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "speed-density",
+    "file": "speed-density.md",
+    "rel_src": "cars/electronics/speed-density/speed-density.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "c2785",
+    "file": "c2785.md",
+    "rel_src": "cars/electronics/c2785/c2785.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-8bit-m-bar",
+    "file": "obd1-8bit-m-bar.md",
+    "rel_src": "cars/electronics/obd1-8bit-m-bar/obd1-8bit-m-bar.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "spark-cut",
+    "file": "spark-cut.md",
+    "rel_src": "cars/electronics/spark-cut/spark-cut.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "wot",
+    "file": "wot.md",
+    "rel_src": "cars/electronics/wot/wot.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pr5",
+    "file": "pr5.md",
+    "rel_src": "cars/electronics/pr5/pr5.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "clamping-diode",
+    "file": "clamping-diode.md",
+    "rel_src": "cars/electronics/clamping-diode/clamping-diode.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "red-loctite",
+    "file": "red-loctite.md",
+    "rel_src": "cars/electronics/red-loctite/red-loctite.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pm6-future",
+    "file": "pm6-future.md",
+    "rel_src": "cars/electronics/pm6-future/pm6-future.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "chipping-an88-89ecu",
+    "file": "chipping-an88-89ecu.md",
+    "rel_src": "cars/electronics/chipping-an88-89ecu/chipping-an88-89ecu.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "launch-control",
+    "file": "launch-control.md",
+    "rel_src": "cars/electronics/launch-control/launch-control.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p28-g03",
+    "file": "p28-g03.md",
+    "rel_src": "cars/electronics/p28-g03/p28-g03.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p2p",
+    "file": "p2p.md",
+    "rel_src": "cars/electronics/p2p/p2p.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "idle-air-control-valve",
+    "file": "idle-air-control-valve.md",
+    "rel_src": "cars/electronics/idle-air-control-valve/idle-air-control-valve.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "map-sensor-equation",
+    "file": "map-sensor-equation.md",
+    "rel_src": "cars/electronics/map-sensor-equation/map-sensor-equation.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "piggy-back",
+    "file": "piggy-back.md",
+    "rel_src": "cars/electronics/piggy-back/piggy-back.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "map-sensor",
+    "file": "map-sensor.md",
+    "rel_src": "cars/electronics/map-sensor/map-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ignition-coil",
+    "file": "ignition-coil.md",
+    "rel_src": "cars/electronics/ignition-coil/ignition-coil.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0",
+    "file": "obd0.md",
+    "rel_src": "cars/electronics/obd0/obd0.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "kurts-obd0-obd1",
+    "file": "kurts-obd0-obd1.md",
+    "rel_src": "cars/electronics/kurts-obd0-obd1/kurts-obd0-obd1.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "zif",
+    "file": "zif.md",
+    "rel_src": "cars/electronics/zif/zif.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "recent-changes",
+    "file": "recent-changes.md",
+    "rel_src": "cars/electronics/recent-changes/recent-changes.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "a5",
+    "file": "a5.md",
+    "rel_src": "cars/electronics/a5/a5.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-control",
+    "file": "ecu-control.md",
+    "rel_src": "cars/electronics/ecu-control/ecu-control.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "understanding-maps",
+    "file": "understanding-maps.md",
+    "rel_src": "cars/electronics/understanding-maps/understanding-maps.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "air-fuel-ratio",
+    "file": "air-fuel-ratio.md",
+    "rel_src": "cars/electronics/air-fuel-ratio/air-fuel-ratio.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pressure-atmosphere",
+    "file": "pressure-atmosphere.md",
+    "rel_src": "cars/electronics/pressure-atmosphere/pressure-atmosphere.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "wire-harness",
+    "file": "wire-harness.md",
+    "rel_src": "cars/electronics/wire-harness/wire-harness.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "mcu-readers",
+    "file": "mcu-readers.md",
+    "rel_src": "cars/electronics/mcu-readers/mcu-readers.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-civic-integra",
+    "file": "obd1-civic-integra.md",
+    "rel_src": "cars/electronics/obd1-civic-integra/obd1-civic-integra.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd2",
+    "file": "obd2.md",
+    "rel_src": "cars/electronics/obd2/obd2.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pa-sensor",
+    "file": "pa-sensor.md",
+    "rel_src": "cars/electronics/pa-sensor/pa-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "how-to-log-external-data-such-as-an-egt-sensor",
+    "file": "how-to-log-external-data-such-as-an-egt-sensor.md",
+    "rel_src": "cars/electronics/how-to-log-external-data-such-as-an-egt-sensor/how-to-log-external-data-such-as-an-egt-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "replace-m5128",
+    "file": "replace-m5128.md",
+    "rel_src": "cars/electronics/replace-m5128/replace-m5128.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "d1780",
+    "file": "d1780.md",
+    "rel_src": "cars/electronics/d1780/d1780.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "mpfi",
+    "file": "mpfi.md",
+    "rel_src": "cars/electronics/mpfi/mpfi.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "sectors",
+    "file": "sectors.md",
+    "rel_src": "cars/electronics/sectors/sectors.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "checking-error-codes",
+    "file": "checking-error-codes.md",
+    "rel_src": "cars/electronics/checking-error-codes/checking-error-codes.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "vise-grip",
+    "file": "vise-grip.md",
+    "rel_src": "cars/electronics/vise-grip/vise-grip.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "wiki-plugin",
+    "file": "wiki-plugin.md",
+    "rel_src": "cars/electronics/wiki-plugin/wiki-plugin.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "intake-air-temperature-sensor",
+    "file": "intake-air-temperature-sensor.md",
+    "rel_src": "cars/electronics/intake-air-temperature-sensor/intake-air-temperature-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "willem",
+    "file": "willem.md",
+    "rel_src": "cars/electronics/willem/willem.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "add-knock-to-p30g00",
+    "file": "add-knock-to-p30g00.md",
+    "rel_src": "cars/electronics/add-knock-to-p30g00/add-knock-to-p30g00.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rm11",
+    "file": "rm11.md",
+    "rel_src": "cars/electronics/rm11/rm11.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "clock-speed",
+    "file": "clock-speed.md",
+    "rel_src": "cars/electronics/clock-speed/clock-speed.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ph3",
+    "file": "ph3.md",
+    "rel_src": "cars/electronics/ph3/ph3.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pr3-auto-manual",
+    "file": "pr3-auto-manual.md",
+    "rel_src": "cars/electronics/pr3-auto-manual/pr3-auto-manual.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "soldering-iron",
+    "file": "soldering-iron.md",
+    "rel_src": "cars/electronics/soldering-iron/soldering-iron.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "add-boost",
+    "file": "add-boost.md",
+    "rel_src": "cars/electronics/add-boost/add-boost.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p11",
+    "file": "p11.md",
+    "rel_src": "cars/electronics/p11/p11.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd2b",
+    "file": "obd2b.md",
+    "rel_src": "cars/electronics/obd2b/obd2b.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "crome-rom-editor",
+    "file": "crome-rom-editor.md",
+    "rel_src": "cars/electronics/crome-rom-editor/crome-rom-editor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0mpfi",
+    "file": "obd0mpfi.md",
+    "rel_src": "cars/electronics/obd0mpfi/obd0mpfi.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "oxygen-sensor",
+    "file": "oxygen-sensor.md",
+    "rel_src": "cars/electronics/oxygen-sensor/oxygen-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "troubleshooting-solid-cel",
+    "file": "troubleshooting-solid-cel.md",
+    "rel_src": "cars/electronics/troubleshooting-solid-cel/troubleshooting-solid-cel.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0vss",
+    "file": "obd0vss.md",
+    "rel_src": "cars/electronics/obd0vss/obd0vss.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "square-brackets",
+    "file": "square-brackets.md",
+    "rel_src": "cars/electronics/square-brackets/square-brackets.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "test-page",
+    "file": "test-page.md",
+    "rel_src": "cars/electronics/test-page/test-page.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "engine-simulator",
+    "file": "engine-simulator.md",
+    "rel_src": "cars/electronics/engine-simulator/engine-simulator.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "electronic-advance",
+    "file": "electronic-advance.md",
+    "rel_src": "cars/electronics/electronic-advance/electronic-advance.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "nvsram",
+    "file": "nvsram.md",
+    "rel_src": "cars/electronics/nvsram/nvsram.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p71",
+    "file": "p71.md",
+    "rel_src": "cars/electronics/p71/p71.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "66k-assembler-docs",
+    "file": "66k-assembler-docs.md",
+    "rel_src": "cars/electronics/66k-assembler-docs/66k-assembler-docs.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pgmfi-d51",
+    "file": "pgmfi-d51.md",
+    "rel_src": "cars/electronics/pgmfi-d51/pgmfi-d51.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p54",
+    "file": "p54.md",
+    "rel_src": "cars/electronics/p54/p54.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd2p5m-auto-manual",
+    "file": "obd2p5m-auto-manual.md",
+    "rel_src": "cars/electronics/obd2p5m-auto-manual/obd2p5m-auto-manual.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rs232",
+    "file": "rs232.md",
+    "rel_src": "cars/electronics/rs232/rs232.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dpfi",
+    "file": "dpfi.md",
+    "rel_src": "cars/electronics/dpfi/dpfi.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ect",
+    "file": "ect.md",
+    "rel_src": "cars/electronics/ect/ect.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "chips-for-ec-us",
+    "file": "chips-for-ec-us.md",
+    "rel_src": "cars/electronics/chips-for-ec-us/chips-for-ec-us.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rat-shack",
+    "file": "rat-shack.md",
+    "rel_src": "cars/electronics/rat-shack/rat-shack.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "acura-integra-pr4ecu-pinout-and-schematics",
+    "file": "acura-integra-pr4ecu-pinout-and-schematics.md",
+    "rel_src": "cars/electronics/acura-integra-pr4ecu-pinout-and-schematics/acura-integra-pr4ecu-pinout-and-schematics.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "manual-checksum",
+    "file": "manual-checksum.md",
+    "rel_src": "cars/electronics/manual-checksum/manual-checksum.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "low-impedance-injectors",
+    "file": "low-impedance-injectors.md",
+    "rel_src": "cars/electronics/low-impedance-injectors/low-impedance-injectors.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pk3",
+    "file": "pk3.md",
+    "rel_src": "cars/electronics/pk3/pk3.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p70",
+    "file": "p70.md",
+    "rel_src": "cars/electronics/p70/p70.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1p13-auto-manual",
+    "file": "obd1p13-auto-manual.md",
+    "rel_src": "cars/electronics/obd1p13-auto-manual/obd1p13-auto-manual.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pocket-programmer2",
+    "file": "pocket-programmer2.md",
+    "rel_src": "cars/electronics/pocket-programmer2/pocket-programmer2.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "203-ac",
+    "file": "203-ac.md",
+    "rel_src": "cars/electronics/203-ac/203-ac.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1p08-auto-manual",
+    "file": "obd1p08-auto-manual.md",
+    "rel_src": "cars/electronics/obd1p08-auto-manual/obd1p08-auto-manual.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ghetto-dyne",
+    "file": "ghetto-dyne.md",
+    "rel_src": "cars/electronics/ghetto-dyne/ghetto-dyne.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "joel-eck",
+    "file": "joel-eck.md",
+    "rel_src": "cars/electronics/joel-eck/joel-eck.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pw1",
+    "file": "pw1.md",
+    "rel_src": "cars/electronics/pw1/pw1.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "chipping-obd1-small-case",
+    "file": "chipping-obd1-small-case.md",
+    "rel_src": "cars/electronics/chipping-obd1-small-case/chipping-obd1-small-case.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rom-emulator",
+    "file": "rom-emulator.md",
+    "rel_src": "cars/electronics/rom-emulator/rom-emulator.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0-oki83c154-reader",
+    "file": "obd0-oki83c154-reader.md",
+    "rel_src": "cars/electronics/obd0-oki83c154-reader/obd0-oki83c154-reader.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "inter-wiki",
+    "file": "inter-wiki.md",
+    "rel_src": "cars/electronics/inter-wiki/inter-wiki.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "nico-analyze",
+    "file": "nico-analyze.md",
+    "rel_src": "cars/electronics/nico-analyze/nico-analyze.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "release-notes",
+    "file": "release-notes.md",
+    "rel_src": "cars/electronics/release-notes/release-notes.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "66k-resources",
+    "file": "66k-resources.md",
+    "rel_src": "cars/electronics/66k-resources/66k-resources.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pgsrc-translation",
+    "file": "pgsrc-translation.md",
+    "rel_src": "cars/electronics/pgsrc-translation/pgsrc-translation.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "io",
+    "file": "io.md",
+    "rel_src": "cars/electronics/io/io.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1pr4",
+    "file": "obd1pr4.md",
+    "rel_src": "cars/electronics/obd1pr4/obd1pr4.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p28",
+    "file": "p28.md",
+    "rel_src": "cars/electronics/p28/p28.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "eprommer5",
+    "file": "eprommer5.md",
+    "rel_src": "cars/electronics/eprommer5/eprommer5.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "27c256",
+    "file": "27c256.md",
+    "rel_src": "cars/electronics/27c256/27c256.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "desoldering-iron",
+    "file": "desoldering-iron.md",
+    "rel_src": "cars/electronics/desoldering-iron/desoldering-iron.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ram",
+    "file": "ram.md",
+    "rel_src": "cars/electronics/ram/ram.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "label-decode",
+    "file": "label-decode.md",
+    "rel_src": "cars/electronics/label-decode/label-decode.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "wiki-word",
+    "file": "wiki-word.md",
+    "rel_src": "cars/electronics/wiki-word/wiki-word.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-trouble-codes",
+    "file": "ecu-trouble-codes.md",
+    "rel_src": "cars/electronics/ecu-trouble-codes/ecu-trouble-codes.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "fuzzy-pages",
+    "file": "fuzzy-pages.md",
+    "rel_src": "cars/electronics/fuzzy-pages/fuzzy-pages.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p12",
+    "file": "p12.md",
+    "rel_src": "cars/electronics/p12/p12.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "check-sum",
+    "file": "check-sum.md",
+    "rel_src": "cars/electronics/check-sum/check-sum.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pm5",
+    "file": "pm5.md",
+    "rel_src": "cars/electronics/pm5/pm5.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-civic-integra-ec-us",
+    "file": "obd1-civic-integra-ec-us.md",
+    "rel_src": "cars/electronics/obd1-civic-integra-ec-us/obd1-civic-integra-ec-us.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "absolute-vacuum",
+    "file": "absolute-vacuum.md",
+    "rel_src": "cars/electronics/absolute-vacuum/absolute-vacuum.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "php-wiki-administration",
+    "file": "php-wiki-administration.md",
+    "rel_src": "cars/electronics/php-wiki-administration/php-wiki-administration.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "real-time-programability",
+    "file": "real-time-programability.md",
+    "rel_src": "cars/electronics/real-time-programability/real-time-programability.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "edit-text",
+    "file": "edit-text.md",
+    "rel_src": "cars/electronics/edit-text/edit-text.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "oki80c154",
+    "file": "oki80c154.md",
+    "rel_src": "cars/electronics/oki80c154/oki80c154.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "why-do-piggybacks-suck",
+    "file": "why-do-piggybacks-suck.md",
+    "rel_src": "cars/electronics/why-do-piggybacks-suck/why-do-piggybacks-suck.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dual-point",
+    "file": "dual-point.md",
+    "rel_src": "cars/electronics/dual-point/dual-point.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p06",
+    "file": "p06.md",
+    "rel_src": "cars/electronics/p06/p06.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p39",
+    "file": "p39.md",
+    "rel_src": "cars/electronics/p39/p39.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "91pm7-target-idle",
+    "file": "91pm7-target-idle.md",
+    "rel_src": "cars/electronics/91pm7-target-idle/91pm7-target-idle.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-backup-processor",
+    "file": "ecu-backup-processor.md",
+    "rel_src": "cars/electronics/ecu-backup-processor/ecu-backup-processor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "sohc",
+    "file": "sohc.md",
+    "rel_src": "cars/electronics/sohc/sohc.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "1-wire-vtec",
+    "file": "1-wire-vtec.md",
+    "rel_src": "cars/electronics/1-wire-vtec/1-wire-vtec.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "chip-max",
+    "file": "chip-max.md",
+    "rel_src": "cars/electronics/chip-max/chip-max.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "full-recent-changes",
+    "file": "full-recent-changes.md",
+    "rel_src": "cars/electronics/full-recent-changes/full-recent-changes.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pwm",
+    "file": "pwm.md",
+    "rel_src": "cars/electronics/pwm/pwm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p1k",
+    "file": "p1k.md",
+    "rel_src": "cars/electronics/p1k/p1k.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "win-hex",
+    "file": "win-hex.md",
+    "rel_src": "cars/electronics/win-hex/win-hex.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "mass-air-flow",
+    "file": "mass-air-flow.md",
+    "rel_src": "cars/electronics/mass-air-flow/mass-air-flow.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "calendar-plugin",
+    "file": "calendar-plugin.md",
+    "rel_src": "cars/electronics/calendar-plugin/calendar-plugin.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "bar",
+    "file": "bar.md",
+    "rel_src": "cars/electronics/bar/bar.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "cpu",
+    "file": "cpu.md",
+    "rel_src": "cars/electronics/cpu/cpu.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "introduction-to-ecu-chipping",
+    "file": "introduction-to-ecu-chipping.md",
+    "rel_src": "cars/electronics/introduction-to-ecu-chipping/introduction-to-ecu-chipping.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p5m",
+    "file": "p5m.md",
+    "rel_src": "cars/electronics/p5m/p5m.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "epromer5",
+    "file": "epromer5.md",
+    "rel_src": "cars/electronics/epromer5/epromer5.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "latch",
+    "file": "latch.md",
+    "rel_src": "cars/electronics/latch/latch.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-connections",
+    "file": "ecu-connections.md",
+    "rel_src": "cars/electronics/ecu-connections/ecu-connections.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "add-iab-to-p28",
+    "file": "add-iab-to-p28.md",
+    "rel_src": "cars/electronics/add-iab-to-p28/add-iab-to-p28.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p13jdm",
+    "file": "p13jdm.md",
+    "rel_src": "cars/electronics/p13jdm/p13jdm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-8bit-advance",
+    "file": "obd1-8bit-advance.md",
+    "rel_src": "cars/electronics/obd1-8bit-advance/obd1-8bit-advance.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1j12",
+    "file": "obd1j12.md",
+    "rel_src": "cars/electronics/obd1j12/obd1j12.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "acura",
+    "file": "acura.md",
+    "rel_src": "cars/electronics/acura/acura.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "knock-replacement",
+    "file": "knock-replacement.md",
+    "rel_src": "cars/electronics/knock-replacement/knock-replacement.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "eprom",
+    "file": "eprom.md",
+    "rel_src": "cars/electronics/eprom/eprom.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "orphaned-pages",
+    "file": "orphaned-pages.md",
+    "rel_src": "cars/electronics/orphaned-pages/orphaned-pages.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "asm662",
+    "file": "asm662.md",
+    "rel_src": "cars/electronics/asm662/asm662.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "engine-sim",
+    "file": "engine-sim.md",
+    "rel_src": "cars/electronics/engine-sim/engine-sim.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "spark-advance",
+    "file": "spark-advance.md",
+    "rel_src": "cars/electronics/spark-advance/spark-advance.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "relative-pressure",
+    "file": "relative-pressure.md",
+    "rel_src": "cars/electronics/relative-pressure/relative-pressure.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rtp-project",
+    "file": "rtp-project.md",
+    "rel_src": "cars/electronics/rtp-project/rtp-project.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p14",
+    "file": "p14.md",
+    "rel_src": "cars/electronics/p14/p14.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "second-gen-usb-to-serial-converter",
+    "file": "second-gen-usb-to-serial-converter.md",
+    "rel_src": "cars/electronics/second-gen-usb-to-serial-converter/second-gen-usb-to-serial-converter.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pm9",
+    "file": "pm9.md",
+    "rel_src": "cars/electronics/pm9/pm9.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "iat",
+    "file": "iat.md",
+    "rel_src": "cars/electronics/iat/iat.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "good-style",
+    "file": "good-style.md",
+    "rel_src": "cars/electronics/good-style/good-style.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "91pm7",
+    "file": "91pm7.md",
+    "rel_src": "cars/electronics/91pm7/91pm7.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "hon-data",
+    "file": "hon-data.md",
+    "rel_src": "cars/electronics/hon-data/hon-data.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ea",
+    "file": "ea.md",
+    "rel_src": "cars/electronics/ea/ea.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "adc",
+    "file": "adc.md",
+    "rel_src": "cars/electronics/adc/adc.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-civ-teg-routines",
+    "file": "obd1-civ-teg-routines.md",
+    "rel_src": "cars/electronics/obd1-civ-teg-routines/obd1-civ-teg-routines.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "service-manual",
+    "file": "service-manual.md",
+    "rel_src": "cars/electronics/service-manual/service-manual.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "sram",
+    "file": "sram.md",
+    "rel_src": "cars/electronics/sram/sram.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "hardware-for-one-wire-vtec",
+    "file": "hardware-for-one-wire-vtec.md",
+    "rel_src": "cars/electronics/hardware-for-one-wire-vtec/hardware-for-one-wire-vtec.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "max233",
+    "file": "max233.md",
+    "rel_src": "cars/electronics/max233/max233.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "desoldering-station",
+    "file": "desoldering-station.md",
+    "rel_src": "cars/electronics/desoldering-station/desoldering-station.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "injector-sizing",
+    "file": "injector-sizing.md",
+    "rel_src": "cars/electronics/injector-sizing/injector-sizing.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "disable-vtec-vss-check",
+    "file": "disable-vtec-vss-check.md",
+    "rel_src": "cars/electronics/disable-vtec-vss-check/disable-vtec-vss-check.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "uber-p72",
+    "file": "uber-p72.md",
+    "rel_src": "cars/electronics/uber-p72/uber-p72.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "warning-about-adding-a-knock-sensor",
+    "file": "warning-about-adding-a-knock-sensor.md",
+    "rel_src": "cars/electronics/warning-about-adding-a-knock-sensor/warning-about-adding-a-knock-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "throttle-plate",
+    "file": "throttle-plate.md",
+    "rel_src": "cars/electronics/throttle-plate/throttle-plate.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "top-dead-center-sensor",
+    "file": "top-dead-center-sensor.md",
+    "rel_src": "cars/electronics/top-dead-center-sensor/top-dead-center-sensor.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-hardware-mods",
+    "file": "ecu-hardware-mods.md",
+    "rel_src": "cars/electronics/ecu-hardware-mods/ecu-hardware-mods.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "uber-data",
+    "file": "uber-data.md",
+    "rel_src": "cars/electronics/uber-data/uber-data.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "prelude-accord",
+    "file": "prelude-accord.md",
+    "rel_src": "cars/electronics/prelude-accord/prelude-accord.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "helms-manual",
+    "file": "helms-manual.md",
+    "rel_src": "cars/electronics/helms-manual/helms-manual.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-boost-controller",
+    "file": "ecu-boost-controller.md",
+    "rel_src": "cars/electronics/ecu-boost-controller/ecu-boost-controller.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "diy",
+    "file": "diy.md",
+    "rel_src": "cars/electronics/diy/diy.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "c144",
+    "file": "c144.md",
+    "rel_src": "cars/electronics/c144/c144.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "knock-sensor-voltages",
+    "file": "knock-sensor-voltages.md",
+    "rel_src": "cars/electronics/knock-sensor-voltages/knock-sensor-voltages.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "chipping-jdmp30",
+    "file": "chipping-jdmp30.md",
+    "rel_src": "cars/electronics/chipping-jdmp30/chipping-jdmp30.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0-conversion-formula",
+    "file": "obd0-conversion-formula.md",
+    "rel_src": "cars/electronics/obd0-conversion-formula/obd0-conversion-formula.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p29",
+    "file": "p29.md",
+    "rel_src": "cars/electronics/p29/p29.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0pm6pm7ram-locations",
+    "file": "obd0pm6pm7ram-locations.md",
+    "rel_src": "cars/electronics/obd0pm6pm7ram-locations/obd0pm6pm7ram-locations.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p72",
+    "file": "p72.md",
+    "rel_src": "cars/electronics/p72/p72.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "fuel-pressure",
+    "file": "fuel-pressure.md",
+    "rel_src": "cars/electronics/fuel-pressure/fuel-pressure.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rom-burner",
+    "file": "rom-burner.md",
+    "rel_src": "cars/electronics/rom-burner/rom-burner.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ecu-chipping-wirelist",
+    "file": "ecu-chipping-wirelist.md",
+    "rel_src": "cars/electronics/ecu-chipping-wirelist/ecu-chipping-wirelist.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p74",
+    "file": "p74.md",
+    "rel_src": "cars/electronics/p74/p74.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "steve-wainstead",
+    "file": "steve-wainstead.md",
+    "rel_src": "cars/electronics/steve-wainstead/steve-wainstead.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-16bit-rpm",
+    "file": "obd1-16bit-rpm.md",
+    "rel_src": "cars/electronics/obd1-16bit-rpm/obd1-16bit-rpm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "compression-ratio",
+    "file": "compression-ratio.md",
+    "rel_src": "cars/electronics/compression-ratio/compression-ratio.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "link-icons",
+    "file": "link-icons.md",
+    "rel_src": "cars/electronics/link-icons/link-icons.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "crome-script",
+    "file": "crome-script.md",
+    "rel_src": "cars/electronics/crome-script/crome-script.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0-fuel",
+    "file": "obd0-fuel.md",
+    "rel_src": "cars/electronics/obd0-fuel/obd0-fuel.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "further-reading",
+    "file": "further-reading.md",
+    "rel_src": "cars/electronics/further-reading/further-reading.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p2e",
+    "file": "p2e.md",
+    "rel_src": "cars/electronics/p2e/p2e.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ttl",
+    "file": "ttl.md",
+    "rel_src": "cars/electronics/ttl/ttl.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p91",
+    "file": "p91.md",
+    "rel_src": "cars/electronics/p91/p91.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rev-limiter",
+    "file": "rev-limiter.md",
+    "rel_src": "cars/electronics/rev-limiter/rev-limiter.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "easy-rtp-install",
+    "file": "easy-rtp-install.md",
+    "rel_src": "cars/electronics/easy-rtp-install/easy-rtp-install.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "non-vtec-to-vtec",
+    "file": "non-vtec-to-vtec.md",
+    "rel_src": "cars/electronics/non-vtec-to-vtec/non-vtec-to-vtec.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0-inter-chip-communication",
+    "file": "obd0-inter-chip-communication.md",
+    "rel_src": "cars/electronics/obd0-inter-chip-communication/obd0-inter-chip-communication.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd016-bit-rpm",
+    "file": "obd016-bit-rpm.md",
+    "rel_src": "cars/electronics/obd016-bit-rpm/obd016-bit-rpm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "chipping-with-pictures",
+    "file": "chipping-with-pictures.md",
+    "rel_src": "cars/electronics/chipping-with-pictures/chipping-with-pictures.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "oki83c154",
+    "file": "oki83c154.md",
+    "rel_src": "cars/electronics/oki83c154/oki83c154.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd1-oki66207-reader-plcc68",
+    "file": "obd1-oki66207-reader-plcc68.md",
+    "rel_src": "cars/electronics/obd1-oki66207-reader-plcc68/obd1-oki66207-reader-plcc68.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "turbo-edit",
+    "file": "turbo-edit.md",
+    "rel_src": "cars/electronics/turbo-edit/turbo-edit.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "speed-limiter",
+    "file": "speed-limiter.md",
+    "rel_src": "cars/electronics/speed-limiter/speed-limiter.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "peak-and-hold-injectors",
+    "file": "peak-and-hold-injectors.md",
+    "rel_src": "cars/electronics/peak-and-hold-injectors/peak-and-hold-injectors.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "cel",
+    "file": "cel.md",
+    "rel_src": "cars/electronics/cel/cel.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "combustion-chamber",
+    "file": "combustion-chamber.md",
+    "rel_src": "cars/electronics/combustion-chamber/combustion-chamber.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "5128xram",
+    "file": "5128xram.md",
+    "rel_src": "cars/electronics/5128xram/5128xram.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "engine-coolant-temperature",
+    "file": "engine-coolant-temperature.md",
+    "rel_src": "cars/electronics/engine-coolant-temperature/engine-coolant-temperature.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "electronic-part-supplier",
+    "file": "electronic-part-supplier.md",
+    "rel_src": "cars/electronics/electronic-part-supplier/electronic-part-supplier.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "usdm",
+    "file": "usdm.md",
+    "rel_src": "cars/electronics/usdm/usdm.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "most-popular",
+    "file": "most-popular.md",
+    "rel_src": "cars/electronics/most-popular/most-popular.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "pt3",
+    "file": "pt3.md",
+    "rel_src": "cars/electronics/pt3/pt3.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "serial-communication",
+    "file": "serial-communication.md",
+    "rel_src": "cars/electronics/serial-communication/serial-communication.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "ps9-auto-manual",
+    "file": "ps9-auto-manual.md",
+    "rel_src": "cars/electronics/ps9-auto-manual/ps9-auto-manual.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "back-links",
+    "file": "back-links.md",
+    "rel_src": "cars/electronics/back-links/back-links.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0-ignition",
+    "file": "obd0-ignition.md",
+    "rel_src": "cars/electronics/obd0-ignition/obd0-ignition.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "p76",
+    "file": "p76.md",
+    "rel_src": "cars/electronics/p76/p76.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "wiki",
+    "file": "wiki.md",
+    "rel_src": "cars/electronics/wiki/wiki.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "how-to-wire-wideband",
+    "file": "how-to-wire-wideband.md",
+    "rel_src": "cars/electronics/how-to-wire-wideband/how-to-wire-wideband.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "tdc",
+    "file": "tdc.md",
+    "rel_src": "cars/electronics/tdc/tdc.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "rtp-truth-table",
+    "file": "rtp-truth-table.md",
+    "rel_src": "cars/electronics/rtp-truth-table/rtp-truth-table.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "debugging-data-logging",
+    "file": "debugging-data-logging.md",
+    "rel_src": "cars/electronics/debugging-data-logging/debugging-data-logging.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "php-wiki-documentation",
+    "file": "php-wiki-documentation.md",
+    "rel_src": "cars/electronics/php-wiki-documentation/php-wiki-documentation.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "obd0backup",
+    "file": "obd0backup.md",
+    "rel_src": "cars/electronics/obd0backup/obd0backup.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "high-cam",
+    "file": "high-cam.md",
+    "rel_src": "cars/electronics/high-cam/high-cam.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "dlc-communication",
+    "file": "dlc-communication.md",
+    "rel_src": "cars/electronics/dlc-communication/dlc-communication.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "xe5",
+    "file": "xe5.md",
+    "rel_src": "cars/electronics/xe5/xe5.md"
+  },
+  {
+    "type": "cars",
+    "category": "electronics",
+    "slug": "cam-profile",
+    "file": "cam-profile.md",
+    "rel_src": "cars/electronics/cam-profile/cam-profile.md"
+  },
+  {
+    "type": "cars",
+    "category": "engine",
+    "slug": "injector-offsets",
+    "file": "injector-offsets.md",
+    "rel_src": "cars/engine/injector-offsets/injector-offsets.md"
+  }
+]
