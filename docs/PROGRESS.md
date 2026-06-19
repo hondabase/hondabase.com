@@ -442,6 +442,12 @@ Living log of the Hondabase rebuild. Plan of record:
   Visual design preserved, not redesigned.
 
 ## Changelog
+- **2026-06-19** - **First-party article/link counters.** Added public article view counts and
+  per-occurrence prose-link click counters without touching Markdown. Article views reuse the
+  derived `articles.view_count` field with `last_viewed_at` for dump detection; body links get
+  stable per-rendered-occurrence `article_link_clicks` rows, inline count badges, and a
+  non-blocking same-origin click beacon. Bot/prefetch requests and rapid duplicate counts are
+  suppressed with short-lived cache/session keys, and reindex preserves counter state.
 - **2026-06-19** - **Site progress complete.** The Hondabase rebuild is now marked complete in the
   tracker; new work from here is content expansion and maintenance, not core site delivery.
 - **2026-06-19** - **Second Hondata-derived article batch drafted.** Added original articles for
