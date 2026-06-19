@@ -779,8 +779,7 @@
     .rev-tag-warn { color: var(--color-amber); border-color: rgba(251, 191, 36, 0.4); }
     .rev-tag-revert { color: var(--color-amber-3); border-color: rgba(252, 211, 77, 0.4); }
 
-    .edit-history-link { display: inline-block; margin: 0.6rem 0 0 1rem; font-family: var(--font-mono); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-dim); }
-    .edit-history-link:hover { color: var(--color-amber); }
+
 
     .rev-summary { padding: 0.6rem 1rem 0; font-size: 0.88rem; color: var(--color-dim); }
     .rev-summary span { color: var(--color-muted); font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 0.15rem; }
@@ -1166,20 +1165,27 @@
 .prose-article h2:hover .heading-anchor, .prose-article h3:hover .heading-anchor { opacity: 1; }
 
 .article-foot { border-top: 1px solid var(--color-border); padding-top: 1.25rem; }
-.article-foot form { display: inline; }
+.article-foot-actions { display: flex; align-items: flex-start; gap: 0.5rem; flex-wrap: wrap; }
+.article-foot-actions form { display: contents; }
+.article-foot-admin { margin-top: 0.75rem; }
+.article-foot-admin a { font-family: var(--font-mono); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-dim); }
+.article-foot-admin a:hover { color: var(--color-amber); }
 .btn-danger { border-color: #ef4444; color: #ef4444; }
 .btn-danger:hover { background: #ef4444; color: #fff; }
-.edit-dropdown { display: inline-block; position: relative; margin-top: 0.5rem; }
-.edit-dropdown-menu { position: absolute; top: 100%; left: 0; z-index: 50; min-width: 220px; background: var(--color-bg); border: 1px solid var(--color-amber); margin-top: 2px; }
-.edit-dropdown-menu a { display: block; padding: 0.55rem 1rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-amber); }
-.edit-dropdown-menu a:hover { background: var(--color-amber); color: #1a1a1a; }
-.edit-dropdown-menu a + a { border-top: 1px solid var(--color-border); }
-.delete-dropdown { display: inline-block; position: relative; margin-top: 0.5rem; }
-.delete-dropdown-menu { position: absolute; top: 100%; left: 0; z-index: 50; min-width: 220px; background: var(--color-bg); border: 1px solid #ef4444; margin-top: 2px; }
-.delete-dropdown-menu form { display: block; }
-.delete-dropdown-menu button { display: block; width: 100%; padding: 0.55rem 1rem; text-align: left; font-family: var(--font-mono); font-size: 0.8rem; color: #ef4444; background: none; border: none; cursor: pointer; }
-.delete-dropdown-menu button:hover { background: #ef4444; color: #fff; }
-.delete-dropdown-menu form + form button { border-top: 1px solid var(--color-border); }
+.article-action-dropdown { position: relative; }
+.article-action-menu { position: absolute; top: 100%; left: 0; z-index: 50; min-width: 220px; background: var(--color-bg); border: 1px solid var(--color-amber); margin-top: 2px; }
+.article-action-menu a,
+.article-action-menu button { display: block; width: 100%; padding: 0.55rem 1rem; text-align: left; font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-amber); background: none; border: none; cursor: pointer; }
+.article-action-menu a:hover,
+.article-action-menu button:hover { background: var(--color-amber); color: #1a1a1a; }
+.article-action-menu a + a,
+.article-action-menu form + form button { border-top: 1px solid var(--color-border); }
+.article-action-menu form { display: block; }
+.article-action-menu--danger { border-color: #ef4444; }
+.article-action-menu--danger a,
+.article-action-menu--danger button { color: #ef4444; }
+.article-action-menu--danger a:hover,
+.article-action-menu--danger button:hover { background: #ef4444; color: #fff; }
 
 .article-attribution {
   max-width: 72ch;
