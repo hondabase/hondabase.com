@@ -3,9 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\ArticleFacet;
-use App\Models\UserEquipment;
 use App\Models\UserProduct;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 /**
@@ -166,12 +167,12 @@ class Garage extends Component
         };
 
         $placeholders = [
-            'nickname' => \Illuminate\Support\Arr::random($defaults['nicknames']),
+            'nickname' => Arr::random($defaults['nicknames']),
             'year' => (string) rand(1990, (int) date('Y')),
             'make' => 'Honda',
-            'model' => \Illuminate\Support\Arr::random($defaults['models'] ?: ['Model']),
-            'chassis' => $defaults['chassis'] ? \Illuminate\Support\Arr::random($defaults['chassis']) : '',
-            'engine' => $defaults['engines'] ? \Illuminate\Support\Arr::random($defaults['engines']) : '',
+            'model' => Arr::random($defaults['models'] ?: ['Model']),
+            'chassis' => $defaults['chassis'] ? Arr::random($defaults['chassis']) : '',
+            'engine' => $defaults['engines'] ? Arr::random($defaults['engines']) : '',
         ];
 
         return view('livewire.garage', [
@@ -181,13 +182,13 @@ class Garage extends Component
             'productTypes' => UserProduct::TYPES,
             'makeList' => ArticleFacet::where('kind', 'make')->distinct()->orderBy('label')->pluck('label')
                 ->concat(['Honda', 'Acura'])
-                ->map(fn($l) => \Illuminate\Support\Str::headline($l))->unique()->values()->all(),
+                ->map(fn ($l) => Str::headline($l))->unique()->values()->all(),
             'modelList' => ArticleFacet::where('kind', 'model')->distinct()->orderBy('label')->pluck('label')
                 ->concat($defaults['models'])
-                ->map(fn($l) => \Illuminate\Support\Str::headline($l))->unique()->values()->all(),
+                ->map(fn ($l) => Str::headline($l))->unique()->values()->all(),
             'chassisList' => ArticleFacet::where('kind', 'chassis')->distinct()->orderBy('label')->pluck('label')
                 ->concat($defaults['chassis'])
-                ->map(fn($l) => strtoupper($l))->unique()->values()->all(),
+                ->map(fn ($l) => strtoupper($l))->unique()->values()->all(),
             'engineList' => ArticleFacet::where('kind', 'engine')->distinct()->orderBy('label')->pluck('label')
                 ->concat($defaults['engines'])
                 ->unique()->values()->all(),

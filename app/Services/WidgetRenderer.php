@@ -40,11 +40,15 @@ class WidgetRenderer
         $path = public_path('reference/error-codes/error-codes.json');
         $raw = is_file($path) ? json_decode((string) file_get_contents($path), true) : [];
         $out = [];
+        $locale = app()->getLocale();
+
         foreach ((array) $raw as $e) {
             $out[] = [
                 'code' => array_map('strval', (array) ($e['code'] ?? [])),
-                'short' => (string) ($e['function']['short'] ?? ''),
-                'long' => (string) ($e['function']['long']['en'] ?? ''),
+                'system' => (string) ($e['system'] ?? 'ECU'),
+                'short' => (string) ($e['short'] ?? ''),
+                'long' => (string) ($e['long'][$locale] ?? $e['long']['en'] ?? ''),
+                'causes' => (string) ($e['causes'][$locale] ?? $e['causes']['en'] ?? ''),
             ];
         }
 

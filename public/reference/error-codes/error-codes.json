@@ -1,317 +1,353 @@
 [
-	{
-		"code": [ "0", "11" ],
-		"function": {
-			"short": "ECU",
-			"long": {
-				"en": "Engine Control Unit, the vehicle's main computer that controls engine and transmission functions."
-			}
-		}
-	},
-	{
-		"code": [ "1" ],
-		"function": {
-			"short": "O2S11",
-			"long": {
-				"en": "Upstream oxygen sensor on bank 1, measures exhaust oxygen content to determine fuel mixture."
-			}
-		}
-	},
-	{
-		"code": [ "2" ],
-		"function": {
-			"short": "O2S12",
-			"long": {
-				"en": "Downstream oxygen sensor on bank 1 after catalytic converter, monitors converter efficiency."
-			}
-		}
-	},
-	{
-		"code": [ "3", "5" ],
-		"function": {
-			"short": "MAP",
-			"long": {
-				"en": "Manifold Absolute Pressure sensor, measures intake manifold air pressure to determine engine load."
-			}
-		}
-	},
-	{
-		"code": [ "4" ],
-		"function": {
-			"short": "CKP",
-			"long": {
-				"en": "Crankshaft position sensor, monitors crankshaft position and rotational speed."
-			}
-		}
-	},
-	{
-		"code": [ "6" ],
-		"function": {
-			"short": "ECT",
-			"long": {
-				"en": "Engine coolant temperature sensor, measures the temperature of the engine coolant."
-			}
-		}
-	},
-	{
-		"code": [ "7" ],
-		"function": {
-			"short": "TPS",
-			"long": {
-				"en": "Throttle position sensor, monitors throttle valve position."
-			}
-		}
-	},
-	{
-		"code": [ "8" ],
-		"function": {
-			"short": "CMP",
-			"long": {
-				"en": "Camshaft position sensor, monitors camshaft position."
-			}
-		}
-	},
-	{
-		"code": [ "9" ],
-		"function": {
-			"short": "CYP1",
-			"long": {
-				"en": "Cylinder 1 position sensor, tracks piston position in cylinder 1."
-			}
-		}
-	},
-	{
-		"code": [ "10" ],
-		"function": {
-			"short": "IAT",
-			"long": {
-				"en": "Intake air temperature sensor, measures the temperature of the air entering the engine."
-			}
-		}
-	},
-	{
-		"code": [ "12" ],
-		"function": {
-			"short": "EGR",
-			"long": {
-				"en": "Exhaust Gas Recirculation system, recirculates exhaust gases to engine intake to reduce emissions."
-			}
-		}
-	},
-	{
-		"code": [ "13" ],
-		"function": {
-			"short": "BPS",
-			"long": {
-				"en": "Barometric pressure sensor, measures atmospheric pressure."
-			}
-		}
-	},
-	{
-		"code": [ "14" ],
-		"function": {
-			"short": "IAC",
-			"long": {
-				"en": "Idle Air Control valve, controls engine idle speed. Code may also indicate faulty ECU."
-			}
-		}
-	},
-	{
-		"code": [ "15" ],
-		"function": {
-			"short": "IGN",
-			"long": {
-				"en": "Ignition system malfunction detected."
-			}
-		}
-	},
-	{
-		"code": [ "16" ],
-		"function": {
-			"short": "FINJ",
-			"long": {
-				"en": "Fuel injector circuit malfunction."
-			}
-		}
-	},
-	{
-		"code": [ "17" ],
-		"function": {
-			"short": "VSS",
-			"long": {
-				"en": "Vehicle speed sensor, measures vehicle speed."
-			}
-		}
-	},
-	{
-		"code": [ "19" ],
-		"function": {
-			"short": "TCC",
-			"long": {
-				"en": "Torque converter clutch solenoid malfunction in automatic transmission."
-			}
-		}
-	},
-	{
-		"code": [ "20" ],
-		"function": {
-			"short": "ELD",
-			"long": {
-				"en": "Electrical load detector, monitors vehicle electrical system voltage."
-			}
-		}
-	},
-	{
-		"code": [ "21" ],
-		"function": {
-			"short": "VTEC",
-			"long": {
-				"en": "Variable Valve Timing and Lift Electronic Control (VTEC) system solenoid valve malfunction."
-			}
-		}
-	},
-	{
-		"code": [ "22" ],
-		"function": {
-			"short": "VTEC",
-			"long": {
-				"en": "VTEC pressure switch malfunction."
-			}
-		}
-	},
-	{
-		"code": [ "23" ],
-		"function": {
-			"short": "KS",
-			"long": {
-				"en": "Knock sensor, detects engine knocking or pre-ignition."
-			}
-		}
-	},
-	{
-		"code": [ "30" ],
-		"function": {
-			"short": "ATISS",
-			"long": {
-				"en": "Automatic transmission input speed sensors A and B malfunction."
-			}
-		}
-	},
-	{
-		"code": [ "41" ],
-		"function": {
-			"short": "O2S11H",
-			"long": {
-				"en": "Upstream oxygen sensor heater circuit malfunction on bank 1."
-			}
-		}
-	},
-	{
-		"code": [ "43" ],
-		"function": {
-			"short": "EVAP",
-			"long": {
-				"en": "Evaporative emissions (EVAP) system malfunction, prevents fuel vapor from escaping to atmosphere."
-			}
-		}
-	},
-	{
-		"code": [ "45" ],
-		"function": {
-			"short": "FINJ",
-			"long": {
-				"en": "Fuel injection system malfunction."
-			}
-		}
-	},
-	{
-		"code": [ "48" ],
-		"function": {
-			"short": "O2S21",
-			"long": {
-				"en": "Downstream oxygen sensor malfunction on bank 2 after catalytic converter."
-			}
-		}
-	},
-	{
-		"code": [ "61" ],
-		"function": {
-			"short": "O2S21",
-			"long": {
-				"en": "Upstream oxygen sensor malfunction on bank 2."
-			}
-		}
-	},
-	{
-		"code": [ "63" ],
-		"function": {
-			"short": "O2S22",
-			"long": {
-				"en": "Downstream oxygen sensor malfunction on bank 2 after catalytic converter."
-			}
-		}
-	},
-	{
-		"code": [ "65" ],
-		"function": {
-			"short": "O2S22H",
-			"long": {
-				"en": "Downstream oxygen sensor heater malfunction on bank 2."
-			}
-		}
-	},
-	{
-		"code": [ "67" ],
-		"function": {
-			"short": "CAT",
-			"long": {
-				"en": "Catalytic converter system efficiency below threshold."
-			}
-		}
-	},
-	{
-		"code": [ "70" ],
-		"function": {
-			"short": "AT",
-			"long": {
-				"en": "Automatic transmission system malfunction."
-			}
-		}
-	},
-	{
-		"code": [ "71", "72", "73", "74", "75", "76" ],
-		"function": {
-			"short": "MIS",
-			"long": {
-				"en": "Misfire detected on specified engine cylinder (1-6)."
-			}
-		}
-	},
-	{
-		"code": [ "80" ],
-		"function": {
-			"short": "EGR",
-			"long": {
-				"en": "Exhaust Gas Recirculation (EGR) system malfunction."
-			}
-		}
-	},
-	{
-		"code": [ "86" ],
-		"function": {
-			"short": "ECT",
-			"long": {
-				"en": "Engine coolant temperature sensor malfunction."
-			}
-		}
-	},
-	{
-		"code": [ "92" ],
-		"function": {
-			"short": "EVAP",
-			"long": {
-				"en": "Evaporative emissions (EVAP) system malfunction, fuel vapor leaking/venting issue."
-			}
-		}
-	}
+    {
+        "code": ["0"],
+        "system": "ECU",
+        "short": "ECU",
+        "long": {
+            "en": "Internal ROM failure or power supply issue.",
+            "pt": "Falha na ROM interna ou problema de alimentação."
+        }
+    },
+    {
+        "code": ["1"],
+        "system": "ECU",
+        "short": "O2S1",
+        "long": {
+            "en": "Primary Oxygen Sensor circuit fault.",
+            "pt": "Falha no circuito do Sensor de Oxigénio Primário."
+        },
+        "causes": {
+            "en": "Damaged wiring, defective sensor, or heater fault.",
+            "pt": "Cablagem danificada, sensor defeituoso ou falha no aquecedor."
+        }
+    },
+    {
+        "code": ["2"],
+        "system": "ECU",
+        "short": "O2S2",
+        "long": {
+            "en": "Secondary Oxygen Sensor circuit fault.",
+            "pt": "Falha no circuito do Sensor de Oxigénio Secundário."
+        },
+        "causes": {
+            "en": "Defective sensor or wiring (common on dual-sensor models).",
+            "pt": "Sensor ou cablagem defeituosos (comum em modelos com sensor duplo)."
+        }
+    },
+    {
+        "code": ["3", "5"],
+        "system": "ECU",
+        "short": "MAP",
+        "long": {
+            "en": "Manifold Absolute Pressure sensor fault.",
+            "pt": "Falha no sensor de Pressão Absoluta do Coletor (MAP)."
+        },
+        "causes": {
+            "en": "Open/short circuit or mechanical vacuum leak.",
+            "pt": "Circuito aberto/curto ou fuga de vácuo mecânica."
+        }
+    },
+    {
+        "code": ["4"],
+        "system": "ECU",
+        "short": "CKP",
+        "long": {
+            "en": "Crankshaft Position sensor fault.",
+            "pt": "Falha no sensor de Posição da Cambota (CKP)."
+        },
+        "causes": {
+            "en": "Internal distributor sensor failure.",
+            "pt": "Falha no sensor interno do distribuidor."
+        }
+    },
+    {
+        "code": ["6"],
+        "system": "ECU",
+        "short": "ECT",
+        "long": {
+            "en": "Engine Coolant Temperature sensor fault.",
+            "pt": "Falha no sensor de Temperatura do Líquido de Arrefecimento (ECT)."
+        },
+        "causes": {
+            "en": "Coolant temp sensor circuit open or shorted.",
+            "pt": "Circuito do sensor de temperatura aberto ou em curto."
+        }
+    },
+    {
+        "code": ["7"],
+        "system": "ECU",
+        "short": "TPS",
+        "long": {
+            "en": "Throttle Position Sensor fault.",
+            "pt": "Falha no sensor de Posição do Acelerador (TPS)."
+        },
+        "causes": {
+            "en": "Defective throttle position sensor or calibration.",
+            "pt": "Sensor de posição do acelerador defeituoso ou descalibrado."
+        }
+    },
+    {
+        "code": ["8"],
+        "system": "ECU",
+        "short": "TDC",
+        "long": {
+            "en": "Top Dead Center sensor fault.",
+            "pt": "Falha no sensor de Ponto Morto Superior (TDC)."
+        },
+        "causes": {
+            "en": "Internal distributor sensor failure.",
+            "pt": "Falha no sensor interno do distribuidor."
+        }
+    },
+    {
+        "code": ["9"],
+        "system": "ECU",
+        "short": "CYP",
+        "long": {
+            "en": "Cylinder position sensor fault.",
+            "pt": "Falha no sensor de posição do cilindro (CYP)."
+        },
+        "causes": {
+            "en": "Internal distributor sensor failure.",
+            "pt": "Falha no sensor interno do distribuidor."
+        }
+    },
+    {
+        "code": ["10"],
+        "system": "ECU",
+        "short": "IAT",
+        "long": {
+            "en": "Intake Air Temperature sensor fault.",
+            "pt": "Falha no sensor de Temperatura do Ar de Admissão (IAT)."
+        },
+        "causes": {
+            "en": "Intake air temp sensor circuit open or shorted.",
+            "pt": "Circuito do sensor de temperatura do ar aberto ou em curto."
+        }
+    },
+    {
+        "code": ["11"],
+        "system": "ECU",
+        "short": "TEMP",
+        "long": {
+            "en": "Engine overheating threshold exceeded.",
+            "pt": "Limite de sobreaquecimento do motor excedido."
+        }
+    },
+    {
+        "code": ["12"],
+        "system": "ECU",
+        "short": "EGR",
+        "long": {
+            "en": "Exhaust Gas Recirculation system fault.",
+            "pt": "Falha no sistema de Recirculação dos Gases de Escape (EGR)."
+        },
+        "causes": {
+            "en": "Clogged passages or defective valve position sensor.",
+            "pt": "Passagens entupidas ou sensor de posição da válvula defeituoso."
+        }
+    },
+    {
+        "code": ["13"],
+        "system": "ECU",
+        "short": "BARO",
+        "long": {
+            "en": "Barometric pressure sensor fault.",
+            "pt": "Falha no sensor de pressão barométrica (BARO)."
+        },
+        "causes": {
+            "en": "Internal sensor inside the ECU casing.",
+            "pt": "Sensor interno localizado dentro da caixa da ECU."
+        }
+    },
+    {
+        "code": ["14"],
+        "system": "ECU",
+        "short": "IACV",
+        "long": {
+            "en": "Idle Air Control Valve circuit fault.",
+            "pt": "Falha no circuito da Válvula de Controlo de Ar (IACV)."
+        },
+        "causes": {
+            "en": "Defective solenoid, vacuum leaks, or carbon build-up.",
+            "pt": "Circuito da válvula de controlo de ralenti ou sujidade."
+        }
+    },
+    {
+        "code": ["15"],
+        "system": "ECU",
+        "short": "IGN",
+        "long": {
+            "en": "Ignition output signal fault.",
+            "pt": "Falha no sinal de saída de ignição."
+        }
+    },
+    {
+        "code": ["16"],
+        "system": "ECU",
+        "short": "INJ",
+        "long": {
+            "en": "Fuel injector circuit fault.",
+            "pt": "Falha no circuito dos injetores de combustível."
+        },
+        "causes": {
+            "en": "Wiring fault, loose connectors, or bad resistor box.",
+            "pt": "Falha no circuito dos injetores (verificar cablagem/caixa de resistências)."
+        }
+    },
+    {
+        "code": ["17"],
+        "system": "ECU",
+        "short": "VSS",
+        "long": {
+            "en": "Vehicle Speed Sensor failure.",
+            "pt": "Falha no sensor de velocidade do veículo (VSS)."
+        },
+        "causes": {
+            "en": "Sensor failure or wiring fault. Prevents VTEC engagement.",
+            "pt": "Falha no sensor ou na cablagem. Impede a ativação do VTEC."
+        }
+    },
+    {
+        "code": ["19"],
+        "system": "ECU",
+        "short": "LCV",
+        "long": {
+            "en": "Automatic transmission lockup control valve fault.",
+            "pt": "Falha na válvula de bloqueio da transmissão automática."
+        }
+    },
+    {
+        "code": ["20"],
+        "system": "ECU",
+        "short": "ELD",
+        "long": {
+            "en": "Electrical Load Detector fault.",
+            "pt": "Falha no Detetor de Carga Elétrica (ELD)."
+        },
+        "causes": {
+            "en": "Defective unit in engine bay fuse box.",
+            "pt": "Unidade ELD defeituosa na caixa de fusíveis do motor."
+        }
+    },
+    {
+        "code": ["21"],
+        "system": "ECU",
+        "short": "VTEC",
+        "long": {
+            "en": "VTEC spool valve solenoid fault.",
+            "pt": "Falha no solenoide da válvula VTEC."
+        },
+        "causes": {
+            "en": "Wiring fault or defective solenoid coil.",
+            "pt": "Falha na cablagem ou solenoide VTEC defeituoso."
+        }
+    },
+    {
+        "code": ["22"],
+        "system": "ECU",
+        "short": "VTPS",
+        "long": {
+            "en": "VTEC pressure switch fault.",
+            "pt": "Falha no interruptor de pressão do VTEC."
+        },
+        "causes": {
+            "en": "Low oil pressure or defective switch.",
+            "pt": "Pressão de óleo baixa ou interruptor de pressão defeituoso."
+        }
+    },
+    {
+        "code": ["23"],
+        "system": "ECU",
+        "short": "KS",
+        "long": {
+            "en": "Knock sensor circuit fault.",
+            "pt": "Falha no circuito do sensor de detonação (knock)."
+        },
+        "causes": {
+            "en": "Defective sensor or broken shielded wire.",
+            "pt": "Sensor de detonação defeituoso ou fio blindado partido."
+        }
+    },
+    {
+        "code": ["30", "31"],
+        "system": "ECU",
+        "short": "A/T",
+        "long": {
+            "en": "Automatic transmission communication fault.",
+            "pt": "Falha de comunicação da transmissão automática."
+        }
+    },
+    {
+        "code": ["41"],
+        "system": "ECU",
+        "short": "O2H",
+        "long": {
+            "en": "Primary O2 sensor heater circuit fault.",
+            "pt": "Falha no circuito do aquecedor do sensor O2 primário."
+        }
+    },
+    {
+        "code": ["43", "45"],
+        "system": "ECU",
+        "short": "FUEL",
+        "long": {
+            "en": "Fuel supply system performance fault (too rich/lean).",
+            "pt": "Falha de performance do sistema de combustível (rico/pobre)."
+        }
+    },
+    {
+        "code": ["48"],
+        "system": "ECU",
+        "short": "LAF",
+        "long": {
+            "en": "Lean Air Fuel sensor fault.",
+            "pt": "Falha no sensor de mistura pobre (LAF)."
+        }
+    },
+    {
+        "code": ["92"],
+        "system": "ECU",
+        "short": "EVAP",
+        "long": {
+            "en": "Evaporative emissions (EVAP) system fault.",
+            "pt": "Falha no sistema de emissões evaporativas (EVAP)."
+        }
+    },
+    {
+        "code": ["1", "2"],
+        "system": "TCU",
+        "short": "T-LCV",
+        "long": {
+            "en": "Lock Up Solenoid A/B circuit open or shorted.",
+            "pt": "Circuito do solenoide de bloqueio A/B aberto ou em curto."
+        }
+    },
+    {
+        "code": ["3"],
+        "system": "TCU",
+        "short": "T-TPS",
+        "long": {
+            "en": "Transmission TPS signal missing.",
+            "pt": "Sinal de posição do acelerador (TPS) para a transmissão em falta."
+        }
+    },
+    {
+        "code": ["7", "8"],
+        "system": "TCU",
+        "short": "T-SHIFT",
+        "long": {
+            "en": "Shift Solenoid A/B circuit open or shorted.",
+            "pt": "Circuito do solenoide de mudança A/B aberto ou em curto."
+        }
+    },
+    {
+        "code": ["10"],
+        "system": "TCU",
+        "short": "T-ECT",
+        "long": {
+            "en": "Transmission ECT signal missing.",
+            "pt": "Sinal de temperatura do líquido de arrefecimento (ECT) em falta."
+        }
+    }
 ]

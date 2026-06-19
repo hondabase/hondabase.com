@@ -448,6 +448,10 @@ Living log of the Hondabase rebuild. Plan of record:
   stable per-rendered-occurrence `article_link_clicks` rows, inline count badges, and a
   non-blocking same-origin click beacon. Bot/prefetch requests and rapid duplicate counts are
   suppressed with short-lived cache/session keys, and reindex preserves counter state.
+- **2026-06-19** - **Counter migration repaired.** Made the article/link counter migration safe to
+  rerun after a partial MariaDB DDL failure, narrowed `article_link_clicks.type` to keep composite
+  indexes under key-length limits, and applied the pending migration so first article views no
+  longer fail on the missing `articles.last_viewed_at` column.
 - **2026-06-19** - **Site progress complete.** The Hondabase rebuild is now marked complete in the
   tracker; new work from here is content expansion and maintenance, not core site delivery.
 - **2026-06-19** - **Second Hondata-derived article batch drafted.** Added original articles for

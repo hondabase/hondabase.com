@@ -66,6 +66,10 @@ a separate repo for forkability; the database is a *derived, rebuildable* index.
 - **Run as `www-data`.** The app files are owned by `www-data`; after editing, restore
   ownership (`chown -R www-data:www-data <paths>`) or artisan/web requests 500.
 
+## Article Formatting
+- **Mandatory:** All articles must adhere to `docs/ARTICLE_FORMATTING_RULES.md`.
+- **SEO & Branding:** Maintain platform-agnostic, SEO-friendly content free of site-specific branding.
+
 ## Running things
 
 ```bash
