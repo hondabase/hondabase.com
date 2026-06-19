@@ -347,6 +347,11 @@ class Explorer extends Component
             unset($byKind['category']);
         }
 
+        // Engine family facets are only relevant for engine-adjacent categories.
+        if (! in_array($this->scopeCategory, ['ecu', 'ignition', 'fueling', 'tuning'], true)) {
+            unset($byKind['engine']);
+        }
+
         $order = ['category', 'engine', 'tag', 'chassis', 'model', 'brand', 'scope', 'system', 'year'];
         $limits = ['tag' => 18];
         $groups = [];
