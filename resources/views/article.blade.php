@@ -145,6 +145,8 @@
             </div>
         </header>
 
+        @include('partials.article-authors', ['art' => $art])
+
         @include('partials.facts', ['art' => $art])
 
         {{-- Context-aware search, article scope: find-in-this-article. Pure client-side
@@ -227,12 +229,9 @@
             </section>
         @endif
 
-        @if ($art['authors']->isNotEmpty() || !empty($art['sources']))
+        @if (!empty($art['sources']))
             <section class="article-attribution" aria-labelledby="article-attribution-heading">
                 <h2 id="article-attribution-heading">{{ __('Credits and source') }}</h2>
-                @if ($art['authors']->isNotEmpty())
-                    <p><span class="attribution-label">{{ __('Authors') }}</span> {{ $art['authors']->map(fn ($credit) => $credit->user->displayName())->join(', ') }}</p>
-                @endif
                 @foreach ($art['sources'] as $source)
                     <p>
                         <span class="attribution-label">{{ __('Source') }}</span>

@@ -110,7 +110,7 @@ class User extends Authenticatable
         return $this->name ?: ($this->github_login ?: 'user'.$this->id);
     }
 
-    public function avatarUrl(): string
+    public function avatarUrl(): ?string
     {
         if ($this->avatar && str_starts_with($this->avatar, 'http')) {
             return $this->avatar;
@@ -119,6 +119,6 @@ class User extends Authenticatable
             return "https://cdn.discordapp.com/avatars/{$this->discord_id}/{$this->avatar}.png?size=64";
         }
 
-        return 'https://cdn.discordapp.com/embed/avatars/0.png';
+        return null;
     }
 }
