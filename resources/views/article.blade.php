@@ -302,6 +302,7 @@
 @endsection
 
 @push('scripts')
+@vite('resources/js/article.js')
 <script>
 // Site-wide Alpine components (like articleFind) are registered in resources/js/app.js to survive wire:navigate.
 // Document-level event delegation is used here for copying hashes so it works after dynamic page transitions.

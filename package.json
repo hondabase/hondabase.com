@@ -23,6 +23,7 @@
         "@tiptap/extension-table-row": "^3.26.1",
         "@tiptap/pm": "^3.26.1",
         "@tiptap/starter-kit": "^3.26.1",
+        "katex": "^0.17.0",
         "tiptap-markdown": "^0.9.0"
     }
 }
