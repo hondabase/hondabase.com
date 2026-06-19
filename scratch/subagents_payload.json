@@ -1,0 +1,674 @@
+[
+    {
+        "slug": "6260a-testing",
+        "summaries": {
+            "en": "Technical analysis of the Honda 6260A ECU test code, explaining how it triggers the diagnostic LED to flash engine error codes.",
+            "pt": "Análise técnica do código de teste da ECU Honda 6260A, explicando como ativa o LED de diagnóstico para piscar os códigos de erro do motor."
+        }
+    },
+    {
+        "slug": "add-knock-to-p30g00",
+        "summaries": {
+            "en": "Step-by-step hardware guide for adding a knock sensor circuit to non-equipped Honda P30 OBD1 ECUs using specific component modifications.",
+            "pt": "Guia de hardware passo a passo para adicionar um circuito de sensor de detonação a ECUs Honda P30 OBD1 não equipadas, utilizando modificações de componentes específicos."
+        }
+    },
+    {
+        "slug": "label-decode",
+        "summaries": {
+            "en": "Learn how to interpret the identification labels on Honda OBD1 ECUs to determine their origin, engine compatibility, and transmission type.",
+            "pt": "Aprenda a interpretar as etiquetas de identificação nas ECUs Honda OBD1 para determinar a sua origem, compatibilidade com o motor e tipo de transmissão."
+        }
+    },
+    {
+        "slug": "obd0-code-compatibility",
+        "summaries": {
+            "en": "A guide to OBD0 Honda ECU code compatibility. Learn which ECUs can share code and how to successfully interchange binaries between units.",
+            "pt": "Um guia sobre a compatibilidade de código das ECUs Honda OBD0. Saiba quais as ECUs que podem partilhar código e como trocar binários entre unidades com sucesso."
+        }
+    },
+    {
+        "slug": "p2p",
+        "summaries": {
+            "en": "Technical overview of the P2P OBD2 Honda Civic EX ECU, covering stock bin configurations, ignition timing maps, and hardware specifications.",
+            "pt": "Visão geral técnica da ECU Honda Civic EX P2P OBD2, abrangendo configurações de bin de origem, mapas de ponto de ignição e especificações de hardware."
+        }
+    },
+    {
+        "slug": "popol-vuh",
+        "summaries": {
+            "en": "A historical overview of the PGMFI.org Wiki project, covering its origins, development, and community contributions to Honda ECU tuning.",
+            "pt": "Uma visão histórica do projeto Wiki PGMFI.org, abrangendo as suas origens, desenvolvimento e contribuições da comunidade para a afinação de ECUs Honda."
+        }
+    },
+    {
+        "slug": "super-pro-z",
+        "summaries": {
+            "en": "Technical overview of the Xeltek SuperProZ EPROM programmer, including supported chip types and its use in Honda ECU chipping.",
+            "pt": "Visão geral técnica do programador de EPROM Xeltek SuperProZ, incluindo tipos de chips suportados e a sua utilização na reprogramação (chipping) de ECUs Honda."
+        }
+    },
+    {
+        "slug": "text-formatting-rules",
+        "summaries": {
+            "en": "Reference guide for Wiki markup formatting, including emphasis, lists, and term definitions used for editing Hondabase technical documentation.",
+            "pt": "Guia de referência para a formatação de markup Wiki, incluindo ênfase, listas e definições de termos utilizados para editar a documentação técnica da Hondabase."
+        }
+    },
+    {
+        "slug": "what-you-need",
+        "summaries": {
+            "en": "Practical introduction to Honda ECU chipping: what it means, the essential tools required, and the process of burning new bin files.",
+            "pt": "Introdução prática à reprogramação (chipping) de ECUs Honda: o que significa, as ferramentas essenciais necessárias e o processo de gravação de novos ficheiros bin."
+        }
+    },
+    {
+        "slug": "chipping-obd1-big-case",
+        "summaries": {
+            "en": "Coming soon: A detailed guide for socketing and chipping large-case Honda OBD1 ECUs, including component requirements and process steps.",
+            "pt": "Brevemente: Um guia detalhado para a instalação de sockets e reprogramação de ECUs Honda OBD1 de caixa grande, incluindo requisitos de componentes e passos do processo."
+        }
+    },
+    {
+        "slug": "new-markup-test-page",
+        "summaries": {
+            "en": "A testing sandbox for experimenting with and verifying new Markdown and Wiki markup formatting features for Hondabase documentation.",
+            "pt": "Uma área de testes para experimentar e verificar novas funcionalidades de formatação de Markdown e markup Wiki para a documentação da Hondabase."
+        }
+    },
+    {
+        "slug": "vise-grip",
+        "summaries": {
+            "en": "A quick look at essential mechanical tools, such as the vise-grip, that are indispensable for hardware modifications on Honda vehicles.",
+            "pt": "Um olhar rápido sobre ferramentas mecânicas essenciais, como o alicate de pressão (vise-grip), que são indispensáveis para modificações de hardware em veículos Honda."
+        }
+    },
+    {
+        "slug": "wiki",
+        "summaries": {
+            "en": "General overview of the PGMFI.org Wiki project, documenting OBD0 and OBD1 Honda engine management systems.",
+            "pt": "Visão geral do projeto Wiki PGMFI.org, que documenta os sistemas de gestão de motor Honda OBD0 e OBD1."
+        }
+    },
+    {
+        "slug": "injector-sizing",
+        "summaries": {
+            "en": "Learn how to correctly calculate and select the appropriate fuel injectors based on your target horsepower and engine modifications.",
+            "pt": "Saiba como calcular e selecionar corretamente os injetores de combustível adequados com base no seu objetivo de potência e modificações do motor."
+        }
+    },
+    {
+        "slug": "obd1p08-auto-manual",
+        "summaries": {
+            "en": "Technical guide for converting automatic Honda P08 OBD1 ECUs to manual transmission configurations by modifying internal resistor board values.",
+            "pt": "Guia técnico para converter ECUs Honda P08 OBD1 automáticas para configurações de transmissão manual, modificando os valores internos da placa de resistências."
+        }
+    },
+    {
+        "slug": "p27",
+        "summaries": {
+            "en": "Technical specifications and application overview for the P27 92-95 OBD1 Euro\/Asian Civic ECU.",
+            "pt": "Especificações técnicas e visão geral da aplicação para a ECU Honda Civic P27 92-95 OBD1 Euro\/Asiática."
+        }
+    },
+    {
+        "slug": "02d011f0-1500",
+        "summaries": {
+            "en": "Hardware modification guide for converting non-VTEC \"11F0\" Honda ECU boards to VTEC, including necessary component additions.",
+            "pt": "Guia de modificação de hardware para converter placas de ECU Honda \"11F0\" sem VTEC para VTEC, incluindo as adições de componentes necessárias."
+        }
+    },
+    {
+        "slug": "p2e",
+        "summaries": {
+            "en": "Technical specifications and application overview for the 96+ Honda Civic LX ECU.",
+            "pt": "Especificações técnicas e visão geral da aplicação para a ECU Honda Civic LX 96+."
+        }
+    },
+    {
+        "slug": "p2n",
+        "summaries": {
+            "en": "Technical specifications and application overview for the 96+ Honda Civic HX ECU.",
+            "pt": "Especificações técnicas e visão geral da aplicação para a ECU Honda Civic HX 96+."
+        }
+    },
+    {
+        "slug": "p2t",
+        "summaries": {
+            "en": "Technical specifications and application overview for the 99+ Honda Civic Si ECU.",
+            "pt": "Especificações técnicas e visão geral da aplicação para a ECU Honda Civic Si 99+."
+        }
+    },
+    {
+        "slug": "cpu",
+        "summaries": {
+            "en": "Overview of the Central Processing Unit (CPU) role as the primary controller in Honda ECU engine management systems.",
+            "pt": "Visão geral do papel da Unidade Central de Processamento (CPU) como o controlador principal nos sistemas de gestão de motor das ECUs Honda."
+        }
+    },
+    {
+        "slug": "d1780",
+        "summaries": {
+            "en": "Technical datasheet and specifications for the NEC 2SD1780 transistor used in Honda ECU hardware circuits.",
+            "pt": "Folha de dados técnicos e especificações para o transistor NEC 2SD1780 utilizado em circuitos de hardware de ECUs Honda."
+        }
+    },
+    {
+        "slug": "g-spot",
+        "summaries": {
+            "en": "Information on the community GSpot forum, dedicated to Honda ECU hardware analysis and technical discussions.",
+            "pt": "Informação sobre o fórum da comunidade GSpot, dedicado à análise de hardware de ECUs Honda e discussões técnicas."
+        }
+    },
+    {
+        "slug": "most-popular",
+        "summaries": {
+            "en": "Top-viewed articles in the Hondabase knowledgebase, providing easy access to popular tuning and diagnostics topics.",
+            "pt": "Artigos mais visualizados na base de conhecimentos Hondabase, proporcionando acesso fácil a tópicos populares de afinação e diagnóstico."
+        }
+    },
+    {
+        "slug": "octal",
+        "summaries": {
+            "en": "Explanation of octal numbering and its relevance in digital logic and bitwise operations for Honda ECU tuning.",
+            "pt": "Explicação da numeração octal e a sua relevância na lógica digital e operações bit-a-bit para a afinação de ECUs Honda."
+        }
+    },
+    {
+        "slug": "oz-dm",
+        "summaries": {
+            "en": "Overview of the Australian Domestic Market (OZaDM) Honda vehicle and ECU specifications.",
+            "pt": "Visão geral das especificações de veículos e ECUs Honda do Mercado Doméstico Australiano (OZaDM)."
+        }
+    },
+    {
+        "slug": "pj7",
+        "summaries": {
+            "en": "Technical specifications and application overview for the 86-87 Honda Prelude Si (B20A3) ECU.",
+            "pt": "Especificações técnicas e visão geral da aplicação para a ECU Honda Prelude Si (B20A3) 86-87."
+        }
+    },
+    {
+        "slug": "square-brackets",
+        "summaries": {
+            "en": "Technical issue report regarding formatting errors in wiki pages requiring maintenance and content correction.",
+            "pt": "Relatório de problema técnico relativo a erros de formatação em páginas wiki que requerem manutenção e correção de conteúdo."
+        }
+    },
+    {
+        "slug": "wot",
+        "summaries": {
+            "en": "Definition and significance of \"Wide Open Throttle\" (WOT) in Honda engine tuning and diagnostic mapping.",
+            "pt": "Definição e significado de \"Wide Open Throttle\" (WOT - Aceleração Total) na afinação de motores Honda e mapeamento de diagnóstico."
+        }
+    },
+    {
+        "slug": "5128xram",
+        "summaries": {
+            "en": "Technical explanation of the 2K byte 5128 SRAM chip used in Honda OBD0 ECUs, including its memory mapping and purpose.",
+            "pt": "Explicação técnica do chip SRAM 5128 de 2K bytes utilizado nas ECUs Honda OBD0, incluindo o seu mapeamento de memória e finalidade."
+        }
+    },
+    {
+        "slug": "66k-resources",
+        "summaries": {
+            "en": "Comprehensive resource list for the Oki 66K processor family used in Honda OBD1 and OBD2 ECUs, including assemblers and manuals.",
+            "pt": "Lista abrangente de recursos para a família de processadores Oki 66K utilizados nas ECUs Honda OBD1 e OBD2, incluindo assemblers e manuais."
+        }
+    },
+    {
+        "slug": "blue-loctite",
+        "summaries": {
+            "en": "Guide to the appropriate use of Loctite thread-locking compounds for securing engine and hardware components in Honda projects.",
+            "pt": "Guia para a utilização adequada de compostos de travamento de roscas Loctite para fixar componentes de motor e hardware em projetos Honda."
+        }
+    },
+    {
+        "slug": "disable-vtec-vss-check-p28",
+        "summaries": {
+            "en": "Technical guide for bypassing the Vehicle Speed Sensor (VSS) check in the VTEC routine for P28 Honda OBD1 ECUs.",
+            "pt": "Guia técnico para contornar a verificação do Sensor de Velocidade do Veículo (VSS) na rotina de VTEC para ECUs Honda P28 OBD1."
+        }
+    },
+    {
+        "slug": "dual-maps",
+        "summaries": {
+            "en": "Introduction to dual-map ROM setups in Honda ECUs, allowing for switchable engine tuning profiles.",
+            "pt": "Introdução a configurações de ROM com mapas duplos em ECUs Honda, permitindo perfis de afinação de motor comutáveis."
+        }
+    },
+    {
+        "slug": "dual-tables",
+        "summaries": {
+            "en": "Explanation of dual-table ROM structures in Honda ECUs, enabling advanced tuning features like VTEC-dependent fuel and ignition maps.",
+            "pt": "Explicação das estruturas de ROM com tabelas duplas em ECUs Honda, permitindo funcionalidades de afinação avançadas como mapas de combustível e ignição dependentes do VTEC."
+        }
+    },
+    {
+        "slug": "ecu-boost-controller",
+        "summaries": {
+            "en": "Overview of developmental Honda ECU boost control features, utilizing PWM signals for wastegate solenoid pressure regulation.",
+            "pt": "Visão geral das funcionalidades de controlo de pressão de turbo em desenvolvimento para ECUs Honda, utilizando sinais PWM para regulação da pressão do solenoide da wastegate."
+        }
+    },
+    {
+        "slug": "ideal-gas-law",
+        "summaries": {
+            "en": "Application of the Ideal Gas Law in Honda speed-density engine management systems for calculating fuel requirements based on pressure and temperature.",
+            "pt": "Aplicação da Lei dos Gases Ideais nos sistemas de gestão de motor Honda baseados em velocidade-densidade para calcular os requisitos de combustível com base na pressão e temperatura."
+        }
+    },
+    {
+        "slug": "inter-wiki",
+        "summaries": {
+            "en": "Reference for inter-wiki linking capabilities in Hondabase, allowing seamless navigation between related technical documentation projects.",
+            "pt": "Referência para as capacidades de ligação inter-wiki na Hondabase, permitindo uma navegação fluida entre projetos de documentação técnica relacionados."
+        }
+    },
+    {
+        "slug": "internal-rom",
+        "summaries": {
+            "en": "Explanation of Internal ROM memory storage within Honda ECU microcontrollers (MCUs) and its role in engine management.",
+            "pt": "Explicação do armazenamento de memória ROM Interna nos microcontroladores (MCUs) das ECUs Honda e o seu papel na gestão do motor."
+        }
+    },
+    {
+        "slug": "java-script",
+        "summaries": {
+            "en": "Overview of JavaScript scripting for automating features in Crome and other Honda ROM editor software.",
+            "pt": "Visão geral do scripting em JavaScript para automatizar funcionalidades no Crome e noutros softwares de edição de ROM Honda."
+        }
+    },
+    {
+        "slug": "launch-control",
+        "summaries": {
+            "en": "Technical explanation of launch control \"two-step\" rev limiter features in Honda ECUs, aiding in consistent vehicle standing starts.",
+            "pt": "Explicação técnica das funcionalidades de limitador de rotação \"two-step\" (controlo de arranque) em ECUs Honda, auxiliando em arranques consistentes do veículo parado."
+        }
+    },
+    {
+        "slug": "obd0-edit",
+        "summaries": {
+            "en": "Information on the community OBD0Edit forum, a resource for technical discussions and development regarding OBD0 Honda ECUs.",
+            "pt": "Informação sobre o fórum da comunidade OBD0Edit, um recurso para discussões técnicas e desenvolvimento relativo a ECUs Honda OBD0."
+        }
+    },
+    {
+        "slug": "obd1-8bit-fuel",
+        "summaries": {
+            "en": "Technical formula reference for interpreting 8-bit fuel values in ROM editor tables for Honda OBD1 engine management.",
+            "pt": "Referência de fórmula técnica para interpretar valores de combustível de 8 bits em tabelas de editores de ROM para a gestão de motor Honda OBD1."
+        }
+    },
+    {
+        "slug": "p1j",
+        "summaries": {
+            "en": "Overview of the 96-00 UK Honda Civic D14 ECU, covering its compatibility and VTEC conversion potential.",
+            "pt": "Visão geral da ECU Honda Civic D14 do Reino Unido de 96-00, abrangendo a sua compatibilidade e potencial de conversão para VTEC."
+        }
+    },
+    {
+        "slug": "p1k",
+        "summaries": {
+            "en": "Overview of the 96-00 UK Honda Civic D14 ECU, covering its compatibility and VTEC conversion potential.",
+            "pt": "Visão geral da ECU Honda Civic D14 do Reino Unido de 96-00, abrangendo a sua compatibilidade e potencial de conversão para VTEC."
+        }
+    },
+    {
+        "slug": "red-loctite",
+        "summaries": {
+            "en": "Technical advice on the use and removal of Red Loctite thread-locking compound in high-stress Honda engine component applications.",
+            "pt": "Conselhos técnicos sobre a utilização e remoção do composto de travamento de roscas Loctite Vermelho em aplicações de componentes de motor Honda de elevado esforço."
+        }
+    },
+    {
+        "slug": "turbo-compressor-map",
+        "summaries": {
+            "en": "Guide to reading and interpreting turbocharger compressor maps for matching turbochargers to Honda engine performance goals.",
+            "pt": "Guia para ler e interpretar mapas de compressores de turbocompressores para adequar os turbocompressores aos objetivos de performance do motor Honda."
+        }
+    },
+    {
+        "slug": "uv-erase",
+        "summaries": {
+            "en": "Technical guide to using UV light for erasing EPROM chips with transparent windows for re-programming.",
+            "pt": "Guia técnico para a utilização de luz UV para apagar chips EPROM com janelas transparentes para reprogramação."
+        }
+    },
+    {
+        "slug": "warning-about-adding-a-knock-sensor",
+        "summaries": {
+            "en": "Technical warning regarding knock sensor installation on non-equipped engines, citing cylinder bore and knock board calibration complexities.",
+            "pt": "Aviso técnico relativo à instalação de sensores de detonação em motores não equipados, citando as complexidades do diâmetro do cilindro e da calibração da placa de detonação."
+        }
+    },
+    {
+        "slug": "full-throttle-shift",
+        "summaries": {
+            "en": "A guide to implementing Full Throttle Shift (FTS) in Honda OBD1 ECUs, allowing for faster gear changes by maintaining boost and RPM during shifts.",
+            "pt": "Um guia para implementar o Full Throttle Shift (FTS) em ECUs Honda OBD1, permitindo passagens de caixa mais rápidas ao manter a pressão de turbo e a rotação durante as mudanças."
+        }
+    },
+    {
+        "slug": "66k-assembler-routines",
+        "summaries": {
+            "en": "A collection of Oki 66K assembly language routines and code snippets for modifying Honda OBD1 and OBD2 ECU firmware.",
+            "pt": "Uma coleção de rotinas em linguagem assembly Oki 66K e trechos de código para modificar o firmware das ECUs Honda OBD1 e OBD2."
+        }
+    },
+    {
+        "slug": "chipping-obd1-small-case",
+        "summaries": {
+            "en": "Step-by-step instructions for socketing and chipping small-case Honda OBD1 ECUs, commonly found in JDM and some European models.",
+            "pt": "Instruções passo a passo para a instalação de sockets e reprogramação de ECUs Honda OBD1 de caixa pequena, comummente encontradas em modelos JDM e alguns europeus."
+        }
+    },
+    {
+        "slug": "disable-vtec-vss-check",
+        "summaries": {
+            "en": "Learn how to disable the VTEC Vehicle Speed Sensor (VSS) check in Honda OBD1 ECUs, enabling VTEC engagement without a working speed signal.",
+            "pt": "Saiba como desativar a verificação do Sensor de Velocidade do Veículo (VSS) de VTEC em ECUs Honda OBD1, permitindo a ativação do VTEC sem um sinal de velocidade funcional."
+        }
+    },
+    {
+        "slug": "ect",
+        "summaries": {
+            "en": "Technical overview of the Engine Coolant Temperature (ECT) sensor in Honda engines, including its role in fueling, ignition timing, and cold start enrichment.",
+            "pt": "Visão geral técnica do sensor de Temperatura do Líquido de Arrefecimento do Motor (ECT) em motores Honda, incluindo o seu papel no combustível, ponto de ignição e enriquecimento no arranque a frio."
+        }
+    },
+    {
+        "slug": "electronic-air-control-vale",
+        "summaries": {
+            "en": "A detailed explanation of the Electronic Air Control Valve (EACV), also known as the Idle Air Control Valve (IACV), and its function in maintaining Honda idle speed.",
+            "pt": "Uma explicação detalhada da Válvula de Controlo de Ar Eletrónica (EACV), também conhecida como Válvula de Controlo de Ar de Relenti (IACV), e a sua função na manutenção do ralenti Honda."
+        }
+    },
+    {
+        "slug": "engine-simulator",
+        "summaries": {
+            "en": "Guide to using or building an engine simulator to bench-test Honda OBD0 and OBD1 ECUs without a vehicle.",
+            "pt": "Guia para utilizar ou construir um simulador de motor para testar ECUs Honda OBD0 e OBD1 em bancada sem um veículo."
+        }
+    },
+    {
+        "slug": "erm",
+        "summaries": {
+            "en": "Information on the UberData Engine Management (ERM) system, a legacy tuning solution for Honda OBD1 ECUs.",
+            "pt": "Informação sobre o sistema UberData Engine Management (ERM), uma solução de afinação legado para ECUs Honda OBD1."
+        }
+    },
+    {
+        "slug": "fuel-octane",
+        "summaries": {
+            "en": "Understanding fuel octane ratings and their impact on Honda engine performance, knock resistance, and ignition timing optimization.",
+            "pt": "Compreender os índices de octanagem do combustível e o seu impacto na performance do motor Honda, resistência à detonação e otimização do ponto de ignição."
+        }
+    },
+    {
+        "slug": "iat",
+        "summaries": {
+            "en": "Technical overview of the Intake Air Temperature (IAT) sensor and its critical role in air density calculations and fueling corrections for Honda ECUs.",
+            "pt": "Visão geral técnica do sensor de Temperatura do Ar de Admissão (IAT) e o seu papel crítico nos cálculos de densidade do ar e correções de combustível para ECUs Honda."
+        }
+    },
+    {
+        "slug": "io",
+        "summaries": {
+            "en": "Basic overview of Input\/Output (I\/O) ports in Honda ECU microcontrollers and how they interface with engine sensors and actuators.",
+            "pt": "Visão geral básica das portas de Entrada\/Saída (I\/O) nos microcontroladores das ECUs Honda e como fazem a interface com sensores e atuadores do motor."
+        }
+    },
+    {
+        "slug": "jdm",
+        "summaries": {
+            "en": "A reference for JDM (Japanese Domestic Market) Honda ECUs, highlighting hardware differences such as the lack of ELD and knock sensors compared to USDM models.",
+            "pt": "Uma referência para as ECUs Honda JDM (Mercado Doméstico Japonês), destacando as diferenças de hardware, como a falta de sensores ELD e de detonação em comparação com os modelos USDM."
+        }
+    },
+    {
+        "slug": "latches",
+        "summaries": {
+            "en": "Technical explanation of address latches (e.g., 74HC373) used in Honda OBD1 ECUs to interface the MCU with external EPROM memory.",
+            "pt": "Explicação técnica dos latches de endereço (ex: 74HC373) utilizados nas ECUs Honda OBD1 para fazer a interface do MCU com a memória EPROM externa."
+        }
+    },
+    {
+        "slug": "lego-zoo",
+        "summaries": {
+            "en": "A historical community page dedicated to the early days of the PGMFI.org wiki and the contributors who helped build the Honda tuning knowledgebase.",
+            "pt": "Uma página histórica da comunidade dedicada aos primórdios da wiki PGMFI.org e aos colaboradores que ajudaram a construir a base de conhecimentos de afinação Honda."
+        }
+    },
+    {
+        "slug": "p0c",
+        "summaries": {
+            "en": "Technical specifications and pinout information for the P0C 92-95 Honda Accord 2.2L OBD1 ECU.",
+            "pt": "Especificações técnicas e informações de pinagem para a ECU Honda Accord 2.2L OBD1 P0C 92-95."
+        }
+    },
+    {
+        "slug": "p11",
+        "summaries": {
+            "en": "Technical specifications and hardware overview for the P11 92-95 Honda Prelude 2.0i (BB3) OBD1 ECU.",
+            "pt": "Especificações técnicas e visão geral do hardware para a ECU Honda Prelude 2.0i (BB3) OBD1 P11 92-95."
+        }
+    },
+    {
+        "slug": "p5m",
+        "summaries": {
+            "en": "Hardware analysis and component specifications for the P5M 97+ Honda Prelude 2.2VTi (EDM) OBD2 ECU.",
+            "pt": "Análise de hardware e especificações de componentes para a ECU Honda Prelude 2.2VTi (EDM) OBD2 P5M 97+."
+        }
+    },
+    {
+        "slug": "p5p",
+        "summaries": {
+            "en": "Overview of the P5P JDM Honda Prelude Type-S OBD2 ECU, including its unique hardware features and performance mapping.",
+            "pt": "Visão geral da ECU Honda Prelude Type-S JDM OBD2 P5P, incluindo as suas características únicas de hardware e mapeamento de performance."
+        }
+    },
+    {
+        "slug": "p75",
+        "summaries": {
+            "en": "Technical comparison of OBD2 Honda Integra LS\/GS P75 ECUs, including their transition from OBD1 and hardware variations.",
+            "pt": "Comparação técnica das ECUs Honda Integra LS\/GS P75 OBD2, incluindo a sua transição de OBD1 e variações de hardware."
+        }
+    },
+    {
+        "slug": "p76",
+        "summaries": {
+            "en": "Technical overview of the P76 JDM Honda Integra SOHC ZC OBD1 ECU and its application in tuning.",
+            "pt": "Visão geral técnica da ECU Honda Integra SOHC ZC JDM OBD1 P76 e a sua aplicação na afinação."
+        }
+    },
+    {
+        "slug": "p84",
+        "summaries": {
+            "en": "Specifications for the P84 JDM Honda Civic ETi OBD1 ECU, designed for VTEC-E fuel economy engines with automatic transmissions.",
+            "pt": "Especificações para a ECU Honda Civic ETi JDM OBD1 P84, concebida para motores VTEC-E de economia de combustível com transmissões automáticas."
+        }
+    },
+    {
+        "slug": "pa-sensor",
+        "summaries": {
+            "en": "Technical guide to the Atmospheric Pressure (PA) sensor in Honda ECUs, explaining its role in altitude compensation and fueling adjustments.",
+            "pt": "Guia técnico para o sensor de Pressão Atmosférica (PA) nas ECUs Honda, explicando o seu papel na compensação de altitude e ajustes de combustível."
+        }
+    },
+    {
+        "slug": "pr7",
+        "summaries": {
+            "en": "Hardware overview and technical specifications for the PR7 91-94 Honda NSX OBD1 ECU.",
+            "pt": "Visão geral do hardware e especificações técnicas para a ECU Honda NSX OBD1 PR7 91-94."
+        }
+    },
+    {
+        "slug": "pt5",
+        "summaries": {
+            "en": "Analysis of the PT5 EDM Honda Accord OBD1 ECU, covering its shared PCB architecture with other Accord units.",
+            "pt": "Análise da ECU Honda Accord EDM OBD1 PT5, abrangendo a sua arquitetura de PCB partilhada com outras unidades Accord."
+        }
+    },
+    {
+        "slug": "pwm",
+        "summaries": {
+            "en": "Explanation of Pulse Width Modulation (PWM) and its use in Honda ECUs for controlling solenoids like the IACV, boost controllers, and VTEC.",
+            "pt": "Explicação da Modulação por Largura de Pulso (PWM) e a sua utilização nas ECUs Honda para controlar solenoides como a IACV, controladores de pressão de turbo e VTEC."
+        }
+    },
+    {
+        "slug": "rtfm",
+        "summaries": {
+            "en": "A humorous but important reminder to consult the available documentation and manuals before performing complex Honda ECU modifications.",
+            "pt": "Um lembrete humorístico mas importante para consultar a documentação e os manuais disponíveis antes de realizar modificações complexas em ECUs Honda."
+        }
+    },
+    {
+        "slug": "sectors",
+        "summaries": {
+            "en": "Understanding memory sectors in EPROMs and Flash chips used for Honda ECU tuning and data storage.",
+            "pt": "Compreender os setores de memória em chips EPROM e Flash utilizados para a afinação de ECUs Honda e armazenamento de dados."
+        }
+    },
+    {
+        "slug": "service-manual",
+        "summaries": {
+            "en": "Information on obtaining and using factory service manuals (Helms) for accurate Honda vehicle wiring and mechanical repair.",
+            "pt": "Informação sobre como obter e utilizar manuais de serviço de fábrica (Helms) para uma cablagem e reparação mecânica precisa de veículos Honda."
+        }
+    },
+    {
+        "slug": "uber-data",
+        "summaries": {
+            "en": "Historical overview of the UberData tuning software, one of the original free platforms for Honda OBD1 ECU remapping.",
+            "pt": "Visão histórica do software de afinação UberData, uma das plataformas gratuitas originais para a reprogramação de ECUs Honda OBD1."
+        }
+    },
+    {
+        "slug": "usdm",
+        "summaries": {
+            "en": "Reference for USDM (United States Domestic Market) Honda ECUs, known for their comprehensive feature sets including ELD and knock control.",
+            "pt": "Referência para as ECUs Honda USDM (Mercado Doméstico dos Estados Unidos), conhecidas pelos seus conjuntos abrangentes de funcionalidades, incluindo ELD e controlo de detonação."
+        }
+    },
+    {
+        "slug": "vss",
+        "summaries": {
+            "en": "Technical guide to the Vehicle Speed Sensor (VSS) in Honda vehicles, covering signal types, troubleshooting, and its impact on VTEC.",
+            "pt": "Guia técnico para o Sensor de Velocidade do Veículo (VSS) em veículos Honda, abrangendo tipos de sinal, resolução de problemas e o seu impacto no VTEC."
+        }
+    },
+    {
+        "slug": "02d01980-1500",
+        "summaries": {
+            "en": "Detailed parts list and hardware modification guide for converting the 02D01980-1500 Honda ECU board for VTEC and IAB support.",
+            "pt": "Lista detalhada de peças e guia de modificação de hardware para converter a placa de ECU Honda 02D01980-1500 para suporte de VTEC e IAB."
+        }
+    },
+    {
+        "slug": "5050s",
+        "summaries": {
+            "en": "Troubleshooting and installation guide for using 5050s components in Honda VTEC conversion circuits, including MIL code 21 fixes.",
+            "pt": "Guia de resolução de problemas e instalação para a utilização de componentes 5050s em circuitos de conversão VTEC Honda, incluindo correções para o código MIL 21."
+        }
+    },
+    {
+        "slug": "edm",
+        "summaries": {
+            "en": "Reference for EDM (European Domestic Market) Honda ECUs, detailing common hardware differences such as the lack of an injector test circuit.",
+            "pt": "Referência para as ECUs Honda EDM (Mercado Doméstico Europeu), detalhando as diferenças comuns de hardware, como a falta de um circuito de teste de injetores."
+        }
+    },
+    {
+        "slug": "maf-sensor",
+        "summaries": {
+            "en": "Technical explanation of Mass Air Flow (MAF) sensors and why Honda primarily uses MAP-based speed-density systems instead.",
+            "pt": "Explicação técnica dos sensores de Fluxo de Massa de Ar (MAF) e por que a Honda utiliza principalmente sistemas de velocidade-densidade baseados em MAP."
+        }
+    },
+    {
+        "slug": "obd1-conversion-formulae",
+        "summaries": {
+            "en": "A comprehensive list of mathematical formulas for converting raw ROM hex values into human-readable units like RPM, pressure, and temperature.",
+            "pt": "Uma lista abrangente de fórmulas matemáticas para converter valores hexadecimais brutos da ROM em unidades legíveis por humanos, como RPM, pressão e temperatura."
+        }
+    },
+    {
+        "slug": "obd1-oki66207-reader-plcc68",
+        "summaries": {
+            "en": "Advanced guide for building a hardware reader to dump Internal ROM data from PLCC68 Oki 66207 processors found in Honda OBD1 ECUs.",
+            "pt": "Guia avançado para construir um leitor de hardware para extrair dados da ROM Interna de processadores PLCC68 Oki 66207 encontrados em ECUs Honda OBD1."
+        }
+    },
+    {
+        "slug": "obd1cn2",
+        "summaries": {
+            "en": "Pinout and wiring guide for the CN2 serial datalogging port on Honda OBD1 ECUs, essential for real-time tuning and diagnostics.",
+            "pt": "Guia de pinagem e cablagem para a porta de datalogging série CN2 nas ECUs Honda OBD1, essencial para afinação e diagnóstico em tempo real."
+        }
+    },
+    {
+        "slug": "obd2-oki66507-reader-nico",
+        "summaries": {
+            "en": "Technical guide to building a hardware dumper for reading internal memory from Oki 66507 microcontrollers in Honda OBD2 ECUs.",
+            "pt": "Guia técnico para construir um dumper de hardware para ler a memória interna de microcontroladores Oki 66507 em ECUs Honda OBD2."
+        }
+    },
+    {
+        "slug": "p07",
+        "summaries": {
+            "en": "Technical analysis of the P07 Honda Civic VX OBD1 ECU, featuring unique dual-processor architecture for lean-burn control.",
+            "pt": "Análise técnica da ECU Honda Civic VX OBD1 P07, apresentando uma arquitetura única de processador duplo para controlo de mistura pobre."
+        }
+    },
+    {
+        "slug": "pgsrc-translation",
+        "summaries": {
+            "en": "A reference matrix for translated page names within the PGMFI technical documentation project.",
+            "pt": "Uma matriz de referência para nomes de páginas traduzidos dentro do projeto de documentação técnica PGMFI."
+        }
+    },
+    {
+        "slug": "rm11",
+        "summaries": {
+            "en": "Technical fix for replacing the RM11 resistor network in Honda ECUs with individual resistors for VTEC conversions.",
+            "pt": "Correção técnica para substituir a rede de resistências RM11 em ECUs Honda por resistências individuais para conversões VTEC."
+        }
+    },
+    {
+        "slug": "rom-maps",
+        "summaries": {
+            "en": "A collaborative index of memory addresses and ROM maps for Honda OBD1 Civic and Integra ECUs, essential for firmware reverse engineering.",
+            "pt": "Um índice colaborativo de endereços de memória e mapas de ROM para ECUs Honda Civic e Integra OBD1, essencial para a engenharia reversa de firmware."
+        }
+    },
+    {
+        "slug": "rtp-project",
+        "summaries": {
+            "en": "Information on the Real-Time Programming (RTP) project, aiming to enable live ECU tuning for Honda OBD1 platforms.",
+            "pt": "Informação sobre o projeto de Programação em Tempo Real (RTP), com o objetivo de permitir a afinação de ECUs em tempo real para plataformas Honda OBD1."
+        }
+    },
+    {
+        "slug": "ecu-troubleshooting",
+        "summaries": {
+            "en": "A comprehensive troubleshooting guide for diagnosing and resolving Honda ECU problems, including solid CEL lights, diagnostic trouble codes (DTC), and engine no-start issues in OBD0 and OBD1 vehicles.",
+            "pt": "Um guia abrangente de resolução de problemas para diagnosticar e resolver problemas de ECUs Honda, incluindo luzes CEL sólidas, códigos de diagnóstico de problemas (DTC) e problemas de falta de arranque do motor em veículos OBD0 e OBD1."
+        }
+    },
+    {
+        "slug": "honda-error-codes",
+        "summaries": {
+            "en": "A complete Honda OBD0, OBD1, and OBD2 diagnostic trouble code (DTC) reference guide. Learn how to retrieve CEL flash codes, interpret common Honda engine error codes, and diagnose vehicle malfunctions.",
+            "pt": "Um guia de referência completo de códigos de diagnóstico de problemas (DTC) Honda OBD0, OBD1 e OBD2. Saiba como recuperar códigos de flashes CEL, interpretar códigos de erro comuns de motores Honda e diagnosticar avarias no veículo."
+        }
+    },
+    {
+        "slug": "02d01720-1500",
+        "summaries": {
+            "en": "Step-by-step hardware modification guide for converting non-VTEC \"1720\" Honda ECU boards to support VTEC, including a detailed list of required components.",
+            "pt": "Guia passo a passo de modificação de hardware para converter placas de ECU Honda \"1720\" sem VTEC para suportar VTEC, incluindo uma lista detalhada dos componentes necessários."
+        }
+    }
+]
