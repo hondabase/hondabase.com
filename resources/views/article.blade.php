@@ -290,6 +290,12 @@
                 @endforeach
                 @can('manage-articles')
                     <a class="edit-history-link" href="/admin/history/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}">{{ __('View edit history') }}</a>
+                    <form method="POST" action="/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}"
+                          onsubmit="return confirm('Delete this article permanently? This cannot be undone.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">{{ __('Delete article') }}</button>
+                    </form>
                 @endcan
                 <p class="contribute">{{ __('Spotted an error or have something to add? Suggest an edit right here.') }}
                     @cannot('manage-articles') {{ __('Every change is reviewed before it goes live.') }} @endcannot</p>

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DeleteArticle;
 use App\Models\Article;
+use App\Models\ArticleAuthor;
 use App\Models\ArticleLinkClick;
 use App\Models\ArticleRevision;
 use App\Models\Compatibility;
@@ -13,6 +15,7 @@ use App\Support\BreadcrumbBuilder;
 use App\Support\Locales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -279,6 +282,28 @@ class ArticleController extends Controller
             'children' => $node->children()->orderBy('name')->get(),
             'crumbs' => $this->crumbs->forCategory($node->type, $category, $locale),
         ]);
+    }
+
+    public function destroy(string $type, string $path): \Illuminate\Http\RedirectResponse
+    {
+        ['category' => $category, 'slug' => $slug] = ArticleService::splitPath($path);
+
+        abort_if($category === '' || $slug === '', 404);
+        abort_unless($this->articles->rawMarkdown($type, $category, $slug) !== null, 404);
+
+        // Remove all locale rows for this article; cascade handles facets/compatibilities/favorites.
+        Article::where('type', $type)->where('category', $category)->where('slug', $slug)->delete();
+
+        // Clean up slug-keyed tables that don't FK to articles.
+        ArticleRevision::where('type', $type)->where('category', $category)->where('slug', $slug)->delete();
+        ArticleAuthor::where('repo_path', 'like', "{$type}/{$category}/{$slug}/%")->delete();
+        ArticleLinkClick::where('type', $type)->where('category', $category)->where('slug', $slug)->delete();
+
+        DeleteArticle::dispatch($type, $category, $slug, Auth::user()->displayName());
+
+        session()->flash('status', "Article \"{$slug}\" deleted.");
+
+        return redirect("/{$type}/{$category}");
     }
 
     public function stagedAsset(ArticleRevision $revision, string $file): BinaryFileResponse

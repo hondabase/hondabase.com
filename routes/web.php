@@ -63,6 +63,10 @@ Route::middleware(['auth', 'can:manage-articles'])->group(function () {
     Route::get('/admin/history/{type}/{path}', fn (string $type, string $path) => view('admin.history', ['type' => $type] + ArticleService::splitPath($path)))
         ->where(['type' => 'cars|motorcycles|aircraft|common', 'path' => '[A-Za-z0-9._/-]+'])
         ->name('admin.history.article');
+
+    Route::delete('/{type}/{path}', [ArticleController::class, 'destroy'])
+        ->where(['type' => 'cars|motorcycles|aircraft|common', 'path' => '[A-Za-z0-9._/-]+'])
+        ->name('article.destroy');
 });
 
 Route::get('/sitemap.xml', function () {
