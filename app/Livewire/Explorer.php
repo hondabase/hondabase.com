@@ -135,26 +135,45 @@ class Explorer extends Component
 
         $term = trim($this->q);
         if ($term !== '') {
-            $like = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $term).'%';
+            $like = $this->like($term);
+            $terms = $this->searchTerms($term);
             $locale = app()->getLocale();
-            $query->where(function ($w) use ($like, $locale) {
-                $w->where('articles.title', 'like', $like)
-                    ->orWhere('articles.summary', 'like', $like)
-                    ->orWhere('articles.body_text', 'like', $like);
+            $query->where(function ($w) use ($like, $terms, $locale) {
+                $w->where(function ($phrase) use ($like) {
+                    $this->whereArticleMatches($phrase, $like, 'articles');
+                });
+                if ($terms !== []) {
+                    $w->orWhere(function ($tokens) use ($terms) {
+                        foreach ($terms as $word) {
+                            $tokens->where(function ($x) use ($word) {
+                                $this->whereArticleMatches($x, $this->like($word), 'articles');
+                            });
+                        }
+                    });
+                }
                 // Under a non-default locale, also match the article's translation row so a
                 // term that only appears in the translated text still finds it.
                 if (! Locales::isDefault($locale)) {
-                    $w->orWhereExists(function ($sub) use ($like, $locale) {
+                    $w->orWhereExists(function ($sub) use ($like, $terms, $locale) {
                         $sub->select(DB::raw(1))
                             ->from('articles as t')
                             ->whereColumn('t.type', 'articles.type')
                             ->whereColumn('t.category', 'articles.category')
                             ->whereColumn('t.slug', 'articles.slug')
                             ->where('t.locale', $locale)
-                            ->where(function ($x) use ($like) {
-                                $x->where('t.title', 'like', $like)
-                                    ->orWhere('t.summary', 'like', $like)
-                                    ->orWhere('t.body_text', 'like', $like);
+                            ->where(function ($x) use ($like, $terms) {
+                                $x->where(function ($phrase) use ($like) {
+                                    $this->whereArticleMatches($phrase, $like, 't');
+                                });
+                                if ($terms !== []) {
+                                    $x->orWhere(function ($tokens) use ($terms) {
+                                        foreach ($terms as $word) {
+                                            $tokens->where(function ($token) use ($word) {
+                                                $this->whereArticleMatches($token, $this->like($word), 't');
+                                            });
+                                        }
+                                    });
+                                }
                             });
                     });
                 }
@@ -190,6 +209,28 @@ class Explorer extends Component
             ->orderBy('title')
             ->limit(60)
             ->get();
+    }
+
+    private function whereArticleMatches($query, string $like, string $table): void
+    {
+        $query->where("{$table}.title", 'like', $like)
+            ->orWhere("{$table}.summary", 'like', $like)
+            ->orWhere("{$table}.body_text", 'like', $like)
+            ->orWhere("{$table}.slug", 'like', $like)
+            ->orWhere("{$table}.category", 'like', $like);
+    }
+
+    /** @return list<string> */
+    private function searchTerms(string $term): array
+    {
+        preg_match_all('/[[:alnum:]]+/u', mb_strtolower($term), $matches);
+
+        return array_values(array_unique(array_filter($matches[0] ?? [], fn (string $word) => $word !== '')));
+    }
+
+    private function like(string $term): string
+    {
+        return '%'.str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $term).'%';
     }
 
     /** Recent articles matching anything the user follows. */
