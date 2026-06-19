@@ -31,9 +31,5 @@ class AppServiceProvider extends ServiceProvider
         // Staff (and the owner) manage articles: review/approve edits, apply their own without
         // a separate approver, and revert applied changes. The approval gate for everyone else.
         Gate::define('manage-articles', fn (User $user) => $user->isStaff());
-
-        // Granting/revoking the staff role is owner-only: staff manage articles, but only the
-        // instance owner decides who is staff (mirrors the hondabase:staff artisan command).
-        Gate::define('manage-staff', fn (User $user) => $user->isOwner());
     }
 }

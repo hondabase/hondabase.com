@@ -41,9 +41,6 @@
                         <a href="/admin/reviews" class="nav-signin">{{ __('Reviews') }}</a>
                         <a href="/admin/taxonomy" class="nav-signin">Taxonomy</a>
                     @endcan
-                    @can('manage-staff')
-                        <a href="/admin/staff" class="nav-signin">{{ __('Staff') }}</a>
-                    @endcan
                     <span class="nav-user">{{ auth()->user()->displayName() }}</span>
                     <form method="POST" action="/auth/logout" class="nav-form">@csrf<button type="submit">{{ __('Sign out') }}</button></form>
                 @else
