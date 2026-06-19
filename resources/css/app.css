@@ -69,6 +69,13 @@
     a:hover {
         color: var(--color-amber-2);
     }
+
+    /* scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--color-bg-2); }
+    ::-webkit-scrollbar-thumb { background: var(--color-border-2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--color-amber); }
+    * { scrollbar-width: thin; scrollbar-color: var(--color-border-2) var(--color-bg-2); }
 }
 
 /* ---------------------------------------------------------------------------
