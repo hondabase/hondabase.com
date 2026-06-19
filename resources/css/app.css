@@ -1169,6 +1169,11 @@
 .article-foot form { display: inline; }
 .btn-danger { border-color: #ef4444; color: #ef4444; }
 .btn-danger:hover { background: #ef4444; color: #fff; }
+.edit-dropdown { display: inline-block; position: relative; margin-top: 0.5rem; }
+.edit-dropdown-menu { position: absolute; top: 100%; left: 0; z-index: 50; min-width: 220px; background: var(--color-bg); border: 1px solid var(--color-amber); margin-top: 2px; }
+.edit-dropdown-menu a { display: block; padding: 0.55rem 1rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-amber); }
+.edit-dropdown-menu a:hover { background: var(--color-amber); color: #1a1a1a; }
+.edit-dropdown-menu a + a { border-top: 1px solid var(--color-border); }
 .delete-dropdown { display: inline-block; position: relative; margin-top: 0.5rem; }
 .delete-dropdown-menu { position: absolute; top: 100%; left: 0; z-index: 50; min-width: 220px; background: var(--color-bg); border: 1px solid #ef4444; margin-top: 2px; }
 .delete-dropdown-menu form { display: block; }

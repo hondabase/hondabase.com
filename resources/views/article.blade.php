@@ -281,13 +281,22 @@
 
         <footer class="article-foot">
             @auth
-                <a class="btn edit-cta" href="/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>{{ __('Edit this article') }}</a>
-                @foreach (\App\Support\Locales::others() as $loc)
-                    @php $native = \App\Support\Locales::all()[$loc]['native']; @endphp
-                    <a class="btn edit-cta edit-cta-lang" href="/{{ $loc }}/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>
-                        {{ in_array($loc, $art['available_locales'], true) ? __('Edit the :language translation', ['language' => $native]) : __('Translate to :language', ['language' => $native]) }}
-                    </a>
-                @endforeach
+                @if (!\App\Support\Locales::isDefault($art['locale']))
+                    {{-- Viewing a translation: dropdown with edit translation or edit English --}}
+                    @php $native = \App\Support\Locales::all()[$art['locale']]['native']; @endphp
+                    <div class="edit-dropdown" x-data="{ open: false }" @keydown.escape.window="open = false">
+                        <button type="button" class="btn edit-cta" @click="open = !open" :aria-expanded="open.toString()">
+                            {{ __('Edit') }} &#9660;
+                        </button>
+                        <div class="edit-dropdown-menu" x-show="open" x-cloak @click.outside="open = false">
+                            <a href="/{{ $art['locale'] }}/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>{{ __('Edit :language translation', ['language' => $native]) }}</a>
+                            <a href="/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>{{ __('Edit English article') }}</a>
+                        </div>
+                    </div>
+                @else
+                    {{-- Viewing English: single edit button --}}
+                    <a class="btn edit-cta" href="/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>{{ __('Edit article') }}</a>
+                @endif
                 @can('manage-articles')
                     <a class="edit-history-link" href="/admin/history/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}">{{ __('View edit history') }}</a>
                     @if (!\App\Support\Locales::isDefault($art['locale']))
