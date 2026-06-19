@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Process;
 /**
  * Removes an article bundle from the local content clone and pushes the deletion to origin.
  *
- * Deletes the canonical English bundle plus all per-locale translation directories for this slug.
- * The DB cleanup (Article rows, revisions, etc.) is done synchronously in the controller before
- * this job is dispatched, so the article is already gone from the live site by the time git runs.
+ * When $locale is null, deletes every locale's bundle directory for this slug (full removal).
+ * When $locale is a non-default locale, deletes only that translation directory.
+ * The DB cleanup is done synchronously in the controller before this job is dispatched.
  */
 class DeleteArticle implements ShouldQueue
 {
@@ -29,6 +29,7 @@ class DeleteArticle implements ShouldQueue
         public string $category,
         public string $slug,
         public string $deletedByName,
+        public ?string $locale = null,
     ) {}
 
     public function backoff(): array
@@ -40,13 +41,16 @@ class DeleteArticle implements ShouldQueue
     {
         $root = rtrim((string) config('hondabase.content_path'), '/');
 
-        $paths = $this->removeBundles($root);
+        $paths = $this->locale
+            ? $this->removeLocaleBundle($root, $this->locale)
+            : $this->removeAllBundles($root);
 
         if (empty($paths)) {
             Log::info('DeleteArticle: nothing on disk to remove', [
                 'type' => $this->type,
                 'category' => $this->category,
                 'slug' => $this->slug,
+                'locale' => $this->locale,
             ]);
 
             return;
@@ -56,33 +60,37 @@ class DeleteArticle implements ShouldQueue
         $this->push($root);
     }
 
-    /** Remove every locale's bundle directory and return the repo-relative paths that were deleted. */
-    private function removeBundles(string $root): array
+    /** Remove a single locale's translation directory. Returns the removed repo-relative paths. */
+    private function removeLocaleBundle(string $root, string $locale): array
+    {
+        $localeRoot = Locales::isDefault($locale) ? $root : "{$root}/{$locale}";
+        $dir = "{$localeRoot}/{$this->type}/{$this->category}/{$this->slug}";
+
+        if (! is_dir($dir)) {
+            return [];
+        }
+
+        $rel = Locales::isDefault($locale)
+            ? "{$this->type}/{$this->category}/{$this->slug}"
+            : "{$locale}/{$this->type}/{$this->category}/{$this->slug}";
+
+        $rm = Process::path($root)->run(['git', 'rm', '-r', '--', $rel]);
+
+        if (! $rm->successful()) {
+            throw new \RuntimeException("git rm failed for {$rel}: ".$rm->errorOutput().$rm->output());
+        }
+
+        return [$rel];
+    }
+
+    /** Remove every locale's bundle directory. Returns the removed repo-relative paths. */
+    private function removeAllBundles(string $root): array
     {
         $paths = [];
 
         foreach (Locales::codes() as $locale) {
-            $localeRoot = Locales::isDefault($locale)
-                ? $root
-                : "{$root}/{$locale}";
-
-            $dir = "{$localeRoot}/{$this->type}/{$this->category}/{$this->slug}";
-
-            if (! is_dir($dir)) {
-                continue;
-            }
-
-            $rel = Locales::isDefault($locale)
-                ? "{$this->type}/{$this->category}/{$this->slug}"
-                : "{$locale}/{$this->type}/{$this->category}/{$this->slug}";
-
-            $rm = Process::path($root)->run(['git', 'rm', '-r', '--', $rel]);
-
-            if (! $rm->successful()) {
-                throw new \RuntimeException("git rm failed for {$rel}: ".$rm->errorOutput().$rm->output());
-            }
-
-            $paths[] = $rel;
+            $removed = $this->removeLocaleBundle($root, $locale);
+            $paths = array_merge($paths, $removed);
         }
 
         return $paths;
@@ -91,11 +99,13 @@ class DeleteArticle implements ShouldQueue
     private function commit(string $root, array $paths): void
     {
         $bot = config('hondabase.git');
-        $subject = "Delete {$this->type}/{$this->category}/{$this->slug} (by {$this->deletedByName})";
-        $message = $subject."\n";
+
+        $subject = $this->locale
+            ? "Delete {$this->locale} translation of {$this->type}/{$this->category}/{$this->slug} (by {$this->deletedByName})"
+            : "Delete {$this->type}/{$this->category}/{$this->slug} (by {$this->deletedByName})";
 
         $msgFile = tempnam(sys_get_temp_dir(), 'hb-del-');
-        file_put_contents($msgFile, $message);
+        file_put_contents($msgFile, $subject."\n");
 
         try {
             $commit = Process::path($root)->run([
@@ -117,6 +127,7 @@ class DeleteArticle implements ShouldQueue
             'type' => $this->type,
             'category' => $this->category,
             'slug' => $this->slug,
+            'locale' => $this->locale,
         ]);
     }
 

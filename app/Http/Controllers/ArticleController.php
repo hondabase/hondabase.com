@@ -284,14 +284,30 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function destroy(string $type, string $path): \Illuminate\Http\RedirectResponse
+    public function destroy(Request $request, string $type, string $path): \Illuminate\Http\RedirectResponse
     {
         ['category' => $category, 'slug' => $slug] = ArticleService::splitPath($path);
 
         abort_if($category === '' || $slug === '', 404);
         abort_unless($this->articles->rawMarkdown($type, $category, $slug) !== null, 404);
 
-        // Remove all locale rows for this article; cascade handles facets/compatibilities/favorites.
+        $locale = $request->input('locale');
+        $deletingTranslation = $locale !== null && ! Locales::isDefault($locale) && Locales::isSupported($locale);
+
+        if ($deletingTranslation) {
+            // Remove only this locale's Article row and link clicks.
+            Article::where('type', $type)->where('category', $category)->where('slug', $slug)->where('locale', $locale)->delete();
+            ArticleLinkClick::where('type', $type)->where('category', $category)->where('slug', $slug)->where('locale', $locale)->delete();
+
+            DeleteArticle::dispatch($type, $category, $slug, Auth::user()->displayName(), $locale);
+
+            $native = Locales::all()[$locale]['native'] ?? $locale;
+            session()->flash('status', "The {$native} translation of \"{$slug}\" was deleted.");
+
+            return redirect("/{$type}/{$category}/{$slug}");
+        }
+
+        // Full delete: all locales. Cascade handles facets/compatibilities/favorites.
         Article::where('type', $type)->where('category', $category)->where('slug', $slug)->delete();
 
         // Clean up slug-keyed tables that don't FK to articles.

@@ -290,8 +290,20 @@
                 @endforeach
                 @can('manage-articles')
                     <a class="edit-history-link" href="/admin/history/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}">{{ __('View edit history') }}</a>
+                    @foreach (\App\Support\Locales::others() as $loc)
+                        @if (in_array($loc, $art['available_locales'], true))
+                            @php $native = \App\Support\Locales::all()[$loc]['native']; @endphp
+                            <form method="POST" action="/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}"
+                                  onsubmit="return confirm('Delete the {{ $native }} translation permanently? This cannot be undone.')">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="locale" value="{{ $loc }}">
+                                <button type="submit" class="btn btn-danger">{{ __('Delete :language translation', ['language' => $native]) }}</button>
+                            </form>
+                        @endif
+                    @endforeach
                     <form method="POST" action="/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}"
-                          onsubmit="return confirm('Delete this article permanently? This cannot be undone.')">
+                          onsubmit="return confirm('Delete this article and all translations permanently? This cannot be undone.')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">{{ __('Delete article') }}</button>
