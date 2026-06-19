@@ -282,21 +282,13 @@
         <footer class="article-foot">
             @auth
                 <div class="article-foot-actions">
-                    @if (!\App\Support\Locales::isDefault($art['locale']))
-                        @php $native = \App\Support\Locales::all()[$art['locale']]['native']; @endphp
-                        <div class="article-action-dropdown" x-data="{ open: false }" @keydown.escape.window="open = false">
-                            <button type="button" class="btn edit-cta" @click="open = !open" :aria-expanded="open.toString()">{{ __('Edit') }} &#9660;</button>
-                            <div class="article-action-menu" x-show="open" x-cloak @click.outside="open = false">
-                                <a href="/{{ $art['locale'] }}/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>{{ __('Edit :language translation', ['language' => $native]) }}</a>
-                                <a href="/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>{{ __('Edit English article') }}</a>
-                            </div>
-                        </div>
-                    @else
-                        <a class="btn edit-cta" href="/edit/{{ $art['type'] }}/{{ $art['category'] }}/{{ $art['slug'] }}" wire:navigate>{{ __('Edit article') }}</a>
-                    @endif
+                    @php $editUrl = \App\Support\Locales::isDefault($art['locale'])
+                        ? "/edit/{$art['type']}/{$art['category']}/{$art['slug']}"
+                        : "/{$art['locale']}/edit/{$art['type']}/{$art['category']}/{$art['slug']}"; @endphp
+                    <a class="btn edit-cta" href="{{ $editUrl }}" wire:navigate>{{ __('Edit article') }}</a>
                     @can('manage-articles')
                         @if (!\App\Support\Locales::isDefault($art['locale']))
-                            @php $native = $native ?? \App\Support\Locales::all()[$art['locale']]['native']; @endphp
+                            @php $native = \App\Support\Locales::all()[$art['locale']]['native']; @endphp
                             <div class="article-action-dropdown" x-data="{ open: false }" @keydown.escape.window="open = false">
                                 <button type="button" class="btn btn-danger" @click="open = !open" :aria-expanded="open.toString()">{{ __('Delete') }} &#9660;</button>
                                 <div class="article-action-menu article-action-menu--danger" x-show="open" x-cloak @click.outside="open = false">
