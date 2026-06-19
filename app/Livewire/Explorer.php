@@ -93,6 +93,7 @@ class Explorer extends Component
             'total' => (clone $query)->count(),
             'followed' => $followed,
             'isAuthed' => (bool) auth()->user(),
+            'isStaff' => (bool) auth()->user()?->isStaff(),
             'forYou' => $personalize ? $this->localize($this->forYou($followed)) : collect(),
             'scoped' => $this->scopeType !== null,
             'scopeAll' => $this->scopeAll,
@@ -120,6 +121,10 @@ class Explorer extends Component
         // hang off them. Translation rows are only consulted to broaden search and to overlay
         // titles/summaries for display (see localize()).
         $query = Article::query()->where('articles.locale', Locales::default());
+
+        if (! auth()->user()?->isStaff()) {
+            $query->where('is_hidden', false);
+        }
 
         if ($this->scopeType && ! $this->scopeAll) {
             $query->where('type', $this->scopeType);

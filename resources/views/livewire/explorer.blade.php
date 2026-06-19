@@ -78,9 +78,12 @@
 
         <div class="ex-results" wire:loading.class="is-loading">
             @forelse ($articles as $a)
-                <a class="ex-card" href="{{ $a->url() }}" wire:navigate wire:key="a-{{ $a->id }}">
+                <a class="ex-card @if(($isStaff ?? false) && $a->is_hidden) is-hidden @endif" href="{{ $a->url() }}" wire:navigate wire:key="a-{{ $a->id }}">
                     <div class="ex-card-kicker">{{ ucfirst($a->type) }} &middot; {{ ucwords(str_replace('-', ' ', $a->category)) }}</div>
                     <h3 class="ex-card-title">{{ $a->title }}</h3>
+                    @if (($isStaff ?? false) && $a->is_hidden)
+                        <span class="ex-card-hidden-badge">Hidden</span>
+                    @endif
                     @if ($a->summary)
                         <p class="ex-card-summary">{{ \Illuminate\Support\Str::limit($a->summary, 120) }}</p>
                     @endif

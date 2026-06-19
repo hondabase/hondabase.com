@@ -32,18 +32,19 @@ class ArticleIndexer
         $rows = $this->articles->scan();
 
         DB::transaction(function () use ($rows) {
-            $viewCounts = Article::query()
-                ->get(['type', 'category', 'slug', 'locale', 'view_count', 'last_viewed_at'])
+            $runtimeState = Article::query()
+                ->get(['type', 'category', 'slug', 'locale', 'view_count', 'last_viewed_at', 'is_hidden'])
                 ->mapWithKeys(fn (Article $article) => [$this->articleKey($article->type, $article->category, $article->slug, $article->locale) => [
                     'view_count' => (int) $article->view_count,
                     'last_viewed_at' => $article->last_viewed_at,
+                    'is_hidden' => (bool) $article->is_hidden,
                 ]]);
             Compatibility::query()->delete();
             ArticleFacet::query()->delete();
             Article::query()->delete();
             foreach ($rows as $r) {
-                $counts = $viewCounts[$this->articleKey($r['type'], $r['category'], $r['slug'], $r['locale'] ?? 'en')] ?? [];
-                $this->persist($r, (int) ($counts['view_count'] ?? 0), $counts['last_viewed_at'] ?? null);
+                $state = $runtimeState[$this->articleKey($r['type'], $r['category'], $r['slug'], $r['locale'] ?? 'en')] ?? [];
+                $this->persist($r, (int) ($state['view_count'] ?? 0), $state['last_viewed_at'] ?? null, (bool) ($state['is_hidden'] ?? false));
             }
         });
 
@@ -67,6 +68,7 @@ class ArticleIndexer
             $existing = Article::where(compact('type', 'category', 'slug', 'locale'))->first();
             $viewCount = (int) ($existing?->view_count ?? 0);
             $lastViewedAt = $existing?->last_viewed_at;
+            $isHidden = (bool) ($existing?->is_hidden ?? false);
             if ($existing) {
                 ArticleFacet::where('article_id', $existing->id)->delete();
                 $existing->delete();
@@ -74,12 +76,12 @@ class ArticleIndexer
 
             $row = $this->articles->scanOne($type, $category, $slug, $locale);
             if ($row !== null) {
-                $this->persist($row, $viewCount, $lastViewedAt);
+                $this->persist($row, $viewCount, $lastViewedAt, $isHidden);
             }
         });
     }
 
-    private function persist(array $r, int $viewCount = 0, mixed $lastViewedAt = null): void
+    private function persist(array $r, int $viewCount = 0, mixed $lastViewedAt = null, bool $isHidden = false): void
     {
         $article = Article::create([
             'type' => $r['type'],
@@ -94,6 +96,7 @@ class ArticleIndexer
             'updated_at' => $r['updated'],
             'view_count' => $viewCount,
             'last_viewed_at' => $lastViewedAt,
+            'is_hidden' => $isHidden,
         ]);
 
         // Resolve node compatibility (default-locale identity only) and fold the node-derived

@@ -12,7 +12,7 @@ class Article extends Model
 
     protected $guarded = [];
 
-    protected $casts = ['updated_at' => 'datetime', 'view_count' => 'int', 'last_viewed_at' => 'datetime'];
+    protected $casts = ['updated_at' => 'datetime', 'view_count' => 'int', 'last_viewed_at' => 'datetime', 'is_hidden' => 'bool'];
 
     public function facets(): HasMany
     {

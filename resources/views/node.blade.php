@@ -63,9 +63,12 @@
         @if ($articles->isNotEmpty())
             <div class="ex-results">
                 @foreach ($articles as $a)
-                    <a class="ex-card" href="{{ $a->url() }}" wire:navigate wire:key="node-{{ $a->id }}">
+                    <a class="ex-card @if(($isStaff ?? false) && $a->is_hidden) is-hidden @endif" href="{{ $a->url() }}" wire:navigate wire:key="node-{{ $a->id }}">
                         <div class="ex-card-kicker">{{ ucfirst($a->type) }} &middot; {{ ucwords(str_replace('/', ' / ', str_replace('-', ' ', $a->category))) }}</div>
                         <h3 class="ex-card-title">{{ $a->title }}</h3>
+                        @if (($isStaff ?? false) && $a->is_hidden)
+                            <span class="ex-card-hidden-badge">Hidden</span>
+                        @endif
                     </a>
                 @endforeach
             </div>

@@ -68,7 +68,7 @@ Route::get('/sitemap.xml', function () {
     $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n"
         .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n"
         .'  <url><loc>https://www.hondabase.com/</loc></url>'."\n";
-    foreach (Article::orderBy('type')->orderBy('category')->orderBy('slug')->orderBy('locale')->get(['type', 'category', 'slug', 'locale', 'updated_at']) as $a) {
+    foreach (Article::where('is_hidden', false)->orderBy('type')->orderBy('category')->orderBy('slug')->orderBy('locale')->get(['type', 'category', 'slug', 'locale', 'updated_at']) as $a) {
         $prefix = Locales::isDefault($a->locale) ? '' : '/'.$a->locale;
         $loc = 'https://www.hondabase.com'.$prefix.'/'.$a->type.'/'.$a->category.'/'.$a->slug;
         $xml .= '  <url><loc>'.htmlspecialchars($loc).'</loc>'

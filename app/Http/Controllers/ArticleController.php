@@ -72,6 +72,10 @@ class ArticleController extends Controller
                     'slug' => $slug,
                     'locale' => ! empty($art['is_fallback']) ? Locales::default() : $art['locale'],
                 ])->first();
+                if ($viewArt?->is_hidden && ! auth()->user()?->isStaff()) {
+                    abort(404);
+                }
+
                 $this->clicks->countArticleView($viewArt, $request);
                 $art['view_count'] = (int) ($viewArt?->view_count ?? 0);
                 $decorated = $this->clicks->decorate($art);
@@ -79,6 +83,7 @@ class ArticleController extends Controller
 
                 return view('article', [
                     'art' => $art,
+                    'isHidden' => (bool) $viewArt?->is_hidden,
                     'compatibilityGroups' => $this->compatibilityGroups($dbArt),
                     'crumbs' => $this->crumbs->forCategory($type, $category, $locale),
                 ]);
@@ -268,8 +273,10 @@ class ArticleController extends Controller
 
         // Compatibility links live on the default-locale (English) identity row; render that set and
         // mark each row with the requested locale so url() emits the localized link.
+        $isStaff = auth()->user()?->isStaff();
         $articles = Article::whereIn('id', $articleIds)
             ->where('locale', Locales::default())
+            ->when(! $isStaff, fn ($q) => $q->where('is_hidden', false))
             ->orderByDesc('updated_at')->get()
             ->each(fn (Article $a) => $a->locale = $locale);
 
@@ -279,6 +286,7 @@ class ArticleController extends Controller
             'node' => $node,
             'locale' => $locale,
             'articles' => $articles,
+            'isStaff' => $isStaff,
             'children' => $node->children()->orderBy('name')->get(),
             'crumbs' => $this->crumbs->forCategory($node->type, $category, $locale),
         ]);

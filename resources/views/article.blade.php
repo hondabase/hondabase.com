@@ -287,6 +287,9 @@
                         : "/{$art['locale']}/edit/{$art['type']}/{$art['category']}/{$art['slug']}"; @endphp
                     <a class="btn edit-cta" href="{{ $editUrl }}" wire:navigate>{{ __('Edit article') }}</a>
                     @can('manage-articles')
+                        <livewire:hide-article-button :type="$art['type']" :category="$art['category']" :slug="$art['slug']" :locale="$art['locale']" />
+                    @endcan
+                    @can('manage-articles')
                         @if (!\App\Support\Locales::isDefault($art['locale']))
                             @php $native = \App\Support\Locales::all()[$art['locale']]['native']; @endphp
                             <div class="article-action-dropdown" x-data="{ open: false }" @keydown.escape.window="open = false">
