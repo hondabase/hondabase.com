@@ -499,7 +499,7 @@ class ArticleService
             $f[] = ['tag', Str::slug($t) ?: $t, $t];
         }
         $at = is_array($fm['applies_to'] ?? null) ? $fm['applies_to'] : [];
-        $kindMap = ['engines' => 'engine', 'ecus' => 'ecu', 'models' => 'model', 'trims' => 'trim', 'systems' => 'system', 'years' => 'year'];
+        $kindMap = ['engines' => 'engine', 'ecus' => 'tag', 'models' => 'model', 'trims' => 'trim', 'systems' => 'system', 'years' => 'year'];
         foreach ($at as $key => $vals) {
             $kind = $kindMap[$key] ?? (string) $key;
             foreach ((array) $vals as $v) {
