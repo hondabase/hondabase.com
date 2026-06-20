@@ -80,6 +80,8 @@ Route::get('/sitemap.xml', function () {
     return response($xml, 200, ['Content-Type' => 'application/xml']);
 })->name('sitemap');
 
+Route::get('/explore', fn () => view('explore'))->name('explore');
+
 Route::post('/_click/article-links/{counter}', [ArticleController::class, 'clickLink'])
     ->whereNumber('counter')
     ->name('article-link-clicks.store');
@@ -110,6 +112,10 @@ if ($locales !== '') {
         ->middleware('auth')
         ->where(['locale' => $locales, 'type' => $types, 'path' => $pathTail])
         ->name('article.translate');
+
+    Route::get('/{locale}/explore', fn () => view('explore'))
+        ->where('locale', $locales)
+        ->name('explore.localized');
 
     Route::get('/{locale}/{type}', [ArticleController::class, 'typeIndex'])
         ->where(['locale' => $locales, 'type' => $types])
