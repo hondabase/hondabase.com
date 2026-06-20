@@ -5,7 +5,7 @@
  * Keys: type (matches taxonomy_nodes.type), label, desc, coming_soon (optional bool).
  * Order here is the display order on the homepage.
  * Types listed as coming_soon have no taxonomy data yet; they render as greyed cards.
- * The 'engines' type is intentionally excluded — it is a cross-cutting subject accessible
+ * The 'engines' type is intentionally excluded -- it is a cross-cutting subject accessible
  * via search and engine facets, not a product line users browse from the root.
  */
 return [
