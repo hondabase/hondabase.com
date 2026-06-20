@@ -33,7 +33,7 @@ class Explorer extends Component
     public bool $scopeAll = false;
 
     private const KIND_LABELS = [
-        'category' => 'Categories', 'engine' => 'Engine family',
+        'category' => 'Categories',
         'tag' => 'Tags', 'chassis' => 'Chassis', 'model' => 'Models',
         'make' => 'Make', 'scope' => 'Scope', 'system' => 'Systems', 'year' => 'Years',
     ];
@@ -352,12 +352,9 @@ class Explorer extends Component
             unset($byKind['category']);
         }
 
-        // Engine family facets are only relevant for engine-adjacent categories.
-        if (! in_array($this->scopeCategory, ['ecu', 'ignition', 'fueling', 'tuning'], true)) {
-            unset($byKind['engine']);
-        }
+        unset($byKind['engine'], $byKind['engine_family']);
 
-        $order = ['category', 'engine', 'tag', 'chassis', 'model', 'make', 'scope', 'system', 'year'];
+        $order = ['category', 'tag', 'chassis', 'model', 'make', 'scope', 'system', 'year'];
         $limits = ['tag' => 18];
         $groups = [];
         foreach ([...$order, ...array_diff(array_keys($byKind), $order)] as $kind) {
