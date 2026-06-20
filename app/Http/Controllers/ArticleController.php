@@ -292,6 +292,13 @@ class ArticleController extends Controller
         ]);
     }
 
+    public function typeIndex(Request $request, string $type): \Illuminate\View\View
+    {
+        $locale = $request->route('locale') ?? Locales::default();
+
+        return view('type', compact('type', 'locale'));
+    }
+
     public function destroy(Request $request, string $type, string $path): \Illuminate\Http\RedirectResponse
     {
         ['category' => $category, 'slug' => $slug] = ArticleService::splitPath($path);

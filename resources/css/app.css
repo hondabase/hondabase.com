@@ -257,6 +257,56 @@
         margin-top: 0.55rem;
     }
 
+    /* product lines grid */
+    .pl-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 0.75rem;
+    }
+    .pl-card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 1rem 1.1rem;
+        background: var(--color-panel);
+        border: 1px solid var(--color-border);
+        transition:
+            border-color 0.15s,
+            background 0.15s,
+            transform 0.15s;
+        text-decoration: none;
+    }
+    a.pl-card:hover {
+        border-color: rgba(251, 191, 36, 0.5);
+        background: var(--color-panel-hover);
+        transform: translateY(-2px);
+    }
+    .pl-card-name {
+        font-family: var(--font-display);
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--color-amber-2);
+    }
+    .pl-card-desc {
+        font-size: 0.78rem;
+        color: var(--color-dim);
+        line-height: 1.4;
+    }
+    .pl-card--soon {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+    .pl-card-tag {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-muted);
+        margin-top: 0.3rem;
+    }
+
     /* prose */
     .prose {
         max-width: 75ch;

@@ -111,10 +111,18 @@ if ($locales !== '') {
         ->where(['locale' => $locales, 'type' => $types, 'path' => $pathTail])
         ->name('article.translate');
 
+    Route::get('/{locale}/{type}', [ArticleController::class, 'typeIndex'])
+        ->where(['locale' => $locales, 'type' => $types])
+        ->name('type.index.localized');
+
     Route::get('/{locale}/{type}/{path}', [ArticleController::class, 'resolve'])
         ->where(['locale' => $locales, 'type' => $types, 'path' => $pathTail])
         ->name('article.show.localized');
 }
+
+Route::get('/{type}', [ArticleController::class, 'typeIndex'])
+    ->where('type', $types)
+    ->name('type.index');
 
 Route::get('/{type}/{path}', [ArticleController::class, 'resolve'])
     ->where(['type' => $types, 'path' => $pathTail])
