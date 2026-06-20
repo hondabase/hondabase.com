@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Article;
 use App\Models\TaxonomyNode;
 use App\Support\Locales;
 use Illuminate\Contracts\View\View;
