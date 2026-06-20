@@ -3,15 +3,14 @@
 namespace Tests\Unit;
 
 use App\Support\FrontmatterTags;
-use Illuminate\Support\Facades\File;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class FrontmatterTagsTest extends TestCase
 {
     private function tmp(string $contents): string
     {
         $path = sys_get_temp_dir().'/fmtags-'.uniqid().'.md';
-        File::put($path, $contents);
+        file_put_contents($path, $contents);
 
         return $path;
     }
@@ -22,12 +21,12 @@ class FrontmatterTagsTest extends TestCase
 
         $this->assertTrue(FrontmatterTags::removeTag($path, 'rom'));
 
-        $out = File::get($path);
+        $out = file_get_contents($path);
         $this->assertStringContainsString('tags: [tuning, ecu, memory]', $out);
         $this->assertStringContainsString('complexity: beginner', $out);
         $this->assertStringContainsString('# Title', $out);
-        $this->assertStringNotContainsString('rom', $out);
-        File::delete($path);
+        $this->assertDoesNotMatchRegularExpression('/\brom\b/', $out);
+        unlink($path);
     }
 
     public function test_returns_false_and_leaves_file_unchanged_when_tag_absent(): void
@@ -36,7 +35,7 @@ class FrontmatterTagsTest extends TestCase
         $path = $this->tmp($original);
 
         $this->assertFalse(FrontmatterTags::removeTag($path, 'rom'));
-        $this->assertSame($original, File::get($path));
-        File::delete($path);
+        $this->assertSame($original, file_get_contents($path));
+        unlink($path);
     }
 }
