@@ -11,7 +11,7 @@
 
     <section class="page-head">
         <h2 class="section-head">My Garage</h2>
-        <p class="page-sub">Add your Honda products to personalize your experience. Details like engines
+        <p class="text-dim mt-1 max-w-[70ch]">Add your Honda products to personalize your experience. Details like engines
         or chassis are followed automatically, so matching articles surface in your feed.</p>
     </section>
 

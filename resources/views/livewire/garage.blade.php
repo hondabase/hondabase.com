@@ -22,7 +22,7 @@
                             @endforeach
                         </select>
                     </label>
-                    <label wire:key="field-nickname">{{ __('Nickname') }} <span class="opt">({{ __('optional') }})</span>
+                    <label wire:key="field-nickname">{{ __('Nickname') }} <span class="text-muted font-normal text-[0.85em]">({{ __('optional') }})</span>
                         <input type="text" list="nickname-options" wire:model="nickname" placeholder="{{ $placeholders['nickname'] }}" maxlength="80">
                         <datalist id="nickname-options">
                             @foreach ($nicknameList as $n)<option value="{{ $n }}">@endforeach
@@ -47,7 +47,7 @@
                         </datalist>
                     </label>
                     @if (in_array($type, ['car', 'motorcycle', 'atv', 'sxs']))
-                        <label wire:key="field-chassis">{{ __('Chassis') }} <span class="opt">({{ __('e.g. EK, DC2') }})</span>
+                        <label wire:key="field-chassis">{{ __('Chassis') }} <span class="text-muted font-normal text-[0.85em]">({{ __('e.g. EK, DC2') }})</span>
                             <input type="text" list="chassis-options" wire:model="chassis" placeholder="{{ $placeholders['chassis'] }}" maxlength="20">
                             <datalist id="chassis-options">
                                 @foreach ($chassisList as $c)<option value="{{ $c }}">@endforeach
@@ -63,12 +63,12 @@
                         </label>
                     @endif
                 </div>
-                <label class="full">{{ __('Notes') }} <span class="opt">({{ __('mods, build, anything') }})</span>
+                <label class="full">{{ __('Notes') }} <span class="text-muted font-normal text-[0.85em]">({{ __('mods, build, anything') }})</span>
                     <textarea wire:model="notes" rows="2" maxlength="1000"></textarea>
                 </label>
                 @error('year') <p class="field-err">{{ $message }}</p> @enderror
                 @error('type') <p class="field-err">{{ $message }}</p> @enderror
-                <p class="hint">{{ __('Adding an engine or chassis (if applicable) follows it, so matching new articles show up in your feed.') }}</p>
+                <p class="text-muted text-[0.82rem] my-[0.4rem]">{{ __('Adding an engine or chassis (if applicable) follows it, so matching new articles show up in your feed.') }}</p>
                 <div class="form-actions">
                     <button type="submit" class="btn">{{ $productId ? __('Save changes') : __('Add to garage') }}</button>
                     <button type="button" class="btn-link" wire:click="$set('showProductForm', false)">{{ __('Cancel') }}</button>
@@ -98,7 +98,7 @@
             </div>
         @empty
             @unless ($showProductForm)
-                <p class="empty">{{ __('No products yet. Add one to personalize your feed.') }}</p>
+                <p class="text-muted italic">{{ __('No products yet. Add one to personalize your feed.') }}</p>
             @endunless
         @endforelse
     </section>

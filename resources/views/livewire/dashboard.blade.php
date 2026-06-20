@@ -5,7 +5,7 @@
             <h2>{{ __('Welcome to your Hondabase.') }}</h2>
             <p>{{ __('Add your vehicle and we\'ll tailor your homepage and this dashboard to it: new articles for your engine and chassis show up here automatically.') }}</p>
             <a class="btn" href="/me/garage" wire:navigate>{{ __('Add your first vehicle') }} &rarr;</a>
-            <p class="hint">{!! __('Or just :explore and tap the star on anything to follow it, or :save on an article to bookmark it.', ['explore' => '<a href="/" wire:navigate>'.e(__('explore the catalog')).'</a>', 'save' => '<b>'.e(__('Save')).'</b>']) !!}</p>
+            <p class="text-muted text-[0.82rem] my-[0.4rem]">{!! __('Or just :explore and tap the star on anything to follow it, or :save on an article to bookmark it.', ['explore' => '<a href="/" wire:navigate>'.e(__('explore the catalog')).'</a>', 'save' => '<b>'.e(__('Save')).'</b>']) !!}</p>
         </section>
     @else
         {{-- ---------- Garage summary ---------- --}}
@@ -15,7 +15,7 @@
                 <a class="btn btn-sm" href="/me/garage" wire:navigate>{{ __('Manage garage') }}</a>
             </div>
             @if ($vehicles->isEmpty())
-                <p class="empty">{!! __('No vehicles yet. :add to personalize your feed.', ['add' => '<a href="/me/garage" wire:navigate>'.e(__('Add one')).'</a>']) !!}</p>
+                <p class="text-muted italic">{!! __('No vehicles yet. :add to personalize your feed.', ['add' => '<a href="/me/garage" wire:navigate>'.e(__('Add one')).'</a>']) !!}</p>
             @else
                 <div class="dash-vehicles">
                     @foreach ($vehicles as $v)
@@ -49,7 +49,7 @@
             @endif
 
             @if ($feed->isEmpty())
-                <p class="empty">{!! __('Nothing here yet. Follow a category, engine or chassis on the :explorer (or add a vehicle) to fill this feed.', ['explorer' => '<a href="/" wire:navigate>'.e(__('explorer')).'</a>']) !!}</p>
+                <p class="text-muted italic">{!! __('Nothing here yet. Follow a category, engine or chassis on the :explorer (or add a vehicle) to fill this feed.', ['explorer' => '<a href="/" wire:navigate>'.e(__('explorer')).'</a>']) !!}</p>
             @else
                 <div class="grid">
                     @foreach ($feed as $a)
@@ -67,7 +67,7 @@
         <section class="dash-section">
             <h2 class="section-head">{{ __('Saved articles') }}</h2>
             @if ($favorites->isEmpty())
-                <p class="empty">{!! __('Nothing saved yet. Tap :save on any article to bookmark it here.', ['save' => '<b>'.e(__('Save')).'</b>']) !!}</p>
+                <p class="text-muted italic">{!! __('Nothing saved yet. Tap :save on any article to bookmark it here.', ['save' => '<b>'.e(__('Save')).'</b>']) !!}</p>
             @else
                 <div class="saved-list">
                     @foreach ($favorites as $a)

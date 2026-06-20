@@ -84,11 +84,7 @@
 --------------------------------------------------------------------------- */
 @layer components {
     .wrap {
-        position: relative;
-        z-index: 1;
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 0 1.25rem;
+        @apply relative z-[1] max-w-[1100px] mx-auto px-5;
     }
 
     /* header */
@@ -100,11 +96,7 @@
         z-index: 5;
     }
     .site-header .wrap {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        min-height: 64px;
-        flex-wrap: wrap;
+        @apply flex items-center gap-6 min-h-16 flex-wrap;
     }
     .brand {
         display: flex;
@@ -209,16 +201,7 @@
         padding: 2.25rem 0;
     }
     .section-head {
-        font-family: var(--font-display);
-        font-size: 1.1rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--color-head);
-        margin: 0 0 1.1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
+        @apply font-display text-[1.1rem] font-semibold uppercase tracking-[0.08em] text-head m-0 mb-[1.1rem] flex items-center gap-[0.6rem];
     }
     .section-head::before {
         content: '';
@@ -301,36 +284,18 @@
         padding: 1.25rem 1.4rem;
     }
     .btn {
-        display: inline-block;
-        font-family: var(--font-mono);
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        padding: 0.55rem 1.1rem;
-        border: 1px solid var(--color-amber);
-        color: var(--color-amber);
-        margin-top: 0.5rem;
-        transition:
-            background 0.15s,
-            color 0.15s;
+        @apply inline-block font-mono text-[0.8rem] uppercase tracking-[0.06em] py-[0.55rem] px-[1.1rem] border border-amber text-amber mt-2 transition-[background,color] duration-150;
     }
     .btn:hover {
-        background: var(--color-amber);
-        color: #1a1a1a;
+        @apply bg-amber text-[#1a1a1a];
     }
 
     /* flash */
     .flash {
-        font-family: var(--font-mono);
-        font-size: 0.85rem;
-        padding: 0.7rem 1rem;
-        margin: 1rem 0;
-        border: 1px solid var(--color-border-2);
+        @apply font-mono text-[0.85rem] py-[0.7rem] px-4 my-4 border border-border-2;
     }
     .flash-ok {
-        border-color: var(--color-green);
-        background: rgba(110, 231, 183, 0.08);
-        color: var(--color-green);
+        @apply border-green bg-[rgba(110,231,183,0.08)] text-green;
     }
 
     /* footer */
@@ -339,15 +304,7 @@
         margin-top: 2rem;
     }
     .site-footer .wrap {
-        font-family: var(--font-mono);
-        font-size: 0.7rem;
-        color: var(--color-muted);
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        flex-wrap: wrap;
-        padding-top: 1.4rem;
-        padding-bottom: 1.4rem;
+        @apply font-mono text-[0.7rem] text-muted flex justify-between gap-4 flex-wrap pt-[1.4rem] pb-[1.4rem];
     }
     .site-footer b {
         color: var(--color-dim);
@@ -356,19 +313,13 @@
 
     /* language switcher (footer) */
     .lang-switch {
-        display: flex;
-        gap: 0.6rem;
-        align-items: center;
-        flex-wrap: wrap;
+        @apply flex gap-[0.6rem] items-center flex-wrap;
     }
     .lang-switch a {
         color: var(--color-muted);
     }
     .lang-switch a:hover {
         color: var(--color-amber);
-    }
-    .lang-current {
-        color: var(--color-dim);
     }
 
     /* notification bell (P5) */
@@ -472,17 +423,7 @@
 }
 
 .site-header .header-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 64px;
-    flex-wrap: nowrap;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    @apply flex items-center justify-between min-h-16 flex-nowrap;
 }
 
 /* Burger Button */
@@ -879,15 +820,10 @@
   align-items: center;
 }
 .tag-chip {
-  border: 1px solid var(--color-border-2);
-  padding: .05rem .45rem;
-  color: var(--color-dim);
+  @apply border border-border-2 py-[0.05rem] px-[0.45rem] text-dim;
 }
 .source-note {
-  font-family: var(--font-mono);
-  font-size: .72rem;
-  color: var(--color-muted);
-  margin: .65rem 0 0;
+  @apply font-mono text-[0.72rem] text-muted mt-[0.65rem];
 }
 .source-note a { color: var(--color-amber-2); }
 
@@ -1302,12 +1238,7 @@
 }
 .chip.tag { color: var(--color-amber-2); border-color: rgba(251,191,36,.4); }
 .badge {
-  font-family: var(--font-mono);
-  font-size: .68rem;
-  font-weight: 600;
-  padding: .1rem .5rem;
-  text-transform: uppercase;
-  letter-spacing: .04em;
+  @apply font-mono text-[0.68rem] font-semibold py-[0.1rem] px-[0.5rem] uppercase tracking-[0.04em];
 }
 .badge.obd { background: var(--color-red); color: #fff; }
 .badge.series { background: rgba(251,191,36,.16); color: var(--color-amber-2); border: 1px solid rgba(251,191,36,.5); }
@@ -1976,7 +1907,6 @@
    Mobile-first: single column, thumb-reachable controls; widens on larger screens. */
 
 .page-head { padding: 1.5rem 0 .5rem; }
-.page-sub { color: var(--color-dim); margin: .25rem 0 0; max-width: 70ch; }
 
 .dash-section, .garage-section { padding: 1.25rem 0; border-top: 1px solid var(--color-border); }
 .dash-section:first-of-type, .garage-section:first-of-type { border-top: 0; }
@@ -1991,9 +1921,6 @@
 .btn-link:hover { color: var(--color-amber); }
 .btn-link.danger:hover { color: var(--color-red); }
 
-.empty { color: var(--color-muted); font-style: italic; }
-.hint { color: var(--color-muted); font-size: .82rem; margin: .4rem 0; }
-.opt { color: var(--color-muted); font-weight: 400; font-size: .85em; }
 
 /* ---------- chips ---------- */
 .chip { font-family: var(--font-mono); font-size: .72rem; color: var(--color-dim); background: var(--color-panel); border: 1px solid var(--color-border-2); padding: .15rem .5rem; display: inline-flex; align-items: center; gap: .35rem; line-height: 1.4; }

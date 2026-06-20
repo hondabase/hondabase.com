@@ -47,7 +47,7 @@
                     <a href="/auth/login" class="nav-signin">{{ __('Sign in') }}</a>
                 @endauth
             </nav>
-            <div class="header-right">
+            <div class="flex items-center gap-4">
                 @auth
                     <livewire:notification-bell />
                 @endauth
@@ -73,7 +73,7 @@
             <nav class="lang-switch" aria-label="{{ __('Language') }}">
                 @foreach (config('hondabase.locales') as $code => $meta)
                     @if ($code === app()->getLocale())
-                        <span class="lang-current" aria-current="true">{{ $meta['native'] }}</span>
+                        <span class="text-dim" aria-current="true">{{ $meta['native'] }}</span>
                     @else
                         <a href="{{ route('locale.switch', $code) }}" hreflang="{{ $meta['hreflang'] }}" rel="nofollow">{{ $meta['native'] }}</a>
                     @endif

@@ -5,7 +5,7 @@
 @section('content')
     <section class="page-head">
         <h2 class="section-head">My Hondabase</h2>
-        <p class="page-sub">Your garage, your feed and your saved articles.</p>
+        <p class="text-dim mt-1 max-w-[70ch]">Your garage, your feed and your saved articles.</p>
     </section>
 
     <livewire:dashboard />
@@ -13,7 +13,7 @@
     @if (config('webpush.vapid.public_key'))
     <section class="dash-section" x-data="pushToggle(@js(config('webpush.vapid.public_key')))" x-init="init()" x-cloak>
         <h2 class="section-head">Push notifications</h2>
-        <p class="page-sub">Get a browser notification the moment an article for something you
+        <p class="text-dim mt-1 max-w-[70ch]">Get a browser notification the moment an article for something you
         follow is published or updated, even when Hondabase isn't open.</p>
 
         <div class="push-row" x-show="supported">
@@ -21,7 +21,7 @@
             <span class="push-state" x-show="subscribed">On for this browser.</span>
             <span class="push-state push-denied" x-show="denied">Blocked in your browser settings.</span>
         </div>
-        <p class="hint" x-show="!supported">This browser doesn't support web push.</p>
+        <p class="text-muted text-[0.82rem] my-[0.4rem]" x-show="!supported">This browser doesn't support web push.</p>
     </section>
     @endif
 @endsection
