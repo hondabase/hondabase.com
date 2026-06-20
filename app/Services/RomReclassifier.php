@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Support\FrontmatterTags;
+use App\Support\Locales;
 use Illuminate\Support\Str;
 
 /**
@@ -78,5 +80,49 @@ class RomReclassifier
         ksort($distribution);
 
         return compact('moves', 'strip', 'keep', 'distribution');
+    }
+
+    /**
+     * Strip the `rom` tag from $stripSlugs' files (en + pt, at their current cars/rom location),
+     * then git-mv the bundles and rewrite body links via Recategorizer.
+     *
+     * @return array{moved:int, stripped:int, rewritten:int}
+     */
+    public function execute(array $moves, array $stripSlugs): array
+    {
+        $root = rtrim((string) config('hondabase.content_path'), '/');
+        $bases = ['' => $root];
+        foreach (Locales::others() as $loc) {
+            $bases[$loc] = "{$root}/{$loc}";
+        }
+
+        $stripSet = array_flip($stripSlugs);
+        $stripped = 0;
+        foreach ($moves as $m) {
+            if (! isset($stripSet[$m['slug']])) {
+                continue;
+            }
+            foreach ($bases as $base) {
+                $dir = "{$base}/{$m['type']}/{$m['from']}/{$m['slug']}";
+                foreach (glob("{$dir}/*.md") ?: [] as $md) {
+                    if (FrontmatterTags::removeTag($md, 'rom')) {
+                        $stripped++;
+                    }
+                }
+            }
+        }
+
+        $r = $this->recat->execute($moves);
+
+        // git mv leaves the now-empty `<type>/rom` category folder behind in each tree; remove it so
+        // the category is gone on disk (spec: content/cars/rom no longer exists).
+        $fromDirs = array_unique(array_map(fn ($m) => "{$m['type']}/{$m['from']}", $moves));
+        foreach ($fromDirs as $rel) {
+            foreach ($bases as $base) {
+                @rmdir("{$base}/{$rel}");
+            }
+        }
+
+        return ['moved' => $r['moved'], 'stripped' => $stripped, 'rewritten' => $r['rewritten']];
     }
 }

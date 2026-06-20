@@ -61,4 +61,25 @@ class RomReclassifyTest extends TestCase
         $this->assertContains('boost', $plan['strip']);
         $this->assertNotContains('27sf256', $plan['strip']);
     }
+
+    public function test_execute_files_chip_under_ecu_strips_rom_from_generic_and_moves_pt(): void
+    {
+        $recl = $this->app->make(RomReclassifier::class);
+        $plan = $recl->plan();
+
+        $result = $recl->execute($plan['moves'], $plan['strip']);
+
+        // chip-ROM under ecu, rom tag kept
+        $this->assertFileExists($this->root.'/cars/ecu/27sf256/27sf256.md');
+        $this->assertStringContainsString('rom', File::get($this->root.'/cars/ecu/27sf256/27sf256.md'));
+
+        // generic under tuning in both locales, rom tag stripped
+        $this->assertFileExists($this->root.'/cars/tuning/boost/boost.md');
+        $this->assertFileExists($this->root.'/pt/cars/tuning/boost/boost.md');
+        $this->assertStringNotContainsString('rom', File::get($this->root.'/cars/tuning/boost/boost.md'));
+        $this->assertStringNotContainsString('rom', File::get($this->root.'/pt/cars/tuning/boost/boost.md'));
+
+        $this->assertDirectoryDoesNotExist($this->root.'/cars/rom');
+        $this->assertSame(2, $result['stripped']); // boost en + pt
+    }
 }
