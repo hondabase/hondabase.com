@@ -32,10 +32,16 @@ class CompatibilityResolver
         $links = [];
 
         // 1. Inherited from the folder location (the deepest matched node).
-        $inherited = $this->parser->parse($type, $category)['node'];
+        $parsed = $this->parser->parse($type, $category);
+        $inherited = $parsed['node'];
         if ($inherited) {
             $links[$inherited->id] = ['source' => 'inherited', 'meta' => null];
         }
+
+        // If the article lives under a make node, scope bridge lookups to that make subtree so
+        // chassis/model lookups don't bleed across brands (e.g. Acura DC5 must not also match
+        // Honda's dc5 generation node even though both carry the same chassis code).
+        $makePath = isset($parsed['node_slugs'][0]) ? $type . '/' . $parsed['node_slugs'][0] : null;
 
         // 2. Explicit `fits:` entries -> node paths.
         foreach ($this->fitsList($fm) as $fit) {
@@ -53,17 +59,17 @@ class CompatibilityResolver
             }
         };
         foreach ((array) ($at['chassis'] ?? []) as $code) {
-            foreach ($this->byChassis($type, (string) $code) as $node) {
+            foreach ($this->byChassis($type, (string) $code, $makePath) as $node) {
                 $bridge($node, 'applies_to.chassis');
             }
         }
         foreach ((array) ($at['models'] ?? []) as $m) {
-            foreach ($this->bySlug($type, 'model', Str::slug((string) $m)) as $node) {
+            foreach ($this->bySlug($type, 'model', Str::slug((string) $m), $makePath) as $node) {
                 $bridge($node, 'applies_to.models');
             }
         }
         foreach ((array) ($at['trims'] ?? []) as $tr) {
-            foreach ($this->bySlug($type, 'trim', Str::slug((string) $tr)) as $node) {
+            foreach ($this->bySlug($type, 'trim', Str::slug((string) $tr), $makePath) as $node) {
                 $bridge($node, 'applies_to.trims');
             }
         }
@@ -124,12 +130,15 @@ class CompatibilityResolver
     }
 
     /** @return Collection<int, TaxonomyNode> */
-    private function byChassis(string $type, string $code): Collection
+    private function byChassis(string $type, string $code, ?string $makePath = null): Collection
     {
         $code = strtolower(trim($code));
 
-        return $this->nodes()->filter(function (TaxonomyNode $n) use ($type, $code) {
+        return $this->nodes()->filter(function (TaxonomyNode $n) use ($type, $code, $makePath) {
             if ($n->type !== $type) {
+                return false;
+            }
+            if ($makePath !== null && ! str_starts_with($n->path, $makePath . '/') && $n->path !== $makePath) {
                 return false;
             }
 
@@ -144,9 +153,18 @@ class CompatibilityResolver
     }
 
     /** @return Collection<int, TaxonomyNode> */
-    private function bySlug(string $type, string $kind, string $slug): Collection
+    private function bySlug(string $type, string $kind, string $slug, ?string $makePath = null): Collection
     {
-        return $this->nodes()->filter(fn (TaxonomyNode $n) => $n->type === $type && $n->kind === $kind && $n->slug === $slug)->values();
+        return $this->nodes()->filter(function (TaxonomyNode $n) use ($type, $kind, $slug, $makePath) {
+            if ($n->type !== $type || $n->kind !== $kind || $n->slug !== $slug) {
+                return false;
+            }
+            if ($makePath !== null && ! str_starts_with($n->path, $makePath . '/') && $n->path !== $makePath) {
+                return false;
+            }
+
+            return true;
+        })->values();
     }
 
     /** @return list<TaxonomyNode> the node and each ancestor up to the root */
