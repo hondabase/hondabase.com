@@ -10,12 +10,12 @@
 
     // Preferred labels + display order for well-known fields; anything else is humanized.
     $labels = [
-        'brand' => 'Brand', 'models' => 'Models', 'model' => 'Model', 'chassis' => 'Chassis',
+        'make' => 'Make', 'models' => 'Models', 'model' => 'Model', 'chassis' => 'Chassis',
         'trims' => 'Trims', 'trim' => 'Trim', 'engines' => 'Engines', 'engine' => 'Engine',
         'displacement' => 'Displacement', 'ecus' => 'ECUs', 'systems' => 'Systems',
         'years' => 'Years', 'scope' => 'Scope',
     ];
-    $order = ['brand', 'models', 'model', 'chassis', 'trims', 'trim', 'engines', 'engine',
+    $order = ['make', 'models', 'model', 'chassis', 'trims', 'trim', 'engines', 'engine',
               'displacement', 'ecus', 'systems', 'years', 'scope'];
 
     $keys = array_merge(
@@ -34,7 +34,7 @@
             $v = trim((string) $v);
             if ($k === 'engines' || $k === 'engine')     $items[] = $isFamily($v) ? ['badge series', $familyLabel($v)] : ['chip', $v];
             elseif ($k === 'scope')                      $items[] = ['chip', ucwords(str_replace('-', ' ', $v))];
-            elseif ($k === 'brand')                      $items[] = ['chip', ucfirst($v)];
+            elseif ($k === 'make')                       $items[] = ['chip', ucfirst($v)];
             else                                         $items[] = ['chip', $v];
         }
         if ($items) {

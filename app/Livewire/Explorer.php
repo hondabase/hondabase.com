@@ -35,7 +35,7 @@ class Explorer extends Component
     private const KIND_LABELS = [
         'category' => 'Categories', 'engine' => 'Engine family',
         'tag' => 'Tags', 'chassis' => 'Chassis', 'model' => 'Models',
-        'brand' => 'Brand', 'scope' => 'Scope', 'system' => 'Systems', 'year' => 'Years',
+        'make' => 'Make', 'scope' => 'Scope', 'system' => 'Systems', 'year' => 'Years',
     ];
 
     public function mount(?string $type = null, ?string $category = null): void
@@ -357,7 +357,7 @@ class Explorer extends Component
             unset($byKind['engine']);
         }
 
-        $order = ['category', 'engine', 'tag', 'chassis', 'model', 'brand', 'scope', 'system', 'year'];
+        $order = ['category', 'engine', 'tag', 'chassis', 'model', 'make', 'scope', 'system', 'year'];
         $limits = ['tag' => 18];
         $groups = [];
         foreach ([...$order, ...array_diff(array_keys($byKind), $order)] as $kind) {

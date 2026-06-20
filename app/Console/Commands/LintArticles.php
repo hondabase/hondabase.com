@@ -144,7 +144,7 @@ class LintArticles extends Command
                         if (! is_array($fm['applies_to'])) {
                             $errors[] = "[{$type}/{$category}/{$slug}] 'applies_to' must be an object/array";
                         } else {
-                            $allowedAppliesToKeys = ['brand', 'models', 'model', 'chassis', 'trims', 'trim', 'engines', 'ecus', 'years', 'scope'];
+                            $allowedAppliesToKeys = ['make', 'models', 'model', 'chassis', 'trims', 'trim', 'engines', 'ecus', 'years', 'scope'];
                             foreach (array_keys($fm['applies_to']) as $key) {
                                 if (! in_array($key, $allowedAppliesToKeys, true)) {
                                     $errors[] = "[{$type}/{$category}/{$slug}] Disallowed key under 'applies_to': '{$key}'. Only ".implode(', ', $allowedAppliesToKeys).' are allowed.';

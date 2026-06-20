@@ -46,7 +46,7 @@
                 <option value="chassis"></option>
                 <option value="models"></option>
                 <option value="years"></option>
-                <option value="brand"></option>
+                <option value="make"></option>
                 <option value="systems"></option>
                 <option value="scope"></option>
             </datalist>

@@ -532,7 +532,7 @@ class ArticleService
                 } elseif ($kind === 'scope') {
                     $f[] = ['scope', Str::slug($v), ucwords(str_replace('-', ' ', $v))];
                 } else {
-                    $f[] = [$kind, Str::slug($v) ?: strtolower($v), $kind === 'brand' ? ucfirst($v) : $v];
+                    $f[] = [$kind, Str::slug($v) ?: strtolower($v), $kind === 'make' ? ucfirst($v) : $v];
                 }
             }
         }
