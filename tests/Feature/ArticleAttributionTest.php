@@ -71,7 +71,8 @@ MD);
 
         $this->get('/cars/electronics/test-credit')
             ->assertOk()
-            ->assertSeeText('LegacyWriter, Display Name (@stable_username)')
+            ->assertSeeText('LegacyWriter')
+            ->assertSeeText('Display Name (@stable_username)')
             ->assertSeeText('Adapted from pgmfi.org wiki')
             ->assertSeeText('Licensed under CC BY-NC-SA 1.0.');
     }

@@ -14,6 +14,8 @@ abstract class TestCase extends BaseTestCase
 
         parent::setUp();
 
+        $this->withoutVite();
+
         if (config('database.default') !== 'sqlite' || config('database.connections.sqlite.database') !== ':memory:') {
             throw new \RuntimeException('Refusing to run tests outside the in-memory SQLite database.');
         }

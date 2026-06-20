@@ -62,8 +62,9 @@ MD);
         $facets = $article->facets->map(fn ($f) => $f->kind.':'.$f->value)->all();
 
         $this->assertContains('tag:obd1', $facets);
-        $this->assertContains('ecu:p28', $facets);
+        $this->assertContains('tag:p28', $facets); // ECU facets merged into tags (7f676e3)
         $this->assertNotContains('obd:1', $facets);
+        $this->assertNotContains('ecu:p28', $facets);
     }
 
     public function test_old_obd_filter_url_maps_to_obd_tag_filter(): void
