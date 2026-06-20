@@ -34,7 +34,7 @@ class RomReclassifier
     }
 
     /**
-     * @return array{moves: list<array>, strip: list<string>, keep: list<string>, distribution: array<string,int>}
+     * @return array{moves: list<array{type: string, slug: string, from: string, to: string, reason: string}>, strip: list<string>, keep: list<string>, distribution: array<string,int>}
      */
     public function plan(): array
     {

@@ -44,7 +44,7 @@ class RomReclassifyTest extends TestCase
         parent::tearDown();
     }
 
-    public function seedFile(string $rel, string $contents): void
+    private function seedFile(string $rel, string $contents): void
     {
         File::ensureDirectoryExists(dirname($this->root.'/'.$rel));
         File::put($this->root.'/'.$rel, $contents);
