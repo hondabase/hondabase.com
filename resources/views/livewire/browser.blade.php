@@ -3,7 +3,7 @@
     {{-- ------------------------------------------------------------------ --}}
     {{-- Search box + typeahead                                             --}}
     {{-- ------------------------------------------------------------------ --}}
-    <div class="br-search-wrap" x-data="{ open: @entangle('bq').live !== '' }">
+    <div class="br-search-wrap" x-data="{ open: false }">
         <div class="ex-search">
             <input type="search"
                    wire:model.live.debounce.300ms="bq"
