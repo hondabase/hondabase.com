@@ -61,8 +61,15 @@ a separate repo for forkability; the database is a *derived, rebuildable* index.
 - **PHP style: Laravel Pint.** Run `vendor/bin/pint` before committing; CI runs
   `pint --test`. Scope is configured in `pint.json` (legacy `public/`, `scratch/`,
   `tools/`, `bin/` are excluded).
-- **Styling:** Tailwind v4 `@theme` tokens, one bundle, hybrid semantic-class/utility
-  approach. Never hard-code palette hex values — see `docs/STYLE_GUIDE.md`.
+- **Styling:** Tailwind v4 `@theme` tokens, one bundle, hybrid approach — enforce this order:
+  1. **Inline utilities first.** Simple, single-use styles go directly on the element in Blade
+     (`class="flex items-center gap-4"`). Don't create a named CSS class for a one-liner.
+  2. **`@apply` for reusable components.** If the same visual pattern recurs across many
+     templates, keep the semantic class name but write its body with `@apply` in `app.css`.
+  3. **Raw CSS only when necessary.** Pseudo-elements (`::before`/`::after`), complex child
+     selectors, keyframes, and highly dynamic state classes stay as plain CSS.
+  - Never hard-code palette hex values — always use `@theme` tokens (`text-amber`, `bg-panel`,
+    `border-border`, etc.). See `docs/STYLE_GUIDE.md`.
 - **Run as `www-data`.** The app files are owned by `www-data`; after editing, restore
   ownership (`chown -R www-data:www-data <paths>`) or artisan/web requests 500.
 
