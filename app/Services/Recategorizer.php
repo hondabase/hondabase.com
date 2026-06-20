@@ -25,7 +25,6 @@ class Recategorizer
         'fueling' => ['fueling', 'injectors', 'fuel'],
         'ignition' => ['ignition'],
         'diagnostics' => ['diagnostics', 'troubleshooting', 'error-codes', 'codes'],
-        'rom' => ['rom', 'chipping', 'maps'],
         'tuning' => ['tuning', 'datalogging'],
         'sensors' => ['sensors', 'sensor', 'vtec', 'knock', 'iab', 'adc'],
         'ecu' => ['ecu', 'hardware', 'microcontroller', 'serial', 'protocol', 'interface', 'pgm-fi', 'memory'],
