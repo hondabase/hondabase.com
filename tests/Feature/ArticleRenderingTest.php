@@ -54,6 +54,9 @@ MD
             'hondabase.content_path' => $this->contentPath,
             'app.url' => 'https://www.hondabase.com',
         ]);
+
+        \Illuminate\Support\Facades\URL::forceRootUrl('https://www.hondabase.com');
+        \Illuminate\Support\Facades\URL::forceScheme('https');
     }
 
     protected function tearDown(): void
