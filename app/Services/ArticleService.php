@@ -6,6 +6,7 @@ use App\Markdown\CarouselParser;
 use App\Markdown\GithubAlertExtension;
 use App\Markdown\MarkdownNormalizer;
 use App\Markdown\WirelistParser;
+use App\Models\TaxonomyNode;
 use App\Support\Locales;
 use Illuminate\Support\Str;
 use League\CommonMark\Environment\Environment;
@@ -490,13 +491,26 @@ class ArticleService
         $f = [
             ['type', $type, $this->humanize($type)],
         ];
-        // One category facet per ancestor path segment, so a nested article (electronics/ecu) is
-        // discoverable under both 'electronics' and 'electronics/ecu' (drill-down). A flat category
-        // yields the single facet it always did.
+        // One facet per ancestor path segment for drill-down. Segments that match a taxonomy node
+        // (make/model/generation/etc.) use that node's kind and name; plain subject folders fall
+        // back to 'category'.
+        $segments = array_values(array_filter(explode('/', $category)));
+        $paths = [];
         $acc = '';
-        foreach (array_filter(explode('/', $category)) as $seg) {
+        foreach ($segments as $seg) {
             $acc = $acc === '' ? $seg : "{$acc}/{$seg}";
-            $f[] = ['category', $acc, $this->humanize($seg)];
+            $paths[] = "{$type}/{$acc}";
+        }
+        $nodesByAcc = TaxonomyNode::whereIn('path', $paths)->get()->keyBy(fn ($n) => substr($n->path, strlen($type) + 1));
+        $acc = '';
+        foreach ($segments as $seg) {
+            $acc = $acc === '' ? $seg : "{$acc}/{$seg}";
+            if ($nodesByAcc->has($acc)) {
+                $node = $nodesByAcc[$acc];
+                $f[] = [$node->kind, $node->slug, $node->name];
+            } else {
+                $f[] = ['category', $acc, $this->humanize($seg)];
+            }
         }
         foreach ($this->asList($fm['tags'] ?? []) as $t) {
             $f[] = ['tag', Str::slug($t) ?: $t, $t];
