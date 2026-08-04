@@ -809,7 +809,7 @@ class ArticleService
     /** Point relative <img src> at the co-located asset route. */
     private function rewriteAssets(string $html, string $assetBase, array $assetUrls = []): string
     {
-        return preg_replace_callback('/<img\b[^>]*\bsrc="([^"]+)"/i', function ($m) use ($assetBase, $assetUrls) {
+        return preg_replace_callback('/<img\b[^>]*(?<![:\w])src="([^"]+)"/i', function ($m) use ($assetBase, $assetUrls) {
             $url = $m[1];
             if (preg_match('#^(https?:)?//#i', $url) || str_starts_with($url, '/') || str_starts_with($url, 'data:')) {
                 return $m[0];
@@ -824,7 +824,7 @@ class ArticleService
     /** Point relative attachment links at the co-located asset route. */
     private function rewriteAttachmentLinks(string $html, string $assetBase): string
     {
-        return preg_replace_callback('/<a\b[^>]*\bhref="([^"]+)"/i', function ($m) use ($assetBase) {
+        return preg_replace_callback('/<a\b[^>]*(?<![:\w])href="([^"]+)"/i', function ($m) use ($assetBase) {
             $url = $m[1];
             if (
                 preg_match('#^(?:[a-z][a-z0-9+.-]*:|//)#i', $url)
