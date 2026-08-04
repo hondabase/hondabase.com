@@ -31,6 +31,7 @@
     </div>
 
     <div class="carousel-lightbox"
+        x-ref="lightboxDialog"
         x-show="lightbox"
         x-cloak
         x-transition.opacity

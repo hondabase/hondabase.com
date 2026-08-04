@@ -58,12 +58,27 @@ document.addEventListener('alpine:init', () => {
             this.resetZoom();
             this.lightbox = true;
             document.documentElement.classList.add('carousel-lightbox-open');
+            const el = this.$refs.lightboxDialog;
+            if (el?.requestFullscreen) {
+                el.requestFullscreen().catch(() => {});
+            }
         },
         closeLightbox() {
             if (!this.lightbox) return;
             this.lightbox = false;
             this.resetZoom();
             document.documentElement.classList.remove('carousel-lightbox-open');
+            if (document.fullscreenElement === this.$refs.lightboxDialog) {
+                document.exitFullscreen().catch(() => {});
+            }
+        },
+        init() {
+            this.onFullscreenChange = () => {
+                if (this.lightbox && document.fullscreenElement !== this.$refs.lightboxDialog) {
+                    this.closeLightbox();
+                }
+            };
+            document.addEventListener('fullscreenchange', this.onFullscreenChange);
         },
         resetZoom() {
             this.zoomScale = 1;
@@ -159,6 +174,7 @@ document.addEventListener('alpine:init', () => {
         destroy() {
             cancelAnimationFrame(this.frame);
             document.documentElement.classList.remove('carousel-lightbox-open');
+            document.removeEventListener('fullscreenchange', this.onFullscreenChange);
         },
     }));
 
