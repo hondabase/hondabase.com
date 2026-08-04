@@ -252,7 +252,7 @@ class BrowserTest extends TestCase
 
     // --- navigation ---
 
-    public function test_drillTo_root_clears_node(): void
+    public function test_drill_to_root_clears_node(): void
     {
         Livewire::test(Browser::class)
             ->call('drillTo', 'cars')
@@ -260,7 +260,7 @@ class BrowserTest extends TestCase
             ->assertSet('node', '');
     }
 
-    public function test_drillTo_clears_search_query(): void
+    public function test_drill_to_clears_search_query(): void
     {
         Livewire::test(Browser::class)
             ->set('bq', 'civic')

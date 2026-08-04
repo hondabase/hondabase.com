@@ -6,11 +6,17 @@ a faint scanline texture. Mobile-first, always.
 
 ## One bundle, Tailwind v4
 
-All CSS lives in **`resources/css/app.css`** and is compiled by Vite into a single
-hashed bundle (`public/build/assets/app-*.css`) loaded site-wide via `@vite` in the
-layout. There are **no per-page `<link>` tags** and **no hand-written stylesheets in
-`public/`** anymore (the old `hondabase`/`article`/`explorer`/`me`/`editor`.css were all
-folded in and deleted).
+App CSS lives in **`resources/css/app.css`** and is compiled by Vite into a hashed
+bundle (`public/build/assets/app-*.css`) loaded site-wide via `@vite` in the layout.
+There are **no per-page `<link>` tags** and **no hand-written stylesheets in `public/`**
+anymore (the old `hondabase`/`article`/`explorer`/`me`/`editor`.css were all folded in and
+deleted).
+
+The exception is the generated compatibility stylesheet at **`public/assets/base.css`**,
+used by sibling/static sites such as `manuals.hondabase.com`. Its source entry is
+`resources/css/base.css`, and `pnpm build` publishes the compiled Tailwind output to that
+stable public path via `scripts/publish-base-css.mjs`. Do not edit `public/assets/base.css`
+by hand.
 
 The editor route additionally loads a code-split `editor-*.js` (TipTap); readers never
 download it. `resources/js/app.js` is intentionally empty.

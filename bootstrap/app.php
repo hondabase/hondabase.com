@@ -20,6 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Resolve the UI locale (cookie → Accept-Language → default) on every web request.
         $middleware->web(append: [SetLocale::class]);
+
+        // Called cross-origin from manuals.hondabase.com using the shared .hondabase.com session.
+        $middleware->validateCsrfTokens(except: ['manuals/favorites', 'manuals/logout']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

@@ -13,10 +13,12 @@ use App\Services\ArticleClickCounter;
 use App\Services\ArticleService;
 use App\Support\BreadcrumbBuilder;
 use App\Support\Locales;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ArticleController extends Controller
@@ -292,14 +294,14 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function typeIndex(Request $request, string $type): \Illuminate\View\View
+    public function typeIndex(Request $request, string $type): View
     {
         $locale = $request->route('locale') ?? Locales::default();
 
         return view('type', compact('type', 'locale'));
     }
 
-    public function destroy(Request $request, string $type, string $path): \Illuminate\Http\RedirectResponse
+    public function destroy(Request $request, string $type, string $path): RedirectResponse
     {
         ['category' => $category, 'slug' => $slug] = ArticleService::splitPath($path);
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\ManualFavoriteController;
 use App\Http\Controllers\PushSubscriptionController;
 use App\Models\Article;
 use App\Services\ArticleService;
@@ -85,6 +86,18 @@ Route::get('/explore', fn () => view('explore'))->name('explore');
 Route::post('/_click/article-links/{counter}', [ArticleController::class, 'clickLink'])
     ->whereNumber('counter')
     ->name('article-link-clicks.store');
+
+Route::options('/manuals/favorites', [ManualFavoriteController::class, 'preflight'])
+    ->name('manuals.favorites.preflight');
+Route::get('/manuals/favorites', [ManualFavoriteController::class, 'status'])
+    ->name('manuals.favorites.status');
+Route::post('/manuals/favorites', [ManualFavoriteController::class, 'toggle'])
+    ->name('manuals.favorites.toggle');
+Route::delete('/manuals/favorites/{manualFavorite}', [ManualFavoriteController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('manuals.favorites.destroy');
+Route::post('/manuals/logout', [ManualFavoriteController::class, 'logout'])
+    ->name('manuals.logout');
 
 // Knowledgebase. Types are constrained to the content top-level folders so these
 // patterns never shadow other app routes or the legacy /pgmfi, /guides, /reference paths.

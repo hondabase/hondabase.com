@@ -277,7 +277,7 @@ class ArticleService
             'meta' => $fm,
             'sources' => $this->sources($fm['sources'] ?? []),
             'authors' => $this->authors->forArticle($rel),
-            'en_authors' => \App\Support\Locales::isDefault($locale)
+            'en_authors' => Locales::isDefault($locale)
                 ? collect()
                 : $this->authors->forArticle(preg_replace('/^'.preg_quote($locale, '/').'\//', '', $rel)),
             'edit_url' => 'https://github.com/'.config('hondabase.content_repo').'/blob/main/'.$rel,

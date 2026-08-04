@@ -34,6 +34,7 @@
             <nav class="nav" :class="{ 'is-active': mobileMenuOpen }" x-cloak>
                 <a href="/pgmfi/">pgmfi.org</a>
                 <a href="https://files.hondabase.com">{{ __('Files') }}</a>
+                <a href="https://manuals.hondabase.com">{{ __('Manuals') }}</a>
                 @auth
                     <a href="/me" class="nav-signin">{{ __('My Hondabase') }}</a>
                     <a href="/new" class="nav-signin">{{ __('New article') }}</a>

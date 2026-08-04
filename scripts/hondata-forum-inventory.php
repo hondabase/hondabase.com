@@ -10,7 +10,6 @@ declare(strict_types=1);
  * not mirror full post bodies unless --include-post-text is passed by a user who has permission to
  * archive that content.
  */
-
 $options = getopt('', [
     'start-url::',
     'out::',
@@ -227,6 +226,7 @@ function crawlForumPages(HttpClient $client, string $forumUrl, string $origin): 
         $response = $client->get($nextUrl);
         if ($response['status'] >= 400) {
             fwrite(STDERR, "Skipping {$nextUrl}: HTTP {$response['status']}\n");
+
             return;
         }
 
@@ -374,6 +374,7 @@ function robotsAllows(string $robots, string $path): bool
         if (stripos($line, 'User-agent:') === 0) {
             $agent = trim(substr($line, strlen('User-agent:')));
             $applies = $agent === '*';
+
             continue;
         }
         if ($applies && stripos($line, 'Disallow:') === 0) {
@@ -389,7 +390,7 @@ function robotsAllows(string $robots, string $path): bool
 
 function htmlDom(string $html): DOMDocument
 {
-    $dom = new DOMDocument();
+    $dom = new DOMDocument;
     libxml_use_internal_errors(true);
     $dom->loadHTML('<?xml encoding="utf-8" ?>'.$html, LIBXML_NOERROR | LIBXML_NOWARNING);
     libxml_clear_errors();

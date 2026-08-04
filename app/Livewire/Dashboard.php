@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Article;
 use App\Models\Favorite;
+use App\Models\ManualFavorite;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
@@ -37,12 +38,18 @@ class Dashboard extends Component
             ->orderByDesc('favorites.created_at')
             ->get(['articles.id', 'articles.type', 'articles.category', 'articles.slug', 'articles.title', 'articles.summary']);
 
-        $isEmpty = $vehicles->isEmpty() && $follows->isEmpty() && $favorites->isEmpty();
+        $manualFavorites = ManualFavorite::query()
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get();
+
+        $isEmpty = $vehicles->isEmpty() && $follows->isEmpty() && $favorites->isEmpty() && $manualFavorites->isEmpty();
 
         return view('livewire.dashboard', [
             'vehicles' => $vehicles,
             'follows' => $follows,
             'favorites' => $favorites,
+            'manualFavorites' => $manualFavorites,
             'feed' => $this->feed($followed),
             'isEmpty' => $isEmpty,
         ]);

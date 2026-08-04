@@ -41,7 +41,7 @@ class CompatibilityResolver
         // If the article lives under a make node, scope bridge lookups to that make subtree so
         // chassis/model lookups don't bleed across brands (e.g. Acura DC5 must not also match
         // Honda's dc5 generation node even though both carry the same chassis code).
-        $makePath = isset($parsed['node_slugs'][0]) ? $type . '/' . $parsed['node_slugs'][0] : null;
+        $makePath = isset($parsed['node_slugs'][0]) ? $type.'/'.$parsed['node_slugs'][0] : null;
 
         // 2. Explicit `fits:` entries -> node paths.
         foreach ($this->fitsList($fm) as $fit) {
@@ -138,7 +138,7 @@ class CompatibilityResolver
             if ($n->type !== $type) {
                 return false;
             }
-            if ($makePath !== null && ! str_starts_with($n->path, $makePath . '/') && $n->path !== $makePath) {
+            if ($makePath !== null && ! str_starts_with($n->path, $makePath.'/') && $n->path !== $makePath) {
                 return false;
             }
 
@@ -159,7 +159,7 @@ class CompatibilityResolver
             if ($n->type !== $type || $n->kind !== $kind || $n->slug !== $slug) {
                 return false;
             }
-            if ($makePath !== null && ! str_starts_with($n->path, $makePath . '/') && $n->path !== $makePath) {
+            if ($makePath !== null && ! str_starts_with($n->path, $makePath.'/') && $n->path !== $makePath) {
                 return false;
             }
 

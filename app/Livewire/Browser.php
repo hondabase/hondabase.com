@@ -178,7 +178,7 @@ class Browser extends Component
         $pathSoFar = $type;
 
         foreach (array_slice($parts, 1) as $slug) {
-            $pathSoFar .= '/' . $slug;
+            $pathSoFar .= '/'.$slug;
             $node = $allNodes->get($pathSoFar);
             $crumbs[] = [
                 'label' => $node?->name ?? ucfirst($slug),
@@ -206,7 +206,7 @@ class Browser extends Component
         $cursor = $current;
 
         while ($cursor) {
-            $chain[] = $cursor->kind . ':' . $cursor->slug;
+            $chain[] = $cursor->kind.':'.$cursor->slug;
             $cursor = $cursor->parent_id ? $allNodes->get($cursor->parent_id) : null;
         }
 
@@ -222,17 +222,17 @@ class Browser extends Component
     {
         $type = $this->nodeType();
         $locale = app()->getLocale();
-        $prefix = Locales::isDefault($locale) ? '' : '/' . $locale;
+        $prefix = Locales::isDefault($locale) ? '' : '/'.$locale;
 
         if ($current === null) {
-            return $prefix . '/' . $type;
+            return $prefix.'/'.$type;
         }
 
         // Reverse so the chain is root-first (make before model before generation).
         $chain = array_reverse($this->ancestorFacetChain($current));
         $params = http_build_query(['filters' => $chain]);
 
-        return $prefix . '/' . $type . '?' . $params;
+        return $prefix.'/'.$type.'?'.$params;
     }
 
     // ---------------------------------------------------------------------------
@@ -245,16 +245,16 @@ class Browser extends Component
      */
     private function suggestions(string $q): Collection
     {
-        $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $q) . '%';
+        $like = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], $q).'%';
 
         return TaxonomyNode::where(fn ($w) => $w
             ->where('name', 'like', $like)
             ->orWhere('slug', 'like', $like)
             ->orWhere('meta', 'like', $like)
         )
-        ->orderBy('kind')
-        ->orderBy('name')
-        ->limit(8)
-        ->get(['id', 'type', 'kind', 'slug', 'name', 'path']);
+            ->orderBy('kind')
+            ->orderBy('name')
+            ->limit(8)
+            ->get(['id', 'type', 'kind', 'slug', 'name', 'path']);
     }
 }
