@@ -13,6 +13,8 @@ document.addEventListener('alpine:init', () => {
         pointers: {},
         dragStart: null,
         pinchStart: null,
+        navigating: false,
+        navTimer: null,
         go(index) {
             const next = Math.max(0, Math.min(this.total - 1, index));
             const track = this.$refs.track;
@@ -21,6 +23,13 @@ document.addEventListener('alpine:init', () => {
                 this.current = next;
                 return;
             }
+            // While the smooth scroll below is in flight, syncFromScroll() would otherwise
+            // round the still-animating scrollLeft back to the old index and flash the
+            // previous slide's image before settling on the target — suppress it until
+            // the scroll actually finishes.
+            this.navigating = true;
+            clearTimeout(this.navTimer);
+            this.navTimer = setTimeout(() => { this.navigating = false; }, 500);
             // Full-width slides: index * clientWidth is more reliable than offsetLeft
             // (offsetParent quirks inside flex + scroll containers).
             track.scrollTo({
@@ -31,7 +40,13 @@ document.addEventListener('alpine:init', () => {
         },
         previous() { this.go(this.current - 1); },
         next() { this.go(this.current + 1); },
+        onScrollEnd() {
+            clearTimeout(this.navTimer);
+            this.navigating = false;
+            this.syncFromScroll();
+        },
         syncFromScroll() {
+            if (this.navigating) return;
             cancelAnimationFrame(this.frame);
             this.frame = requestAnimationFrame(() => {
                 const track = this.$refs.track;
@@ -173,6 +188,7 @@ document.addEventListener('alpine:init', () => {
         },
         destroy() {
             cancelAnimationFrame(this.frame);
+            clearTimeout(this.navTimer);
             document.documentElement.classList.remove('carousel-lightbox-open');
             document.removeEventListener('fullscreenchange', this.onFullscreenChange);
         },

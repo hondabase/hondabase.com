@@ -7,7 +7,7 @@
     x-on:keydown.left.prevent="previous()"
     x-on:keydown.right.prevent="next()"
     x-on:keydown.escape.window="closeLightbox()">
-    <div class="carousel-track" x-ref="track" x-on:scroll.passive="syncFromScroll()" tabindex="0">
+    <div class="carousel-track" x-ref="track" x-on:scroll.passive="syncFromScroll()" x-on:scrollend="onScrollEnd()" tabindex="0">
         @foreach ($slides as $index => $slide)
             <figure class="carousel-slide"
                 aria-roledescription="slide"
