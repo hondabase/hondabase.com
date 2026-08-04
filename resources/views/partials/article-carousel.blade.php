@@ -45,7 +45,18 @@
             :disabled="current === 0"
             aria-label="Previous slide">&#8249;</button>
         <figure class="carousel-lightbox-stage">
-            <img :src="lightboxSrc()" :alt="lightboxAlt()">
+            <img :src="lightboxSrc()" :alt="lightboxAlt()"
+                x-ref="lightboxImg"
+                draggable="false"
+                :class="{ 'is-zoomed': zoomScale > 1, 'is-panning': dragStart || pinchStart }"
+                :style="lightboxImgStyle()"
+                x-on:wheel.prevent="onWheel($event)"
+                x-on:dblclick="onDblClick($event)"
+                x-on:pointerdown="onPointerDown($event)"
+                x-on:pointermove="onPointerMove($event)"
+                x-on:pointerup="onPointerUp($event)"
+                x-on:pointercancel="onPointerUp($event)"
+                x-on:pointerleave="onPointerUp($event)">
             <figcaption x-show="lightboxCaption()" x-text="lightboxCaption()"></figcaption>
         </figure>
         <button type="button"

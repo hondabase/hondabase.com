@@ -1015,6 +1015,19 @@ html.carousel-lightbox-open body {
   border: 0;
   margin: 0;
   background: #0a0a0b;
+  touch-action: none;
+  transform-origin: center center;
+  transition: transform .15s ease-out;
+  cursor: zoom-in;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.article-carousel .carousel-lightbox-stage img.is-zoomed {
+  cursor: grab;
+}
+.article-carousel .carousel-lightbox-stage img.is-panning {
+  cursor: grabbing;
+  transition: none;
 }
 .article-carousel .carousel-lightbox-stage figcaption {
   max-width: 40rem;

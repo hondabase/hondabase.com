@@ -6,9 +6,17 @@ document.addEventListener('alpine:init', () => {
         current: 0,
         frame: null,
         lightbox: false,
+        maxZoom: 4,
+        zoomScale: 1,
+        zoomX: 0,
+        zoomY: 0,
+        pointers: {},
+        dragStart: null,
+        pinchStart: null,
         go(index) {
             const next = Math.max(0, Math.min(this.total - 1, index));
             const track = this.$refs.track;
+            this.resetZoom();
             if (!track?.clientWidth) {
                 this.current = next;
                 return;
@@ -47,13 +55,106 @@ document.addEventListener('alpine:init', () => {
         },
         openLightbox(index) {
             if (typeof index === 'number') this.go(index);
+            this.resetZoom();
             this.lightbox = true;
             document.documentElement.classList.add('carousel-lightbox-open');
         },
         closeLightbox() {
             if (!this.lightbox) return;
             this.lightbox = false;
+            this.resetZoom();
             document.documentElement.classList.remove('carousel-lightbox-open');
+        },
+        resetZoom() {
+            this.zoomScale = 1;
+            this.zoomX = 0;
+            this.zoomY = 0;
+            this.pointers = {};
+            this.dragStart = null;
+            this.pinchStart = null;
+        },
+        lightboxImgStyle() {
+            return `transform: translate(${this.zoomX}px, ${this.zoomY}px) scale(${this.zoomScale})`;
+        },
+        clampPan() {
+            const img = this.$refs.lightboxImg;
+            if (!img || this.zoomScale <= 1) {
+                this.zoomX = 0;
+                this.zoomY = 0;
+                return;
+            }
+            const maxX = Math.max(0, (img.clientWidth * (this.zoomScale - 1)) / 2);
+            const maxY = Math.max(0, (img.clientHeight * (this.zoomScale - 1)) / 2);
+            this.zoomX = Math.min(maxX, Math.max(-maxX, this.zoomX));
+            this.zoomY = Math.min(maxY, Math.max(-maxY, this.zoomY));
+        },
+        setZoomAt(nextScale, clientX, clientY) {
+            const img = this.$refs.lightboxImg;
+            if (!img) return;
+            nextScale = Math.min(this.maxZoom, Math.max(1, nextScale));
+            const prevScale = this.zoomScale;
+            if (nextScale === prevScale) return;
+            const rect = img.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const ratio = nextScale / prevScale;
+            this.zoomX += (clientX - centerX) * (1 - ratio);
+            this.zoomY += (clientY - centerY) * (1 - ratio);
+            this.zoomScale = nextScale;
+            if (this.zoomScale === 1) {
+                this.zoomX = 0;
+                this.zoomY = 0;
+            }
+            this.clampPan();
+        },
+        onWheel(e) {
+            const factor = e.deltaY < 0 ? 1.25 : 0.8;
+            this.setZoomAt(this.zoomScale * factor, e.clientX, e.clientY);
+        },
+        onDblClick(e) {
+            this.setZoomAt(this.zoomScale > 1 ? 1 : 2.5, e.clientX, e.clientY);
+        },
+        pinchState() {
+            const [a, b] = Object.values(this.pointers);
+            return {
+                dist: Math.hypot(a.x - b.x, a.y - b.y),
+                midX: (a.x + b.x) / 2,
+                midY: (a.y + b.y) / 2,
+            };
+        },
+        onPointerDown(e) {
+            this.pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+            const ids = Object.keys(this.pointers);
+            if (ids.length === 2) {
+                this.dragStart = null;
+                const state = this.pinchState();
+                this.pinchStart = state.dist > 1 ? { ...state, scale: this.zoomScale } : null;
+            } else if (ids.length === 1) {
+                this.pinchStart = null;
+                if (this.zoomScale > 1) {
+                    e.target.setPointerCapture?.(e.pointerId);
+                    this.dragStart = { x: e.clientX, y: e.clientY, zoomX: this.zoomX, zoomY: this.zoomY };
+                }
+            }
+        },
+        onPointerMove(e) {
+            if (!(e.pointerId in this.pointers)) return;
+            this.pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+            const ids = Object.keys(this.pointers);
+            if (ids.length === 2 && this.pinchStart) {
+                const state = this.pinchState();
+                const nextScale = this.pinchStart.scale * (state.dist / this.pinchStart.dist);
+                this.setZoomAt(nextScale, state.midX, state.midY);
+            } else if (ids.length === 1 && this.dragStart) {
+                this.zoomX = this.dragStart.zoomX + (e.clientX - this.dragStart.x);
+                this.zoomY = this.dragStart.zoomY + (e.clientY - this.dragStart.y);
+                this.clampPan();
+            }
+        },
+        onPointerUp(e) {
+            delete this.pointers[e.pointerId];
+            this.dragStart = null;
+            this.pinchStart = null;
         },
         destroy() {
             cancelAnimationFrame(this.frame);
