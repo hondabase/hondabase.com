@@ -60,7 +60,7 @@
             <h3>{{ $wirelist['title'] }}</h3>
             <p><span x-text="filtered.length"></span> of {{ count($rows) }} connections</p>
         </div>
-        <button type="button" @click="reset">Reset</button>
+        <button type="button" x-on:click="reset">Reset</button>
     </div>
     <div class="wirelist-controls">
         <label>
@@ -69,7 +69,7 @@
         </label>
         <label>
             <span>ECU family</span>
-            <select x-model="variant" @change="chooseVariant">
+            <select x-model="variant" x-on:change="chooseVariant">
                 <option value="all">All ECU families</option>
                 @foreach ($wirelist['variants'] as $variant)
                     <option value="{{ $variant['id'] }}">{{ $variant['label'] }}</option>

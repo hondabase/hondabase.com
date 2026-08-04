@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class ArticleRenderingTest extends TestCase
@@ -55,8 +56,8 @@ MD
             'app.url' => 'https://www.hondabase.com',
         ]);
 
-        \Illuminate\Support\Facades\URL::forceRootUrl('https://www.hondabase.com');
-        \Illuminate\Support\Facades\URL::forceScheme('https');
+        URL::forceRootUrl('https://www.hondabase.com');
+        URL::forceScheme('https');
     }
 
     protected function tearDown(): void
@@ -87,6 +88,12 @@ MD
             ->assertSee('alt="ECU board front"', false)
             ->assertSee('<figcaption>Front of the board.</figcaption>', false)
             ->assertSee('aria-label="2 of 2"', false)
+            // Alpine event handlers must use x-on:* (not @*): ArticleClickCounter re-parses
+            // HTML with DOMDocument, which drops attributes whose names start with @.
+            ->assertSee('x-on:click="previous()"', false)
+            ->assertSee('x-on:click="next()"', false)
+            ->assertSee('x-on:click="openLightbox(0)"', false)
+            ->assertSee('class="carousel-lightbox"', false)
             ->assertDontSee('<a href="">Missing reference</a>', false);
     }
 }

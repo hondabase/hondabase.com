@@ -5,13 +5,18 @@ document.addEventListener('alpine:init', () => {
         total,
         current: 0,
         frame: null,
+        lightbox: false,
         go(index) {
             const next = Math.max(0, Math.min(this.total - 1, index));
             const track = this.$refs.track;
-            const slide = track?.children[next];
-            if (!track || !slide) return;
+            if (!track?.clientWidth) {
+                this.current = next;
+                return;
+            }
+            // Full-width slides: index * clientWidth is more reliable than offsetLeft
+            // (offsetParent quirks inside flex + scroll containers).
             track.scrollTo({
-                left: slide.offsetLeft,
+                left: next * track.clientWidth,
                 behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
             });
             this.current = next;
@@ -26,7 +31,34 @@ document.addEventListener('alpine:init', () => {
                 this.current = Math.max(0, Math.min(this.total - 1, Math.round(track.scrollLeft / track.clientWidth)));
             });
         },
-        destroy() { cancelAnimationFrame(this.frame); },
+        slideEl(index = this.current) {
+            return this.$refs.track?.children[index] ?? null;
+        },
+        lightboxSrc() {
+            return this.slideEl()?.querySelector('img')?.currentSrc
+                || this.slideEl()?.querySelector('img')?.src
+                || '';
+        },
+        lightboxAlt() {
+            return this.slideEl()?.querySelector('img')?.alt || '';
+        },
+        lightboxCaption() {
+            return this.slideEl()?.querySelector('figcaption')?.textContent?.trim() || '';
+        },
+        openLightbox(index) {
+            if (typeof index === 'number') this.go(index);
+            this.lightbox = true;
+            document.documentElement.classList.add('carousel-lightbox-open');
+        },
+        closeLightbox() {
+            if (!this.lightbox) return;
+            this.lightbox = false;
+            document.documentElement.classList.remove('carousel-lightbox-open');
+        },
+        destroy() {
+            cancelAnimationFrame(this.frame);
+            document.documentElement.classList.remove('carousel-lightbox-open');
+        },
     }));
 
     window.Alpine.data('articleFind', () => ({

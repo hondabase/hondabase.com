@@ -932,12 +932,22 @@
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
+.article-carousel .carousel-zoom {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  -webkit-tap-highlight-color: transparent;
+}
 .article-carousel .carousel-slide img {
   width: 100%;
   max-height: 70vh;
   object-fit: contain;
   border: 0;
   margin: 0;
+  pointer-events: none;
 }
 .article-carousel .carousel-slide figcaption {
   padding: .65rem .85rem;
@@ -968,6 +978,113 @@
 }
 .article-carousel .carousel-controls button:hover:not(:disabled) { border-color: var(--color-amber); }
 .article-carousel .carousel-controls button:disabled { opacity: .35; cursor: default; }
+
+/* Fullscreen lightbox (fixed so it works on mobile over the article chrome). */
+html.carousel-lightbox-open,
+html.carousel-lightbox-open body {
+  overflow: hidden;
+  touch-action: none;
+}
+.article-carousel .carousel-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(.75rem, env(safe-area-inset-top)) max(.75rem, env(safe-area-inset-right)) max(.75rem, env(safe-area-inset-bottom)) max(.75rem, env(safe-area-inset-left));
+  background: rgba(0, 0, 0, .94);
+}
+.article-carousel .carousel-lightbox-stage {
+  margin: 0;
+  max-width: min(100%, 96rem);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  min-width: 0;
+}
+.article-carousel .carousel-lightbox-stage img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(88dvh, 100%);
+  object-fit: contain;
+  border: 0;
+  margin: 0;
+  background: #0a0a0b;
+}
+.article-carousel .carousel-lightbox-stage figcaption {
+  max-width: 40rem;
+  padding: 0 .5rem;
+  color: #d4d4d8;
+  font-size: .84rem;
+  font-style: italic;
+  text-align: center;
+}
+.article-carousel .carousel-lightbox-close,
+.article-carousel .carousel-lightbox-nav {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: .35rem;
+  background: rgba(20, 20, 22, .82);
+  color: #fbbf24;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.article-carousel .carousel-lightbox-close:hover,
+.article-carousel .carousel-lightbox-nav:hover:not(:disabled) {
+  border-color: rgba(251, 191, 36, .55);
+  background: rgba(30, 30, 34, .95);
+}
+.article-carousel .carousel-lightbox-nav:disabled {
+  opacity: .3;
+  cursor: default;
+}
+.article-carousel .carousel-lightbox-close {
+  top: max(.75rem, env(safe-area-inset-top));
+  right: max(.75rem, env(safe-area-inset-right));
+}
+.article-carousel .carousel-lightbox-prev {
+  left: max(.5rem, env(safe-area-inset-left));
+  top: 50%;
+  transform: translateY(-50%);
+}
+.article-carousel .carousel-lightbox-next {
+  right: max(.5rem, env(safe-area-inset-right));
+  top: 50%;
+  transform: translateY(-50%);
+}
+.article-carousel .carousel-lightbox-counter {
+  position: absolute;
+  left: 50%;
+  bottom: max(.85rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  padding: .35rem .7rem;
+  border-radius: 999px;
+  background: rgba(20, 20, 22, .82);
+  color: #a1a1aa;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+}
+@media (max-width: 640px) {
+  .article-carousel .carousel-lightbox-nav {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .article-carousel .carousel-lightbox-stage img {
+    max-height: min(78dvh, 100%);
+  }
+}
 
 .ed-carousel-node {
   margin: 1rem 0;

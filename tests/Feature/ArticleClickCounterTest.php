@@ -153,4 +153,28 @@ MD
         $this->assertStringContainsString('data-article-link-counter', $out['html']);
     }
 
+    public function test_decorate_preserves_alpine_x_on_handlers_in_carousel(): void
+    {
+        $carousel = view('partials.article-carousel', [
+            'slides' => [
+                ['src' => '/a.jpg', 'alt' => 'A', 'caption' => ''],
+                ['src' => '/b.jpg', 'alt' => 'B', 'caption' => ''],
+            ],
+        ])->render();
+
+        $out = app(\App\Services\ArticleClickCounter::class)->decorate([
+            'type' => 'cars',
+            'category' => 'wiring',
+            'slug' => 'carousel-click-test',
+            'locale' => 'en',
+            'html' => $carousel.'<p><a href="https://example.com/x">link</a></p>',
+        ]);
+
+        $this->assertStringContainsString('x-on:click="previous()"', $out['html']);
+        $this->assertStringContainsString('x-on:click="next()"', $out['html']);
+        $this->assertStringContainsString('x-on:click="openLightbox(0)"', $out['html']);
+        $this->assertStringContainsString('x-on:scroll.passive="syncFromScroll()"', $out['html']);
+        $this->assertStringNotContainsString('@click=', $out['html']);
+    }
+
 }
