@@ -133,4 +133,24 @@ MD
         $this->assertSame(3, ArticleLinkClick::where('slug', 'click-test')->count());
         $this->assertSame(1, $counter->fresh()->click_count);
     }
+
+    public function test_decorate_preserves_utf8_in_prose_and_links(): void
+    {
+        $html = '<p>µPC277 and 100 Ω — <a href="https://example.com/µ">Ω link</a></p>';
+        $out = app(\App\Services\ArticleClickCounter::class)->decorate([
+            'type' => 'cars',
+            'category' => 'wiring',
+            'slug' => 'utf8-click-test',
+            'locale' => 'en',
+            'html' => $html,
+        ]);
+
+        $this->assertStringContainsString('µPC277', $out['html']);
+        $this->assertStringContainsString('100 Ω', $out['html']);
+        $this->assertStringNotContainsString('Âµ', $out['html']);
+        $this->assertStringNotContainsString("\xC3\x82\xC2\xB5", $out['html']);
+        // link still trackable
+        $this->assertStringContainsString('data-article-link-counter', $out['html']);
+    }
+
 }

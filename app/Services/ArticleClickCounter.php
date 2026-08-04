@@ -29,12 +29,14 @@ class ArticleClickCounter
         }
 
         $identity = $this->identity($article);
+        // libxml's HTML parser defaults to ISO-8859-1 unless a charset is declared.
+        // Without this, multi-byte UTF-8 (µ, Ω, …) is double-encoded on saveHTML
+        // (µ C2 B5 becomes C3 82 C2 B5 → "Âµ" in the browser).
         $dom = new DOMDocument('1.0', 'UTF-8');
         libxml_use_internal_errors(true);
-        $dom->loadHTML(
-            '<!DOCTYPE html><html><body><div id="hb-fragment">'.$html.'</div></body></html>',
-            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
-        );
+        $wrapped = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head>'
+            .'<body><div id="hb-fragment">'.$html.'</div></body></html>';
+        $dom->loadHTML($wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
 
         $root = $dom->getElementById('hb-fragment');
