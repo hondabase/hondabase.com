@@ -25,6 +25,11 @@ Living log of the Hondabase rebuild. Plan of record:
   Deploy on a fresh box: copy the unit to `/etc/systemd/system/`, `systemctl daemon-reload`,
   `systemctl enable --now hondabase-queue`.
 ## Recent Updates (2026-08-06)
+- **Article Attribution & P28 Schematics:** Set article authors for the Honda OBD1 P28 ECU schematics (`cars/wiring/p28-ecu-schematics/p28-ecu-schematics.md`).
+  - Added original authors `Bomarc Services` (original 2005 8-sheet reverse-engineered drawing author) and `imtheman0313` (scan & pinout contributor) to `article_authors`, `users`, and `author_aliases` tables.
+  - Credited editor `VIRUXE` as a contributor in `article_authors`.
+  - Added required `license` and `license_url` fields for sources in the article frontmatter.
+  - Re-ran `hondabase:dump` to update `database/dumps/hondabase.sql`.
 - **GitHub Actions CI:** Resolved CI failures across PHP tests, Pint, and Vite build jobs.
   - Set `APP_URL=https://www.hondabase.com` in `phpunit.xml` environment to prevent route mismatch errors during test runs.
   - Added `"overrides": { "undici": ">=7.28.0" }` and `"packageManager": "pnpm@10.6.1"` to `package.json` to align pnpm v10 frozen installation configs.
