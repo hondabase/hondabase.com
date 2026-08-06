@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Article;
 use App\Models\ArticleLinkClick;
+use App\Services\ArticleClickCounter;
 use App\Services\ArticleIndexer;
 use App\Services\ArticleService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -137,7 +138,7 @@ MD
     public function test_decorate_preserves_utf8_in_prose_and_links(): void
     {
         $html = '<p>µPC277 and 100 Ω — <a href="https://example.com/µ">Ω link</a></p>';
-        $out = app(\App\Services\ArticleClickCounter::class)->decorate([
+        $out = app(ArticleClickCounter::class)->decorate([
             'type' => 'cars',
             'category' => 'wiring',
             'slug' => 'utf8-click-test',
@@ -162,7 +163,7 @@ MD
             ],
         ])->render();
 
-        $out = app(\App\Services\ArticleClickCounter::class)->decorate([
+        $out = app(ArticleClickCounter::class)->decorate([
             'type' => 'cars',
             'category' => 'wiring',
             'slug' => 'carousel-click-test',
@@ -176,5 +177,4 @@ MD
         $this->assertStringContainsString('x-on:scroll.passive="syncFromScroll()"', $out['html']);
         $this->assertStringNotContainsString('@click=', $out['html']);
     }
-
 }

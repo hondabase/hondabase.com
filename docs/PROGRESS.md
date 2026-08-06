@@ -209,7 +209,11 @@ Living log of the Hondabase rebuild. Plan of record:
   for users with a subscription; `toWebPush()` sends the headline. Service worker `public/sw.js`
   (push + notificationclick → open/focus article); subscribe toggle on `/me` (Alpine: registers SW,
   requests permission, subscribes with the VAPID key, POSTs to `/me/push`); `PushSubscriptionController`
-  (store/destroy). **Verified:** follower notified + editor excluded + payload correct + bell renders
+  (store/destroy). **Edit Push Notifications (2026-08-06):** Added `PendingEditSubmitted` and `RevisionStatusUpdated`
+  notifications via `RevisionNotifier` service. When a non-staff contributor submits a pending edit/article,
+  staff members with web push subscriptions receive a push notification linking to `/admin/reviews`. When staff approves
+  or rejects an edit, the author receives a push notification with status and review notes.
+  **Verified:** follower notified + editor excluded + payload correct + bell renders
   + mark-all-read clears; web-push `via()` gates on subscription, `toWebPush` builds; `/sw.js` 200,
   push routes auth-gated, all blades compile, vendor re-chowned to www-data.
 - [~] **P6 - Analytics & nightly dump**: **Google Analytics 4** live (G-63JRK5RNJM,
