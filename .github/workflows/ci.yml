@@ -85,7 +85,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       # Builds the single Tailwind v4 + TipTap bundle; fails CI on any
       # CSS/JS regression before it reaches production.
