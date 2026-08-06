@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Jobs\CommitArticle;
 use App\Models\ArticleRevision;
 use App\Services\ArticleService;
+use App\Services\RevisionNotifier;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
@@ -44,6 +45,8 @@ class RevisionReview extends Component
             'review_notes' => $this->notes[$id] ?? null,
         ]);
 
+        app(RevisionNotifier::class)->notifyAuthorOfStatusChange($rev);
+
         CommitArticle::dispatch($rev->id);
 
         unset($this->notes[$id]);
@@ -69,6 +72,8 @@ class RevisionReview extends Component
             'review_notes' => $this->notes[$id] ?? null,
         ]);
         $rev->cleanupStagedAssets();
+
+        app(RevisionNotifier::class)->notifyAuthorOfStatusChange($rev);
 
         unset($this->notes[$id]);
         $this->message = "Edit #{$id} rejected.";

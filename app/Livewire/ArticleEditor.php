@@ -9,6 +9,7 @@ use App\Markdown\CarouselParser;
 use App\Markdown\WirelistParser;
 use App\Models\ArticleRevision;
 use App\Services\ArticleService;
+use App\Services\RevisionNotifier;
 use App\Support\ArticleDocument;
 use App\Support\Locales;
 use Illuminate\Contracts\View\View;
@@ -178,6 +179,7 @@ class ArticleEditor extends Component
             CommitArticle::dispatch($rev->id);
             session()->flash('status', 'Published. Your change (#'.$rev->id.') was applied and committed; it can be reverted from history.');
         } else {
+            app(RevisionNotifier::class)->notifyStaffOfPendingEdit($rev);
             session()->flash('status', 'Thanks. Your edit (#'.$rev->id.') was submitted for review and will go live once approved.');
         }
 

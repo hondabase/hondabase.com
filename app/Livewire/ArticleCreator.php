@@ -9,6 +9,7 @@ use App\Markdown\CarouselParser;
 use App\Markdown\WirelistParser;
 use App\Models\ArticleRevision;
 use App\Services\ArticleService;
+use App\Services\RevisionNotifier;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -152,6 +153,7 @@ class ArticleCreator extends Component
             return $this->redirect($rev->url(), navigate: true);
         }
 
+        app(RevisionNotifier::class)->notifyStaffOfPendingEdit($rev);
         session()->flash('status', __('Thanks. Your new article (#:id) was submitted for review and will go live once approved.', ['id' => $rev->id]));
 
         return $this->redirect('/', navigate: true);
