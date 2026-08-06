@@ -27,5 +27,8 @@
         "basecoat-css": "^1.0.2",
         "katex": "^0.17.0",
         "tiptap-markdown": "^0.9.0"
+    },
+    "overrides": {
+        "undici": ">=7.28.0"
     }
 }
