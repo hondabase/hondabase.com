@@ -25,6 +25,15 @@ Living log of the Hondabase rebuild. Plan of record:
   Deploy on a fresh box: copy the unit to `/etc/systemd/system/`, `systemctl daemon-reload`,
   `systemctl enable --now hondabase-queue`.
 
+## Recent Content Additions (Nthefastlane scraping)
+- Created 10 new article files across `en` and `pt` locales sourced and adapted from Nthefastlane:
+  1. `cars/wiring/obd2a-obd2b-pinouts/obd2a-obd2b-pinouts.md` (en + pt)
+  2. `cars/wiring/obd0-pm6-pinout/obd0-pm6-pinout.md` (en + pt)
+  3. `cars/diagnostics/main-relay-repair/main-relay-repair.md` (en + pt)
+  4. `cars/engines/k-series/torque-specs/torque-specs.md` (en + pt)
+  5. `cars/transmissions/manual-gear-ratios/manual-gear-ratios.md` (en + pt)
+- Reindexed derived database index: **938 total articles** (468 `en`, 470 `pt`), 12,171 facets, 5,876 compatibilities.
+
 ## Status by phase
 - [x] **P0 - Scaffold + SSO** *(done)*
   - [x] Composer installed; Laravel 13 scaffolded + merged into project root (legacy intact)
