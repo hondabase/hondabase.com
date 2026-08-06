@@ -2,6 +2,7 @@
     "$schema": "https://www.schemastore.org/package.json",
     "private": true,
     "type": "module",
+    "packageManager": "pnpm@10.6.1",
     "scripts": {
         "build": "vite build && node scripts/publish-base-css.mjs",
         "dev": "vite",
