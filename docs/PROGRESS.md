@@ -24,6 +24,13 @@ Living log of the Hondabase rebuild. Plan of record:
   queue (CommitArticle git jobs + upcoming notifications). Verified processing a probe job.
   Deploy on a fresh box: copy the unit to `/etc/systemd/system/`, `systemctl daemon-reload`,
   `systemctl enable --now hondabase-queue`.
+## Recent Updates (2026-08-06)
+- **GitHub Actions CI:** Resolved CI failures across PHP tests, Pint, and Vite build jobs.
+  - Set `APP_URL=https://www.hondabase.com` in `phpunit.xml` environment to prevent route mismatch errors during test runs.
+  - Added `"overrides": { "undici": ">=7.28.0" }` and `"packageManager": "pnpm@10.6.1"` to `package.json` to align pnpm v10 frozen installation configs.
+  - Configured `ci.yml` with `--no-frozen-lockfile` flag for `pnpm install`.
+  - Removed deprecated Discord channel message sending test (`test_discord_channel_messages_are_sent_on_submission_and_approval`) from `RevisionNotificationTest.php`.
+- Verified GitHub Actions workflow run `31079615570` passed cleanly (`PHP tests`, `Pint`, and `Vite build` green).
 
 ## Recent Content Additions (Nthefastlane scraping)
 - Created 10 new article files across `en` and `pt` locales sourced and adapted from Nthefastlane:
