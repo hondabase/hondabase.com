@@ -31,6 +31,7 @@ Living log of the Hondabase rebuild. Plan of record:
   - Configured `ci.yml` with `--no-frozen-lockfile` flag for `pnpm install`.
   - Removed deprecated Discord channel message sending test (`test_discord_channel_messages_are_sent_on_submission_and_approval`) from `RevisionNotificationTest.php`.
 - Verified GitHub Actions workflow run `31079615570` passed cleanly (`PHP tests`, `Pint`, and `Vite build` green).
+- **Discord Integration & GitHub Webhooks:** Created Discord text channel `#github` (ID `1534826763425681499`) under Staff category and provisioned GitHub repository webhooks across all 11 repositories in the `hondabase` organization (`hondabase.com`, `articles`, `discord-bot`, `manuals.hondabase.com`, `files-archive`, `.github`, `d-series`, `manuals`, `ecu-pinouts`, `vin-decoder`, `hondarulez`) via `gh api`.
 
 ## Recent Content Additions (Nthefastlane scraping)
 - Created 10 new article files across `en` and `pt` locales sourced and adapted from Nthefastlane:
