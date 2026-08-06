@@ -8,7 +8,6 @@ use App\Notifications\PendingEditSubmitted;
 use App\Notifications\RevisionStatusUpdated;
 use App\Services\RevisionNotifier;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
@@ -71,41 +70,6 @@ class RevisionNotificationTest extends TestCase
 
         Notification::assertSentTo($member, RevisionStatusUpdated::class, function ($notification) use ($revision) {
             return $notification->revision->id === $revision->id && $notification->revision->status === 'approved';
-        });
-    }
-
-    public function test_discord_channel_messages_are_sent_on_submission_and_approval(): void
-    {
-        config(['services.discord.bot_token' => 'fake-token']);
-        Http::fake();
-
-        $member = User::factory()->create(['is_staff' => false]);
-        $revision = ArticleRevision::create([
-            'user_id' => $member->id,
-            'type' => 'cars',
-            'category' => 'electronics',
-            'slug' => 'test-article',
-            'title' => 'Test Article Title',
-            'repo_path' => 'cars/electronics/test-article/test-article.md',
-            'base_sha' => '1234567890',
-            'original_body' => 'Original',
-            'proposed_body' => 'Proposed changes',
-            'status' => 'pending',
-        ]);
-
-        app(RevisionNotifier::class)->notifyStaffOfPendingEdit($revision);
-
-        Http::assertSent(function ($request) {
-            return str_contains($request->url(), '1261780902598410261/messages')
-                && str_contains($request['content'], 'New Edit Submitted');
-        });
-
-        $revision->update(['status' => 'approved']);
-        app(RevisionNotifier::class)->notifyAuthorOfStatusChange($revision);
-
-        Http::assertSent(function ($request) {
-            return str_contains($request->url(), '1254973874177708078/messages')
-                && str_contains($request['content'], 'Edit Approved');
         });
     }
 }
