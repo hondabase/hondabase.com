@@ -44,7 +44,7 @@
         {{ __('The preview renders exactly like the published page.') }}
     </p>
 
-    {{-- Tabs: phone-first. On a wide screen both panes show side by side and these hide. --}}
+    {{-- Tabs: one pane at a time at every width, so the editor gets the full page. --}}
     <div class="ed-tabs" role="tablist">
         <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'edit' }" @click="tab = 'edit'">{{ __('Write') }}</button>
         <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'preview' }" @click="tab = 'preview'">
