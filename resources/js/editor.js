@@ -22,8 +22,13 @@ function debounce(fn, wait) {
 }
 
 document.addEventListener('alpine:init', () => {
-    window.Alpine.data('tiptapEditor', (wireProp = 'bodyMarkdown') => ({
-        editor: null,
+    // The Editor lives in the factory closure, NOT on the Alpine data object: Alpine would wrap it
+    // in a reactive proxy, and ProseMirror's state identity checks then fail on every dispatch
+    // ("Applying a mismatched transaction").
+    window.Alpine.data('tiptapEditor', (wireProp = 'bodyMarkdown') => {
+        let editor = null;
+
+        return {
         // Bumped on every transaction/selection change so Alpine re-evaluates the toolbar's
         // active-state bindings (TipTap's state is not otherwise reactive to Alpine).
         version: 0,
@@ -31,7 +36,7 @@ document.addEventListener('alpine:init', () => {
         init() {
             // Read the body from Livewire so the (changing) Markdown is never baked into a DOM attr.
             const initial = this.$wire.get(wireProp) ?? '';
-            this.editor = new Editor({
+            editor = new Editor({
                 element: this.$refs.canvas,
                 extensions: createEditorExtensions({
                     assetBase: () => this.$root.dataset.assetBase || '',
@@ -59,42 +64,46 @@ document.addEventListener('alpine:init', () => {
 
         // Alpine calls destroy() when the element is removed (page teardown / wire:navigate).
         destroy() {
-            this.editor?.destroy();
-            this.editor = null;
+            editor?.destroy();
+            editor = null;
         },
 
         markdown() {
-            return this.editor ? this.editor.storage.markdown.getMarkdown() : '';
+            return editor ? editor.storage.markdown.getMarkdown() : '';
         },
 
         // Push serialized Markdown to Livewire (live, so the preview re-renders).
         push: debounce(function () {
-            if (this.editor) this.$wire.set(wireProp, this.markdown());
+            if (editor) this.$wire.set(wireProp, this.markdown());
         }, 400),
 
         // Flush the very latest Markdown (deferred), then submit in the same round-trip, so a user
         // who clicks Save mid-keystroke before the debounce fires never loses content.
         save() {
-            if (this.editor) this.$wire.set(wireProp, this.markdown(), false);
+            if (editor) this.$wire.set(wireProp, this.markdown(), false);
             this.$wire.submit();
         },
 
         // ----- toolbar -----
         cmd(name, arg) {
-            if (!this.editor) return;
-            this.editor.chain().focus()[name](arg).run();
+            if (!editor) return;
+            editor.chain().focus()[name](arg).run();
             this.version++;
         },
         heading(level) {
-            this.editor?.chain().focus().toggleHeading({ level }).run();
+            editor?.chain().focus().toggleHeading({ level }).run();
             this.version++;
         },
         table() {
-            this.editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+            editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+            this.version++;
+        },
+        image() {
+            editor?.chain().focus().insertContent({ type: 'image', attrs: { src: '', alt: '' } }).run();
             this.version++;
         },
         carousel() {
-            this.editor?.chain().focus().insertContent({
+            editor?.chain().focus().insertContent({
                 type: 'articleCarousel',
                 attrs: {
                     slides: [
@@ -106,7 +115,7 @@ document.addEventListener('alpine:init', () => {
             this.version++;
         },
         wirelist() {
-            this.editor?.chain().focus().insertContent({
+            editor?.chain().focus().insertContent({
                 type: 'articleWirelist',
                 attrs: {
                     wirelist: {
@@ -127,7 +136,8 @@ document.addEventListener('alpine:init', () => {
         // active-state probe; reads `version` so the binding tracks it as a reactive dependency
         is(name, attrs) {
             void this.version;
-            return this.editor ? this.editor.isActive(name, attrs) : false;
+            return editor ? editor.isActive(name, attrs) : false;
         },
-    }));
+        };
+    });
 });

@@ -1,4 +1,5 @@
 import { Node, mergeAttributes } from '@tiptap/core';
+import { Plugin } from '@tiptap/pm/state';
 import StarterKit from '@tiptap/starter-kit';
 import { TableKit } from '@tiptap/extension-table';
 import { Markdown } from 'tiptap-markdown';
@@ -290,12 +291,160 @@ export const ArticleWirelist = Node.create({
     },
 });
 
+function imageNodeView({ node: initialNode, view, getPos, extension }) {
+    let node = initialNode;
+    let assets = [];
+    // Fresh inserts open straight into the picker; existing images render clean until clicked.
+    let editing = !node.attrs.src;
+    const dom = document.createElement('span');
+    dom.className = 'ed-image-node';
+    dom.contentEditable = 'false';
+
+    const assetUrl = (src) => {
+        const found = assets.find((asset) => asset.name === src);
+        if (found) return found.url;
+        const base = typeof extension.options.assetBase === 'function'
+            ? extension.options.assetBase()
+            : extension.options.assetBase;
+        return base && src ? `${base.replace(/\/$/, '')}/${src.replace(/^\.\//, '')}` : '';
+    };
+
+    const updateAttrs = (attrs) => {
+        const pos = getPos();
+        if (typeof pos === 'number') view.dispatch(view.state.tr.setNodeMarkup(pos, undefined, { ...node.attrs, ...attrs }));
+    };
+
+    const element = (tag, className, text) => {
+        const el = document.createElement(tag);
+        if (className) el.className = className;
+        if (text !== undefined) el.textContent = text;
+        return el;
+    };
+
+    const option = (label, value, selected = false) => {
+        const el = document.createElement('option');
+        el.textContent = label;
+        el.value = value;
+        el.selected = selected;
+        return el;
+    };
+
+    const render = () => {
+        dom.replaceChildren();
+        dom.classList.toggle('is-editing', editing);
+
+        const preview = element('span', 'ed-image-preview');
+        const url = assetUrl(node.attrs.src);
+        if (url) {
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = node.attrs.alt || '';
+            if (node.attrs.title) img.title = node.attrs.title;
+            preview.append(img);
+        } else {
+            preview.append(element('span', '', 'Choose or upload an image'));
+        }
+        preview.addEventListener('click', () => {
+            if (editing) return;
+            editing = true;
+            render();
+        });
+        dom.append(preview);
+
+        if (!editing) return;
+
+        const fields = element('span', 'ed-image-fields');
+        const select = document.createElement('select');
+        select.setAttribute('aria-label', 'Image');
+        select.append(option('Choose an image...', '', !node.attrs.src));
+        assets.forEach((asset) => select.append(option(asset.name, asset.name, asset.name === node.attrs.src)));
+        select.addEventListener('change', () => updateAttrs({ src: select.value }));
+
+        const upload = element('button', '', 'Upload image');
+        upload.type = 'button';
+        const picker = document.createElement('input');
+        picker.type = 'file';
+        picker.accept = 'image/png,image/jpeg,image/gif,image/webp';
+        picker.hidden = true;
+        upload.addEventListener('click', () => picker.click());
+        picker.addEventListener('change', async () => {
+            const file = picker.files?.[0];
+            if (!file || !extension.options.uploadImage) return;
+            upload.disabled = true;
+            upload.textContent = 'Uploading...';
+            try {
+                const asset = await extension.options.uploadImage(file, assets.map((item) => item.name));
+                if (asset) {
+                    assets = await extension.options.getAssets();
+                    updateAttrs({ src: asset.name });
+                }
+            } finally {
+                upload.disabled = false;
+                upload.textContent = 'Upload image';
+                picker.value = '';
+            }
+        });
+
+        const alt = document.createElement('input');
+        alt.type = 'text';
+        alt.value = node.attrs.alt || '';
+        alt.placeholder = 'Required image alt text';
+        alt.setAttribute('aria-label', 'Image alt text');
+        alt.addEventListener('change', () => updateAttrs({ alt: alt.value.replace(/[\r\n]/g, ' ').trim() }));
+
+        const done = element('button', '', 'Done');
+        done.type = 'button';
+        done.disabled = !node.attrs.src;
+        done.addEventListener('click', () => {
+            editing = false;
+            render();
+        });
+
+        const remove = element('button', 'is-danger', 'Remove');
+        remove.type = 'button';
+        remove.addEventListener('click', () => {
+            const pos = getPos();
+            if (typeof pos === 'number') view.dispatch(view.state.tr.delete(pos, pos + node.nodeSize));
+        });
+
+        fields.append(select, upload, picker, alt, done, remove);
+        dom.append(fields);
+    };
+
+    Promise.resolve(extension.options.getAssets?.() || []).then((result) => {
+        assets = result || [];
+        render();
+    });
+    render();
+
+    return {
+        dom,
+        update(nextNode) {
+            if (nextNode.type !== node.type) return false;
+            node = nextNode;
+            render();
+            return true;
+        },
+        stopEvent: () => true,
+        ignoreMutation: () => true,
+    };
+}
+
+const uploadableImageTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
+
 export const ArticleImage = Node.create({
     name: 'image',
     inline: true,
     group: 'inline',
     atom: true,
     draggable: true,
+    addOptions() {
+        return {
+            assetBase: '',
+            getAssets: async () => [],
+            uploadImage: null,
+        };
+    },
     addAttributes() {
         return {
             src: { default: null },
@@ -308,6 +457,49 @@ export const ArticleImage = Node.create({
     },
     renderHTML({ HTMLAttributes }) {
         return ['img', mergeAttributes(HTMLAttributes)];
+    },
+    addNodeView() {
+        return imageNodeView;
+    },
+    // Dropping or pasting image files uploads them through the same Livewire pipeline as the
+    // picker and inserts a node per file. Position is clamped at insert time because uploads
+    // resolve asynchronously and the doc may have changed underneath.
+    addProseMirrorPlugins() {
+        const extension = this;
+        const imageFiles = (list) => Array.from(list || []).filter((file) => uploadableImageTypes.includes(file.type));
+        const insertUploads = async (view, files, dropPos) => {
+            if (!extension.options.uploadImage) return;
+            for (const file of files) {
+                const known = (await extension.options.getAssets()).map((asset) => asset.name);
+                const asset = await extension.options.uploadImage(file, known);
+                if (!asset) continue;
+                const imageNode = view.state.schema.nodes.image.create({ src: asset.name, alt: '' });
+                const at = typeof dropPos === 'number'
+                    ? Math.min(dropPos, view.state.doc.content.size)
+                    : view.state.selection.from;
+                view.dispatch(view.state.tr.insert(at, imageNode));
+            }
+        };
+        return [new Plugin({
+            props: {
+                handleDrop: (view, event, slice, moved) => {
+                    if (moved) return false;
+                    const files = imageFiles(event.dataTransfer?.files);
+                    if (!files.length) return false;
+                    event.preventDefault();
+                    const at = view.posAtCoords({ left: event.clientX, top: event.clientY })?.pos;
+                    insertUploads(view, files, at);
+                    return true;
+                },
+                handlePaste: (view, event) => {
+                    const files = imageFiles(event.clipboardData?.files);
+                    if (!files.length) return false;
+                    event.preventDefault();
+                    insertUploads(view, files);
+                    return true;
+                },
+            },
+        })];
     },
 });
 
@@ -554,11 +746,11 @@ export const ArticleCarousel = Node.create({
     },
 });
 
-export function createEditorExtensions(carouselOptions = {}) {
+export function createEditorExtensions(assetOptions = {}) {
     return [
         StarterKit,
-        ArticleImage,
-        ArticleCarousel.configure(carouselOptions),
+        ArticleImage.configure(assetOptions),
+        ArticleCarousel.configure(assetOptions),
         ArticleWirelist,
         TableKit.configure({ table: { resizable: false } }),
         Markdown.configure({ html: true, tightLists: true, linkify: false, breaks: false }),

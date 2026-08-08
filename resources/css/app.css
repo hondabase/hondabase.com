@@ -1163,6 +1163,53 @@ html.carousel-lightbox-open body {
 .ed-carousel-node button.is-danger { color: #fca5a5; }
 .ed-carousel-slide-actions { display: flex; flex-wrap: wrap; gap: .4rem; }
 .ed-carousel-footer { border-top: 1px solid var(--color-border); border-bottom: 0; }
+
+/* Inline image node: renders as a plain image; click opens the same picker UI carousels use. */
+.ed-image-node { display: inline-block; max-width: 100%; vertical-align: top; }
+.ed-image-node.is-editing {
+  display: block;
+  margin: 1rem 0;
+  padding: .65rem;
+  border: 1px solid var(--color-border-2);
+  background: var(--color-bg-2);
+}
+.ed-image-preview { display: block; cursor: pointer; }
+.ed-image-node.is-editing .ed-image-preview {
+  min-height: 8rem;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--color-border-2);
+  color: var(--color-muted);
+  font-size: .8rem;
+  cursor: default;
+}
+.ed-image-preview img { max-width: 100%; max-height: 22rem; object-fit: contain; display: block; }
+.ed-image-fields { display: grid; gap: .45rem; margin-top: .65rem; }
+.ed-image-fields input, .ed-image-fields select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--color-border-2);
+  background: var(--color-bg);
+  color: var(--color-txt);
+  padding: .4rem .55rem;
+  font-family: var(--font-mono);
+  font-size: .75rem;
+}
+.ed-image-fields button {
+  border: 1px solid var(--color-border-2);
+  background: var(--color-panel);
+  color: var(--color-amber-2);
+  padding: .35rem .6rem;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  cursor: pointer;
+}
+.ed-image-fields button:disabled { opacity: .35; cursor: default; }
+.ed-image-fields button.is-danger { color: #fca5a5; }
+@media (min-width: 720px) {
+  .ed-image-fields { grid-template-columns: minmax(10rem, 1fr) auto auto; align-items: start; }
+  .ed-image-fields input[type="text"] { grid-column: 1 / -1; }
+}
 .rev-assets {
   display: flex;
   flex-wrap: wrap;

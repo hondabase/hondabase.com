@@ -19,6 +19,7 @@
         <button type="button" class="ed-tool" :class="is('codeBlock') && 'is-on'" @click="cmd('toggleCodeBlock')" title="{{ __('Code block') }}">{{ __('Code') }}</button>
         <span class="ed-tool-sep" aria-hidden="true"></span>
         <button type="button" class="ed-tool" @click="table()" title="{{ __('Insert table') }}">{{ __('Table') }}</button>
+        <button type="button" class="ed-tool" @click="image()" title="{{ __('Insert image') }}">{{ __('Image') }}</button>
         <button type="button" class="ed-tool" @click="carousel()" title="{{ __('Insert image carousel') }}">{{ __('Carousel') }}</button>
         <button type="button" class="ed-tool" @click="wirelist()" title="{{ __('Insert searchable wirelist') }}">{{ __('Wirelist') }}</button>
         <button type="button" class="ed-tool" @click="cmd('setHorizontalRule')" title="{{ __('Divider') }}">&horbar;</button>
