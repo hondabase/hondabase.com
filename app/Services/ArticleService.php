@@ -607,8 +607,12 @@ class ArticleService
         }
         $html = $this->repairEmptyLinks($html);
         $html = $this->rewriteMalformedArchiveLinks($html);
-        if ($assetBase !== '') {
+        if ($assetBase !== '' || $assetUrls !== []) {
+            // Even without a location (new article, empty category/slug), pending uploads must
+            // still resolve to their temporary URLs in the preview.
             $html = $this->rewriteAssets($html, $assetBase, $assetUrls);
+        }
+        if ($assetBase !== '') {
             $html = $this->rewriteArticleLinks($html, $assetBase);
             $html = $this->rewriteAttachmentLinks($html, $assetBase);
         }
