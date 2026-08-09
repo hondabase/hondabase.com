@@ -7,7 +7,6 @@ use App\Models\ArticleRevision;
 use App\Services\ArticleAuthorService;
 use App\Services\ArticleIndexer;
 use App\Services\FollowerNotifier;
-use App\Services\RevisionNotifier;
 use App\Support\Locales;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -79,11 +78,9 @@ class CommitArticle implements ShouldQueue
                         Log::warning('CommitArticle notify failed', ['revision' => $rev->id, 'error' => $e->getMessage()]);
                     }
                     if ($isNew) {
-                        try {
-                            app(RevisionNotifier::class)->notifyNewArticlePublished($rev, $article);
-                        } catch (\Throwable $e) {
-                            Log::warning('CommitArticle new-article Discord notify failed', ['revision' => $rev->id, 'error' => $e->getMessage()]);
-                        }
+                        // Own job so a Discord failure retries with backoff and lands in
+                        // failed_jobs instead of being swallowed with the commit.
+                        NotifyNewArticlePublished::dispatch($rev->id, $article->id);
                     }
                 }
             }
