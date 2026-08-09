@@ -68,12 +68,16 @@
                         <input type="text" class="ed-input" wire:model.blur="fmSources.{{ $i }}.license_url" placeholder="{{ __('License URL') }}" aria-label="{{ __('License URL') }}">
                     </div>
                     <div class="ed-source-foot">
-                        <label class="ed-checkline"><input type="checkbox" wire:model="fmSources.{{ $i }}.adapted"> {{ __('Adapted from this source') }}</label>
+                        <label class="ed-checkline" title="{{ __('Check if the article was derived or rewritten from this source (displays an Adapted from credit badge)') }}">
+                            <input type="checkbox" wire:model="fmSources.{{ $i }}.adapted">
+                            {{ __('Adapted from this source') }}
+                            <span class="ed-opt">({{ __('check if article content was rewritten or imported from this link') }})</span>
+                        </label>
                         <button type="button" class="ed-rm ed-rm-text" wire:click="removeSource({{ $i }})">{{ __('Remove source') }}</button>
                     </div>
                 </div>
             @empty
-                <p class="ed-opt">{{ __('No sources. Add one for any adapted or imported material.') }}</p>
+                <p class="ed-opt">{{ __('No sources. Add one for any referenced, adapted, or imported material.') }}</p>
             @endforelse
             <button type="button" class="ed-add" wire:click="addSource">+ {{ __('Add source') }}</button>
         </div>

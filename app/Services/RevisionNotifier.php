@@ -16,6 +16,7 @@ class RevisionNotifier
 {
     /** Discord channel for brand-new-article publish announcements (#new-articles). */
     private const NEW_ARTICLES_CHANNEL = '1535671816645779626';
+
     /**
      * Send push / database notification to staff users when a non-staff contributor
      * submits an edit or new article for review.
