@@ -49,11 +49,16 @@ a separate repo for forkability; the database is a *derived, rebuildable* index.
 | `resources/css/app.css`      | The **single** Tailwind v4 bundle (see `docs/STYLE_GUIDE.md`) |
 | `resources/js/editor.js`     | TipTap editor (code-split, loaded only on `/new` + `/edit`) |
 | `scripts/*roundtrip*`        | Editor/frontmatter round-trip regression harnesses         |
-| `docs/`                      | Maintainer docs (PROGRESS.md is the living log)            |
-
-`PROGRESS.md` is the source of truth for what's built and why — **update it as you work.**
+| `scripts/internal/`          | Operator pipelines (e.g. 4GUK forum scrape / image clean)  |
+| `docs/`                      | Maintainer docs                                             |
+| `docs/internal/`             | Internal runbooks (not public UI); start at README.md      |
 
 ## Conventions
+
+- **No em dashes.** Never use em dashes (`—`) or en dashes (`–`) in prose, headings, or docs.
+  Use a comma, colon, parentheses, period, or a plain hyphen (`-`) for ranges (e.g. `10-12 mm`,
+  `750-800 rpm`). Same rule for article Markdown, comments, commit messages, and PR text.
+
 
 - **pnpm, never npm.** All Node work goes through pnpm (`pnpm install`, `pnpm build`,
   `pnpm dev`). A `pnpm-lock.yaml` is committed.
@@ -116,5 +121,6 @@ A systemd unit `hondabase-queue.service` (in `docs/deploy/`) drains the `databas
 - Touching **anything indexed** → confirm `hondabase:reindex` still rebuilds cleanly
   (the index must be reproducible from `content/` alone).
 - Adding **content-derived DB state** → make sure it's rebuildable and PII-free.
-- Always: `pint`, `php artisan test`, `pnpm build`, restore `www-data` ownership, and
-  update `docs/PROGRESS.md`.
+- Touching **CSS/JS or any Vite-built asset** → always run `pnpm build` afterward so
+  `public/build` stays in sync with the source.
+- Always: `pint`, `php artisan test`, `pnpm build`, and restore `www-data` ownership.

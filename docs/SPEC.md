@@ -2,7 +2,7 @@
 
 This is the current, implemented specification of Hondabase, the companion to the original
 `SPEC0.md` / `SPEC1.md` (which described the pre-build vision). It records what actually
-exists today. Living status lives in `docs/PROGRESS.md`.
+exists today.
 
 > Convention: never use em dashes anywhere in this project. Mobile-first everywhere
 > (primary user is a hobbyist on a phone in the garage).
@@ -143,16 +143,18 @@ sends article-aware events: `article_view` with `category`, `vehicle_type`, `com
 ## 11. Backups
 
 `php artisan hondabase:dump` writes `database/dumps/hondabase.sql` (plain SQL, git-diff
-friendly), excluding transient tables (sessions, cache, jobs, ...). No email is present
-(never collected). Scheduled daily at 00:00, only when something changed that day; the dump
-is committed **with the site repo** (pending the site repo's Git connection).
+friendly), excluding transient tables (sessions, cache, jobs, ...). Private article-draft rows
+and push-subscription credentials are omitted while their table schemas remain available for
+fresh installs. No email is present (never collected). Scheduled daily at 00:00, only when
+something changed that day; the dump is committed **with the site repo** (pending the site
+repo's Git connection).
 
 ## 12. Tooling and docs
 
 - Commands: `hondabase:reindex`, `hondabase:dump`, `app:lint-articles` (frontmatter linter),
   `hondabase:audit-presentation` (report-only presentation cleanup queue).
 - Wiki migration: `bin/port-wiki.php` (TWiki HTML to Hondabase Markdown), `WIKI_PORTING_PLAN.md`.
-- Docs: `docs/PROGRESS.md`, `docs/widgets.md`, `docs/analytics.md`, this `docs/SPEC.md`;
+- Docs: `docs/widgets.md`, `docs/analytics.md`, this `docs/SPEC.md`;
   content/authoring docs in the articles repo (`content/docs/article-format.md`,
   `content/CONTRIBUTING.md`).
 

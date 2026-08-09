@@ -5,7 +5,7 @@ This plan assessed all **513 topics** in the `library` web of the `pgmfi` wiki a
 > **STATUS: PORTING COMPLETE (2026-06-15).** The content port is done. The per-category backlog
 > tables in sections 2-3 below are a **historical record** of the original assessment (frozen at
 > "Batch 13"); they were never updated through the final bulk-port commits and **do not reflect
-> reality**. See the live counts here and in `docs/PROGRESS.md`. The one outstanding content task is
+> reality**. See the live counts in the table below. The one outstanding content task is
 > **re-categorization** (see section 5), not more porting.
 
 ## 1. Overall Progress Summary (current, 2026-06-15)

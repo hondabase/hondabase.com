@@ -2,8 +2,7 @@
 
 Living tracker for the **Hybrid Storage & Product-Aware Taxonomy** epic (generation-aware routing,
 subject-centric vs product-centric storage, `fits:` compatibility). Plan of record:
-`/root/.claude/plans/actually-i-just-found-shimmying-sparrow.md`. Rolls up into `docs/PROGRESS.md`
-when the epic closes.
+`/root/.claude/plans/actually-i-just-found-shimmying-sparrow.md`.
 
 **Scope reminder:** all Honda/Acura **products**, not just vehicles (cars, motorcycles, ATV, marine,
 power equipment, aircraft). Taxonomy node kinds are data-driven; the user-owned model is
