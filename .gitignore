@@ -35,3 +35,7 @@ Thumbs.db
 # Internal maintainer documentation (ignored by git)
 docs/internal/
 
+# Local scratch workspace and browser-automation debug output
+/scratch
+/.playwright-mcp
+
