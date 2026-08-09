@@ -1413,7 +1413,6 @@ html.carousel-lightbox-open body {
 }
 
 .article-attribution {
-  max-width: 72ch;
   margin: 2rem 0;
   padding: 1rem;
   border: 1px solid var(--color-border);
