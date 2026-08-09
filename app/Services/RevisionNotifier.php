@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Notifications\PendingEditSubmitted;
 use App\Notifications\RevisionStatusUpdated;
 use App\Support\ArticleDocument;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
@@ -166,7 +167,7 @@ class RevisionNotifier
                 'content' => $content,
                 'embeds' => $embeds,
             ]))->throw();
-        } catch (\Illuminate\Http\Client\RequestException $e) {
+        } catch (RequestException $e) {
             Log::warning('Discord channel message rejected', [
                 'channel' => $channelId,
                 'status' => $e->response->status(),

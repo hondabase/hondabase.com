@@ -138,12 +138,22 @@
                 <span class="article-view-count" title="{{ trans_choice(':count view|:count views', (int) ($art['view_count'] ?? 0), ['count' => number_format((int) ($art['view_count'] ?? 0))]) }}" aria-label="{{ trans_choice(':count view|:count views', (int) ($art['view_count'] ?? 0), ['count' => number_format((int) ($art['view_count'] ?? 0))]) }}">{{ number_format((int) ($art['view_count'] ?? 0)) }}</span>
             </p>
             @if (!empty($art['sources']))
+                @php
+                    $adaptedSources = array_values(array_filter($art['sources'], fn($s) => !empty($s['adapted'])));
+                    $headerSources = !empty($adaptedSources) ? $adaptedSources : $art['sources'];
+                @endphp
                 <p class="source-note">{{ __('Adapted from') }}
-                    @if (str_starts_with($art['sources'][0]['url'], '/pgmfi/wiki'))
-                        {{ $art['sources'][0]['name'] }}
-                    @else
-                        <a href="{{ $art['sources'][0]['url'] }}">{{ $art['sources'][0]['name'] }}</a>
-                    @endif
+                    @foreach ($headerSources as $i => $src)
+                        @if ($i > 0), @endif
+                        @if (str_starts_with($src['url'], '/pgmfi/wiki'))
+                            {{ $src['title'] ?? $src['name'] }}
+                        @else
+                            <a href="{{ $src['url'] }}" target="_blank" rel="noopener noreferrer">{{ $src['title'] ?? $src['name'] }}</a>
+                        @endif
+                        @if (!empty($src['author']))
+                            <span class="source-author">({{ __('by :author', ['author' => $src['author']]) }})</span>
+                        @endif
+                    @endforeach
                 </p>
             @endif
             <div class="article-actions">

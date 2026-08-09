@@ -874,12 +874,49 @@ class ArticleService
             return [];
         }
 
-        return array_values(array_filter(
-            $sources,
-            fn ($source) => is_array($source)
-                && is_string($source['name'] ?? null)
-                && is_string($source['url'] ?? null),
-        ));
+        $out = [];
+        foreach ($sources as $source) {
+            if (! is_array($source) || empty($source['url']) || ! is_string($source['url'])) {
+                continue;
+            }
+
+            $url = trim($source['url']);
+            $name = is_string($source['name'] ?? null) ? trim($source['name']) : '';
+            $title = is_string($source['title'] ?? null) ? trim($source['title']) : '';
+            $author = is_string($source['author'] ?? null) ? trim($source['author']) : '';
+            $adapted = ! empty($source['adapted']);
+
+            if ($name === '') {
+                if (str_contains($url, 'rusefi.com')) {
+                    $name = 'rusEFI forum';
+                } elseif (str_contains($url, '4guk.co.uk')) {
+                    $name = '4GUK forum';
+                } elseif (str_contains($url, 'pgmfi.org')) {
+                    $name = 'pgmfi.org wiki';
+                } elseif (str_contains($url, 'honda-tech.com')) {
+                    $name = 'Honda-Tech';
+                } elseif (str_contains($url, 'hondata.com')) {
+                    $name = 'Hondata Help';
+                } elseif ($title !== '') {
+                    $name = $title;
+                } else {
+                    $name = 'Community Source';
+                }
+            }
+
+            $entry = $source;
+            $entry['url'] = $url;
+            $entry['name'] = $name;
+            $entry['title'] = $title !== '' ? $title : $name;
+            if ($author !== '') {
+                $entry['author'] = $author;
+            }
+            $entry['adapted'] = $adapted;
+
+            $out[] = $entry;
+        }
+
+        return $out;
     }
 
     private function humanize(string $slug): string
