@@ -37,6 +37,36 @@ class IdentityCookie
         return self::cookie(self::encode($payload), $ttl);
     }
 
+    /**
+     * True if the given raw cookie value is a valid, correctly-signed token for this user
+     * with enough lifetime left (and current name/avatar) that it needs no re-issue.
+     */
+    public static function covers(?string $token, User $user): bool
+    {
+        if (! is_string($token) || substr_count($token, '.') !== 1) {
+            return false;
+        }
+
+        [$p, $s] = explode('.', $token, 2);
+        $json = base64_decode(strtr($p, '-_', '+/'), true);
+        $sig = base64_decode(strtr($s, '-_', '+/'), true);
+        if ($json === false || $sig === false
+            || ! hash_equals(hash_hmac('sha256', $json, self::secret(), true), $sig)) {
+            return false;
+        }
+
+        $data = json_decode($json, true);
+
+        // Re-issue once less than half the TTL remains, so the exp keeps sliding forward.
+        $minExp = time() + (int) config('session.lifetime', 43200) * 60 / 2;
+
+        return is_array($data)
+            && ($data['sub'] ?? null) === (string) $user->discord_id
+            && ($data['name'] ?? null) === $user->displayName()
+            && ($data['av'] ?? null) === $user->avatar
+            && ($data['exp'] ?? 0) >= $minExp;
+    }
+
     /** Build the cookie that clears the shared identity (used on logout). */
     public static function forget(): Cookie
     {

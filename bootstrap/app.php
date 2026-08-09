@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\RefreshIdentityCookie;
 use App\Http\Middleware\SetLocale;
 use App\Support\IdentityCookie;
 use Illuminate\Foundation\Application;
@@ -19,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(except: [IdentityCookie::NAME]);
 
         // Resolve the UI locale (cookie → Accept-Language → default) on every web request.
-        $middleware->web(append: [SetLocale::class]);
+        $middleware->web(append: [SetLocale::class, RefreshIdentityCookie::class]);
 
         // Called cross-origin from manuals.hondabase.com using the shared .hondabase.com session.
         $middleware->validateCsrfTokens(except: ['manuals/favorites', 'manuals/logout']);
