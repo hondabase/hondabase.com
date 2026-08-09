@@ -7,6 +7,7 @@ use App\Models\ArticleRevision;
 use App\Services\ArticleAuthorService;
 use App\Services\ArticleIndexer;
 use App\Services\FollowerNotifier;
+use App\Services\RevisionNotifier;
 use App\Support\Locales;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -71,10 +72,18 @@ class CommitArticle implements ShouldQueue
                 $article = Article::where('type', $rev->type)->where('category', $rev->category)
                     ->where('slug', $rev->slug)->first();
                 if ($article) {
+                    $isNew = $rev->original_body === '';
                     try {
-                        $notifier->notify($article, $rev->original_body === '', optional($rev->author)->id);
+                        $notifier->notify($article, $isNew, optional($rev->author)->id);
                     } catch (\Throwable $e) {
                         Log::warning('CommitArticle notify failed', ['revision' => $rev->id, 'error' => $e->getMessage()]);
+                    }
+                    if ($isNew) {
+                        try {
+                            app(RevisionNotifier::class)->notifyNewArticlePublished($rev, $article);
+                        } catch (\Throwable $e) {
+                            Log::warning('CommitArticle new-article Discord notify failed', ['revision' => $rev->id, 'error' => $e->getMessage()]);
+                        }
                     }
                 }
             }
