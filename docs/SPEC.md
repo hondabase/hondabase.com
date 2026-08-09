@@ -59,14 +59,13 @@ applies_to:
   models: [civic, integra]
   chassis: [EG, EK, DC2]
   engines: [B-Series, B18C]   # no-digit value = whole family; with a digit = specific engine
-  ecus: [P28, P30, PM6]
 complexity: beginner
-tags: [ecu, obd1, diagnostics]
+tags: [ecu, p28, obd1, diagnostics]
 ```
 
 Every `applies_to` field renders in the article's "Applies to" panel (engine families get
-badges; everything else shows as chips). OBD belongs in `tags` only (`obd0`, `obd1`,
-`obd2`, etc.) because it is too ECU-specific to be a global applicability axis.
+badges; everything else shows as chips). OBD and specific ECU codes (`p28`, `pm6`, etc.)
+belong in `tags` only, because they are too ECU-specific to be a global applicability axis.
 `last_updated` is git-derived.
 
 Authoring/style rules and source-faithful porting rules are in
@@ -96,8 +95,8 @@ Routes (in `routes/web.php`), all type-constrained so they never shadow legacy p
   - `articles` (type, category, slug, title, summary, complexity, body_text [FULLTEXT],
     repo_path, updated_at).
   - `article_facets` (`kind`, `value`, `label`): a **flexible facet** per type, category,
-    tag, and every supported `applies_to` field (engine families normalized). OBD is indexed
-    only through tags.
+    tag, and every supported `applies_to` field (engine families normalized). OBD and ECU
+    codes are indexed only through tags.
 - Forkability invariant: drop the DB, `migrate`, `reindex` and the dynamic site is fully
   restored from the repos.
 

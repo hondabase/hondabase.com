@@ -21,8 +21,13 @@
         </div>
         <div class="ed-field ed-field-grow">
             <label class="ed-label" for="fm-tags">{{ __('Tags') }} <span class="ed-opt">({{ __('comma separated') }})</span></label>
-            <input id="fm-tags" type="text" class="ed-input" wire:model.blur="fmTags"
+            <input id="fm-tags" type="text" class="ed-input" wire:model.blur="fmTags" list="fm-tag-options"
                    placeholder="ecu, obd1, diagnostics" autocomplete="off">
+            <datalist id="fm-tag-options">
+                @foreach ($this->tagOptions as $t)
+                    <option value="{{ $t }}"></option>
+                @endforeach
+            </datalist>
         </div>
     </div>
 
@@ -31,11 +36,17 @@
         <summary>{{ __('Applies to') }} <span class="ed-opt">({{ __('vehicles, engines, ECUs this covers') }})</span></summary>
         <div class="ed-disclosure-body">
             @forelse ($fmAppliesTo as $i => $row)
+                @php $appliesKind = $this->appliesToFieldKind($row['key'] ?? ''); @endphp
                 <div class="ed-applies-row" wire:key="applies-{{ $i }}">
                     <input type="text" class="ed-input ed-applies-key" list="applies-fields"
                            wire:model.blur="fmAppliesTo.{{ $i }}.key" placeholder="{{ __('field') }}" aria-label="{{ __('Field name') }}">
-                    <input type="text" class="ed-input ed-applies-val"
+                    <input type="text" class="ed-input ed-applies-val" list="applies-values-{{ $i }}"
                            wire:model.blur="fmAppliesTo.{{ $i }}.value" placeholder="{{ __('values, comma separated') }}" aria-label="{{ __('Values') }}">
+                    <datalist id="applies-values-{{ $i }}">
+                        @foreach ($this->appliesToValueOptions[$appliesKind] ?? [] as $v)
+                            <option value="{{ $v }}"></option>
+                        @endforeach
+                    </datalist>
                     <button type="button" class="ed-rm" wire:click="removeAppliesTo({{ $i }})" title="{{ __('Remove') }}" aria-label="{{ __('Remove field') }}">&times;</button>
                 </div>
             @empty
@@ -43,7 +54,6 @@
             @endforelse
             <datalist id="applies-fields">
                 <option value="engines"></option>
-                <option value="ecus"></option>
                 <option value="chassis"></option>
                 <option value="models"></option>
                 <option value="years"></option>

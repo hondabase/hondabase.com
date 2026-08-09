@@ -25,6 +25,9 @@ use Symfony\Component\Yaml\Yaml;
  */
 class ArticleService
 {
+    /** Maps a plural/free-form applies_to key to its canonical facet kind; unmapped keys pass through as-is. */
+    public const APPLIES_TO_KIND_MAP = ['engines' => 'engine', 'models' => 'model', 'trims' => 'trim', 'systems' => 'system', 'years' => 'year'];
+
     private string $root;
 
     private MarkdownConverter $converter;
@@ -484,7 +487,7 @@ class ArticleService
     /**
      * Derive [ [kind, value, label], ... ] facets from frontmatter + path. Flexible: type,
      * category, every tag, and every applies_to field (engine families, chassis, ...).
-     * OBD is intentionally tag-only; stale applies_to.obd values are ignored.
+     * OBD and ECU are intentionally tag-only; stale applies_to.obd/.ecus values are ignored.
      */
     public function facetsFor(array $fm, string $type, string $category): array
     {
@@ -516,15 +519,14 @@ class ArticleService
             $f[] = ['tag', Str::slug($t) ?: $t, $t];
         }
         $at = is_array($fm['applies_to'] ?? null) ? $fm['applies_to'] : [];
-        $kindMap = ['engines' => 'engine', 'ecus' => 'tag', 'models' => 'model', 'trims' => 'trim', 'systems' => 'system', 'years' => 'year'];
         foreach ($at as $key => $vals) {
-            $kind = $kindMap[$key] ?? (string) $key;
+            $kind = self::APPLIES_TO_KIND_MAP[$key] ?? (string) $key;
             foreach ((array) $vals as $v) {
                 if (! is_scalar($v) || trim((string) $v) === '') {
                     continue;
                 }
                 $v = trim((string) $v);
-                if ($kind === 'obd') {
+                if ($kind === 'obd' || $kind === 'ecus') {
                     continue;
                 } elseif ($kind === 'engine' && ! preg_match('/\d/', $v)) {
                     $lbl = strtoupper(preg_replace('/[-_ ]?series$/i', '', strtolower($v))).'-Series';

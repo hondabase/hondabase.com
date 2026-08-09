@@ -2,7 +2,10 @@
 
 namespace App\Livewire\Concerns;
 
+use App\Models\ArticleFacet;
+use App\Services\ArticleService;
 use App\Support\ArticleDocument;
+use Livewire\Attributes\Computed;
 
 /**
  * Structured-frontmatter editing shared by the article editor + creator. The raw article file is
@@ -101,7 +104,7 @@ trait EditsFrontmatter
         }
         $rows = [];
         foreach ($at as $key => $v) {
-            if ((string) $key === 'obd') {
+            if (in_array((string) $key, ['obd', 'ecus'], true)) {
                 continue;
             }
             $isList = is_array($v);
@@ -122,7 +125,7 @@ trait EditsFrontmatter
         foreach ($this->fmAppliesTo as $row) {
             $key = trim((string) ($row['key'] ?? ''));
             $raw = trim((string) ($row['value'] ?? ''));
-            if ($key === '' || $key === 'obd' || $raw === '') {
+            if ($key === '' || $key === 'obd' || $key === 'ecus' || $raw === '') {
                 continue;
             }
             $vals = $this->splitCsv($raw);
@@ -134,6 +137,34 @@ trait EditsFrontmatter
         }
 
         return $out;
+    }
+
+    /** Every tag already used across the catalog, for the tags input's datalist. */
+    #[Computed]
+    public function tagOptions(): array
+    {
+        return ArticleFacet::where('kind', 'tag')->distinct()->orderBy('value')->pluck('value')->all();
+    }
+
+    /** Every applies_to value already used across the catalog, grouped by field kind (e.g.
+     *  'model', 'chassis'), so each row's value input can suggest values for its own field. */
+    #[Computed]
+    public function appliesToValueOptions(): array
+    {
+        return ArticleFacet::query()
+            ->whereNotIn('kind', ['type', 'category', 'tag'])
+            ->select('kind', 'value')
+            ->distinct()
+            ->get()
+            ->groupBy('kind')
+            ->map(fn ($rows) => $rows->pluck('value')->sort(SORT_STRING)->values()->all())
+            ->all();
+    }
+
+    /** The facet kind an applies_to row's free-text field name maps to (e.g. 'models' -> 'model'). */
+    public function appliesToFieldKind(string $key): string
+    {
+        return ArticleService::APPLIES_TO_KIND_MAP[$key] ?? $key;
     }
 
     // ----- sources -----

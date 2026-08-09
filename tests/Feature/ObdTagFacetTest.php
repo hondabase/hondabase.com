@@ -42,11 +42,11 @@ class ObdTagFacetTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_obd_applies_to_is_ignored_but_obd_tag_indexes_as_tag(): void
+    public function test_obd_and_ecu_applies_to_are_ignored_but_their_tags_index_as_tags(): void
     {
         $this->seedFile('cars/ecu/obd1-topic/obd1-topic.md', <<<'MD'
 ---
-tags: [ecu, obd1]
+tags: [ecu, obd1, p28]
 applies_to:
   obd: [1]
   ecus: [P28]
@@ -62,9 +62,9 @@ MD);
         $facets = $article->facets->map(fn ($f) => $f->kind.':'.$f->value)->all();
 
         $this->assertContains('tag:obd1', $facets);
-        $this->assertContains('tag:p28', $facets); // ECU facets merged into tags (7f676e3)
+        $this->assertContains('tag:p28', $facets); // ECU codes belong in tags, not applies_to
         $this->assertNotContains('obd:1', $facets);
-        $this->assertNotContains('ecu:p28', $facets);
+        $this->assertNotContains('ecus:p28', $facets);
     }
 
     public function test_old_obd_filter_url_maps_to_obd_tag_filter(): void
@@ -100,6 +100,23 @@ MD);
 
         $this->assertSame(1, Artisan::call('app:lint-articles'));
         $this->assertStringContainsString("Disallowed key under 'applies_to': 'obd'", Artisan::output());
+    }
+
+    public function test_linter_rejects_ecus_under_applies_to(): void
+    {
+        $this->seedFile('cars/ecu/stale-ecu/stale-ecu.md', <<<'MD'
+---
+tags: [p28]
+applies_to:
+  ecus: [P28]
+---
+# Stale ECU
+
+Notes.
+MD);
+
+        $this->assertSame(1, Artisan::call('app:lint-articles'));
+        $this->assertStringContainsString("Disallowed key under 'applies_to': 'ecus'", Artisan::output());
     }
 
     public function test_obd_follows_migrate_to_tag_follows_and_merge_duplicates(): void

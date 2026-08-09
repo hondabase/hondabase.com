@@ -12,11 +12,11 @@
     $labels = [
         'make' => 'Make', 'models' => 'Models', 'model' => 'Model', 'chassis' => 'Chassis',
         'trims' => 'Trims', 'trim' => 'Trim', 'engines' => 'Engines', 'engine' => 'Engine',
-        'displacement' => 'Displacement', 'ecus' => 'ECUs', 'systems' => 'Systems',
+        'displacement' => 'Displacement', 'systems' => 'Systems',
         'years' => 'Years', 'scope' => 'Scope',
     ];
     $order = ['make', 'models', 'model', 'chassis', 'trims', 'trim', 'engines', 'engine',
-              'displacement', 'ecus', 'systems', 'years', 'scope'];
+              'displacement', 'systems', 'years', 'scope'];
 
     $keys = array_merge(
         array_values(array_filter($order, fn ($k) => array_key_exists($k, $at))),
@@ -25,7 +25,7 @@
 
     $rows = [];
     foreach ($keys as $k) {
-        if ($k === 'obd') {
+        if ($k === 'obd' || $k === 'ecus') {
             continue;
         }
         $items = [];
