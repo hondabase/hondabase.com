@@ -28,14 +28,29 @@ applies_to:
   engines: [d-series, b-series, h-series]
 complexity: advanced
 sources:
-  - url: "https://rusefi.com/forum/viewtopic.php?t=2013"
+  - name: "rusEFI Forum"
     title: "Honda D/B/H trigger patterns"
     author: "blundar"
+    url: "https://rusefi.com/forum/viewtopic.php?t=2013"
+    license: "All rights reserved"
+    license_url: "https://rusefi.com/forum/viewtopic.php?t=2013"
     adapted: true
 ---
 ```
 
 ### Sources & Provenance (`sources`)
+- **`name` vs `author`, and what actually renders where (do not mix these up):** `name` is the
+  **site or publication** the source was pulled from (a forum name, a community, a datasheet
+  publisher) and is what the footer's "on `:name`." sentence prints. `author` is the **individual
+  person** and prints separately as "(by `:author`)" in the header badge when present. Setting a
+  person's name in `name` renders nonsensical text like "Source Adapted from *Guide Title* on
+  *Person's Name*." For a source pulled from a single individual's own page/group/repo rather than
+  a multi-author forum, use something like `"<Site or Group Name> (<Platform>)"` for `name` (e.g.
+  `"HondaRulez's Garage (Facebook)"`) and the person's name in `author`.
+- **All of `name`, `title`, `url`, `license`, `license_url` are required** by `app:lint-articles`
+  for every source entry, even ones that are just background references. Use `"All rights
+  reserved"` for `license` and repeat the source `url` as `license_url` when no explicit license
+  page exists.
 - **`adapted: true`**: Set when the article content was restructured, imported, or rewritten from a specific forum thread, wiki page, or community post. Displays an "Adapted from..." header badge and footer credit.
 - **`adapted: false` (or omitted)**: Set when a source is cited purely as a background reference, datasheet, or further reading link.
 
@@ -79,7 +94,7 @@ Valid sub-keys under `applies_to`:
 
 ## 3. Image Watermarking & Author Attribution
 
-1. **Author Watermark Overlay:** All community photos, schematics, or illustrations imported from external threads (rusEFI, 4GUK, PGMFI, Honda-Tech) MUST be watermarked with an author attribution overlay (`Photo: {author} • Hondabase Archive`) before publication.
+1. **Author Watermark Overlay:** All community photos, schematics, or illustrations imported from external threads (rusEFI, 4GUK, PGMFI, Honda-Tech) MUST be watermarked with an author attribution overlay (`Photo: {author}`) before publication. Do not append "Hondabase Archive" or any other site-branding suffix to the watermark text.
 2. **Caption Credit:** Captions must explicitly credit the original thread poster or photographer:
    `*D-series coil-on-plug conversion bracket (photo: rtmickelwait).*`
 3. **Mandatory Asset Embedding:** Every image or attachment listed in `$draft->assets` MUST be explicitly embedded in the Markdown body:
@@ -108,7 +123,7 @@ $fm = [
     ],
     'complexity' => 'intermediate',
     'sources' => [
-        ['url' => 'https://...', 'title' => 'Source Title', 'author' => 'AuthorName', 'adapted' => true]
+        ['name' => 'Site or Publication Name', 'title' => 'Source Title', 'author' => 'AuthorName', 'url' => 'https://...', 'license' => 'All rights reserved', 'license_url' => 'https://...', 'adapted' => true]
     ]
 ];
 
@@ -144,3 +159,21 @@ After creating or updating articles/drafts:
 3. **Reindex (Derived Index):** Run `php artisan hondabase:reindex` to test MariaDB taxonomy compatibility resolution.
 4. **Code Style:** Run `vendor/bin/pint` to fix PHP formatting.
 5. **Permissions:** Restore file ownership: `chown -R www-data:www-data /var/www/hondabase/www/storage /var/www/hondabase/www/content`.
+
+---
+
+## 6. Discord Publish Announcement
+
+Articles that go through the normal member-edit/staff-edit flow (`App\Jobs\CommitArticle` →
+`App\Jobs\NotifyNewArticlePublished` → `App\Services\RevisionNotifier::notifyNewArticlePublished()`)
+automatically get announced in Discord `#new-articles` (channel `1535671816645779626`) once
+approved and committed. **This only fires for genuinely new articles**, not edits to existing ones.
+
+When an article is created directly on disk (as this skill does, bypassing `ArticleDraft` /
+`ArticleRevision`), that automatic announcement never fires because there's no revision to hook.
+If a Discord announcement is wanted for such an article, send it manually **only when explicitly
+asked to** by reproducing `RevisionNotifier::notifyNewArticlePublished()`'s exact embed shape
+(rich embed: title, summary as description, `Category`, `Complexity`, `Applies To`, `Tags`,
+`Source` fields, color `3900150`) via `config('services.discord.bot_token')` posting to
+`https://discord.com/api/v10/channels/1535671816645779626/messages`. Do not send Discord messages
+as a routine part of article creation, only on explicit request.
