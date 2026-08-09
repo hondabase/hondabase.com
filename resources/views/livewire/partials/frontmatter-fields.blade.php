@@ -26,7 +26,8 @@
         </div>
     </div>
 
-    <details class="ed-disclosure">
+    {{-- Preserve the browser-owned `open` state while Livewire morphs rows inside the disclosure. --}}
+    <details class="ed-disclosure" wire:ignore.self>
         <summary>{{ __('Applies to') }} <span class="ed-opt">({{ __('vehicles, engines, ECUs this covers') }})</span></summary>
         <div class="ed-disclosure-body">
             @forelse ($fmAppliesTo as $i => $row)
@@ -54,7 +55,7 @@
         </div>
     </details>
 
-    <details class="ed-disclosure">
+    <details class="ed-disclosure" wire:ignore.self>
         <summary>{{ __('Sources') }} <span class="ed-opt">({{ __('provenance for adapted or imported material') }})</span></summary>
         <div class="ed-disclosure-body">
             @forelse ($fmSources as $i => $src)

@@ -4,6 +4,9 @@ return [
     // Local working clone of hondabase/articles (canonical content repo).
     'content_path' => env('HONDABASE_CONTENT_PATH', base_path('content')),
 
+    // Private image storage for not-yet-submitted article drafts.
+    'draft_asset_path' => storage_path('app/draft-assets'),
+
     // Local archive used to recover original PGMFI wiki authors and source URLs.
     'pgmfi_source_path' => env('HONDABASE_PGMFI_SOURCE_PATH', base_path('tools/wiki-import/source/twiki')),
 

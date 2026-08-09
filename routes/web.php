@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ArticleDraftController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ManualFavoriteController;
 use App\Http\Controllers\PushSubscriptionController;
 use App\Models\Article;
+use App\Models\ArticleDraft;
 use App\Services\ArticleService;
 use App\Support\Locales;
 use Illuminate\Support\Facades\Route;
@@ -31,9 +33,20 @@ Route::middleware('auth')->group(function () {
     Route::delete('/me/push', [PushSubscriptionController::class, 'destroy'])->name('push.destroy');
 });
 
-// New-article creation (auth-gated). `new` is not a content type, so it never collides with
-// the knowledgebase routes below.
-Route::get('/new', fn () => view('new'))->middleware('auth')->name('article.new');
+// New-article creation + private draft assets (auth-gated). `new` is not a content type, so it
+// never collides with the knowledgebase routes below. Draft lookups are owner-scoped to avoid
+// exposing even their metadata to another signed-in user.
+Route::middleware('auth')->group(function () {
+    Route::get('/new', fn () => view('new'))->name('article.new');
+    Route::get('/new/{draft}', function (int $draft) {
+        abort_unless(ArticleDraft::whereKey($draft)->where('user_id', auth()->id())->exists(), 404);
+
+        return view('new', ['draftId' => $draft]);
+    })->whereNumber('draft')->name('article.new.draft');
+    Route::get('/new/{draft}/assets/{file}', [ArticleDraftController::class, 'asset'])
+        ->where(['draft' => '[0-9]+', 'file' => '[A-Za-z0-9._-]+\.[A-Za-z0-9]+'])
+        ->name('article.draft.asset');
+});
 
 // In-browser editor (auth-gated). `edit` is not a content type, so it never collides with
 // the knowledgebase routes below. The Livewire component re-checks existence + auth too.

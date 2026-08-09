@@ -84,6 +84,11 @@ document.addEventListener('alpine:init', () => {
             this.$wire.submit();
         },
 
+        saveDraft() {
+            if (editor) this.$wire.set(wireProp, this.markdown(), false);
+            this.$wire.saveDraft();
+        },
+
         // ----- toolbar -----
         cmd(name, arg) {
             if (!editor) return;

@@ -22,6 +22,40 @@
         @endif
     </p>
 
+    @if ($this->drafts->isNotEmpty())
+        <details class="mb-6 border border-border bg-panel px-4 py-3" @if ($draftId === null) open @endif>
+            <summary class="cursor-pointer font-mono text-xs uppercase tracking-wider text-dim">
+                {{ trans_choice('{1} Your draft|[2,*] Your drafts', $this->drafts->count()) }}
+                <span class="text-amber">({{ $this->drafts->count() }})</span>
+            </summary>
+            <div class="mt-3 divide-y divide-border border-t border-border">
+                @foreach ($this->drafts as $draft)
+                    <div class="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="min-w-0">
+                            <a class="block truncate font-display text-head hover:text-amber"
+                               href="{{ route('article.new.draft', $draft) }}" wire:navigate
+                               @if ($draft->id === $draftId) aria-current="page" @endif>
+                                {{ $draft->title }}
+                                @if ($draft->id === $draftId)
+                                    <span class="font-mono text-xs text-amber">{{ __('editing') }}</span>
+                                @endif
+                            </a>
+                            <p class="mt-1 truncate font-mono text-xs text-muted">
+                                /{{ $draft->type }}/{{ $draft->category ?: '…' }}/{{ $draft->slug ?: '…' }}
+                                · {{ __('Saved :time', ['time' => $draft->updated_at->diffForHumans()]) }}
+                            </p>
+                        </div>
+                        <button type="button" class="self-start font-mono text-xs uppercase text-muted hover:text-red sm:self-auto"
+                                wire:click="deleteDraft({{ $draft->id }})"
+                                wire:confirm="{{ __('Delete this draft and its saved images?') }}">
+                            {{ __('Delete') }}
+                        </button>
+                    </div>
+                @endforeach
+            </div>
+        </details>
+    @endif
+
     {{-- Tabs: one pane at a time at every width, so the editor gets the full page. --}}
     <div class="ed-tabs" role="tablist">
         <button type="button" class="ed-tab" :class="{ 'is-on': tab === 'edit' }" @click="tab = 'edit'">{{ __('Write') }}</button>
@@ -70,6 +104,19 @@
             <input type="file" class="ed-input ed-file" wire:model="images" multiple accept="image/png,image/jpeg,image/gif,image/webp">
             <div wire:loading wire:target="images" class="ed-rendering">{{ __('Uploading…') }}</div>
             @error('images.*') <p class="ed-error">{{ $message }}</p> @enderror
+            @if (count($this->savedDraftAssets))
+                <ul class="ed-assets">
+                    @foreach ($this->savedDraftAssets as $i => $asset)
+                        <li>
+                            <code>{{ $asset['name'] }}</code>
+                            <span class="ed-asset-snip">{{ __('saved with this draft') }}</span>
+                            <button type="button" class="ed-asset-rm" wire:click="removeDraftAsset({{ $i }})"
+                                    wire:confirm="{{ __('Remove this image from the draft?') }}"
+                                    aria-label="{{ __('Remove image') }}">&times;</button>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
             @if (count($this->assetNames))
                 <ul class="ed-assets">
                     @foreach ($this->assetNames as $i => $name)
@@ -80,7 +127,9 @@
                         </li>
                     @endforeach
                 </ul>
-                <p class="ed-opt">{{ __('Images are committed with the article once it is published.') }}</p>
+            @endif
+            @if (count($this->savedDraftAssets) || count($this->assetNames))
+                <p class="ed-opt">{{ __('Images are saved privately with a draft and committed with the article once it is published.') }}</p>
             @endif
 
             <label class="ed-label" for="ed-note">{{ __('Note for the reviewer') }} <span class="ed-opt">({{ __('optional') }})</span></label>
@@ -88,12 +137,16 @@
                    placeholder="{{ __('e.g. New article documenting the knock sensor circuit') }}">
             @error('note') <p class="ed-error">{{ $message }}</p> @enderror
 
-            <div class="ed-actions">
-                <button type="button" class="btn ed-submit" @click="save()" wire:loading.attr="disabled" wire:target="submit,images">
+            <div class="ed-actions flex-wrap">
+                <button type="button" class="ed-add mt-0" @click="saveDraft()" wire:loading.attr="disabled" wire:target="saveDraft,images">
+                    <span wire:loading.remove wire:target="saveDraft">{{ __('Save draft') }}</span>
+                    <span wire:loading wire:target="saveDraft">{{ __('Saving draft...') }}</span>
+                </button>
+                <button type="button" class="btn ed-submit" @click="save()" wire:loading.attr="disabled" wire:target="submit,saveDraft,images">
                     <span wire:loading.remove wire:target="submit">{{ $canManage ? __('Publish article') : __('Submit for review') }}</span>
                     <span wire:loading wire:target="submit">{{ $canManage ? __('Publishing...') : __('Submitting...') }}</span>
                 </button>
-                <a class="ed-cancel-link" href="/" wire:navigate>{{ __('Discard') }}</a>
+                <a class="ed-cancel-link" href="/" wire:navigate>{{ $draftId === null ? __('Discard') : __('Close') }}</a>
             </div>
         </section>
 

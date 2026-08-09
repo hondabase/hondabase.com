@@ -67,6 +67,11 @@ trait ManagesArticleImages
     protected function uploadedPreviewUrls(): array
     {
         $urls = [];
+        foreach ($this->additionalImageAssets() as $asset) {
+            if (isset($asset['name'], $asset['url'])) {
+                $urls[$asset['name']] = $asset['url'];
+            }
+        }
         foreach ($this->images as $index => $image) {
             $name = $this->assetNames()[$index] ?? null;
             if ($name !== null) {
@@ -122,10 +127,19 @@ trait ManagesArticleImages
     private function existingImageAssets(): array
     {
         if (! isset($this->type, $this->category, $this->slug)) {
-            return [];
+            return $this->additionalImageAssets();
         }
 
-        return app(ArticleService::class)->imageAssets((string) $this->type, (string) $this->category, (string) $this->slug);
+        return [
+            ...app(ArticleService::class)->imageAssets((string) $this->type, (string) $this->category, (string) $this->slug),
+            ...$this->additionalImageAssets(),
+        ];
+    }
+
+    /** Extra persisted picker assets supplied by a using component (for example, creator drafts). */
+    protected function additionalImageAssets(): array
+    {
+        return [];
     }
 
     private function assetName(string $original): string

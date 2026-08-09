@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->hasMany(ArticleAuthor::class);
     }
 
+    public function articleDrafts(): HasMany
+    {
+        return $this->hasMany(ArticleDraft::class);
+    }
+
     public function authorAliases(): HasMany
     {
         return $this->hasMany(AuthorAlias::class);

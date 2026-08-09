@@ -8,5 +8,5 @@
 @endpush
 
 @section('content')
-    <livewire:article-creator />
+    <livewire:article-creator :draft-id="$draftId ?? null" />
 @endsection

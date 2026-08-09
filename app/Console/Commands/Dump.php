@@ -22,6 +22,11 @@ class Dump extends Command
         'sessions', 'cache', 'cache_locks', 'jobs', 'job_batches', 'failed_jobs', 'password_reset_tokens',
     ];
 
+    /** Keep private/security-sensitive rows out while retaining their schema for fresh installs. */
+    private const SKIP_TABLE_DATA = [
+        'article_drafts', 'push_subscriptions',
+    ];
+
     public function handle(): int
     {
         if (! $this->option('force') && ! $this->changedToday()) {
@@ -44,6 +49,9 @@ class Dump extends Command
         ];
         foreach (self::SKIP_TABLES as $t) {
             $args[] = '--ignore-table='.$db['database'].'.'.$t;
+        }
+        foreach (self::SKIP_TABLE_DATA as $t) {
+            $args[] = '--ignore-table-data='.$db['database'].'.'.$t;
         }
         $args[] = $db['database'];
 
