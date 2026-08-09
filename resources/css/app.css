@@ -870,11 +870,14 @@
   @apply border border-border-2 py-[0.05rem] px-[0.45rem] text-dim;
 }
 .source-note {
-  @apply font-mono text-[0.72rem] text-amber mt-[0.75rem] inline-flex items-center gap-1.5 flex-wrap bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-md;
+  @apply font-mono text-[0.72rem] text-muted mt-[0.75rem] inline-flex items-center gap-1.5 flex-wrap;
 }
-.source-note a { color: var(--color-amber-2); font-weight: 500; }
+.source-chip {
+  @apply border border-border-2 py-[0.05rem] px-[0.45rem] text-dim uppercase tracking-[0.08em] text-[0.62rem];
+}
+.source-note a { color: var(--color-amber-2); }
 .source-note a:hover { text-decoration: underline; }
-.source-author { color: var(--color-muted); opacity: 0.85; }
+.source-author { color: var(--color-muted); }
 
 /* prose body */
 .prose-article {
@@ -1416,11 +1419,8 @@ html.carousel-lightbox-open body {
 
 .article-attribution {
   margin: 2.5rem 0 2rem;
-  padding: 1.25rem 1.5rem;
+  padding: 1.1rem 1.25rem;
   border: 1px solid var(--color-border);
-  border-left: 4px solid var(--color-amber);
-  background: var(--color-panel);
-  border-radius: 0.5rem;
 }
 .article-attribution h2 {
   font-family: var(--font-display);
@@ -1429,7 +1429,7 @@ html.carousel-lightbox-open body {
   margin: 0 0 .75rem;
 }
 .article-attribution p { color: var(--color-dim); font-size: .88rem; margin: .45rem 0 0; line-height: 1.5; }
-.article-attribution a { color: var(--color-amber-2); font-weight: 500; }
+.article-attribution a { color: var(--color-amber-2); }
 .article-attribution a:hover { text-decoration: underline; }
 .attribution-label {
   display: inline-block;
@@ -1439,10 +1439,7 @@ html.carousel-lightbox-open body {
   font-size: .68rem;
   text-transform: uppercase;
   letter-spacing: .08em;
-  color: var(--color-amber);
-  background: rgba(251, 191, 36, 0.1);
-  padding: 0.1rem 0.4rem;
-  border-radius: 0.2rem;
+  color: var(--color-muted);
 }
 
 /* summary + facts / applies-to panel */

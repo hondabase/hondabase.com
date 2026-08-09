@@ -142,7 +142,7 @@
                     $adaptedSources = array_values(array_filter($art['sources'], fn($s) => !empty($s['adapted'])));
                     $headerSources = !empty($adaptedSources) ? $adaptedSources : $art['sources'];
                 @endphp
-                <p class="source-note">{{ __('Adapted from') }}
+                <p class="source-note"><span class="source-chip">{{ __('Adapted from') }}</span>
                     @foreach ($headerSources as $i => $src)
                         @if ($i > 0), @endif
                         @if (str_starts_with($src['url'], '/pgmfi/wiki'))
