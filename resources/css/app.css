@@ -870,9 +870,11 @@
   @apply border border-border-2 py-[0.05rem] px-[0.45rem] text-dim;
 }
 .source-note {
-  @apply font-mono text-[0.72rem] text-muted mt-[0.65rem];
+  @apply font-mono text-[0.72rem] text-amber mt-[0.75rem] inline-flex items-center gap-1.5 flex-wrap bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-md;
 }
-.source-note a { color: var(--color-amber-2); }
+.source-note a { color: var(--color-amber-2); font-weight: 500; }
+.source-note a:hover { text-decoration: underline; }
+.source-author { color: var(--color-muted); opacity: 0.85; }
 
 /* prose body */
 .prose-article {
@@ -1413,29 +1415,34 @@ html.carousel-lightbox-open body {
 }
 
 .article-attribution {
-  margin: 2rem 0;
-  padding: 1rem;
+  margin: 2.5rem 0 2rem;
+  padding: 1.25rem 1.5rem;
   border: 1px solid var(--color-border);
-  border-left: 3px solid var(--color-amber);
+  border-left: 4px solid var(--color-amber);
   background: var(--color-panel);
+  border-radius: 0.5rem;
 }
 .article-attribution h2 {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--color-head);
-  margin: 0 0 .65rem;
+  margin: 0 0 .75rem;
 }
-.article-attribution p { color: var(--color-dim); font-size: .85rem; margin: .4rem 0 0; }
-.article-attribution a { color: var(--color-amber-2); }
+.article-attribution p { color: var(--color-dim); font-size: .88rem; margin: .45rem 0 0; line-height: 1.5; }
+.article-attribution a { color: var(--color-amber-2); font-weight: 500; }
+.article-attribution a:hover { text-decoration: underline; }
 .attribution-label {
   display: inline-block;
   min-width: 4.5rem;
-  margin-right: .35rem;
+  margin-right: .4rem;
   font-family: var(--font-mono);
   font-size: .68rem;
   text-transform: uppercase;
   letter-spacing: .08em;
-  color: var(--color-muted);
+  color: var(--color-amber);
+  background: rgba(251, 191, 36, 0.1);
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.2rem;
 }
 
 /* summary + facts / applies-to panel */
