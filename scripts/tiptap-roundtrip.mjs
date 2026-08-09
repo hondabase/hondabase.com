@@ -1,6 +1,6 @@
 // Headless round-trip harness: validates that the real TipTap pipeline
 // (StarterKit + Table + tiptap-markdown) serializes Markdown losslessly/idempotently.
-// Usage: node scripts/tiptap-roundtrip.mjs [--show <slug>]
+// Usage: node scripts/tiptap-roundtrip.mjs [--show <slug>] [--start <offset> --limit <count>]
 import { JSDOM } from 'jsdom';
 
 const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
@@ -54,7 +54,12 @@ if (showArg !== -1) {
     process.exit(0);
 }
 
-const files = walk(ROOT);
+const startArg = process.argv.indexOf('--start');
+const limitArg = process.argv.indexOf('--limit');
+const start = startArg === -1 ? 0 : Math.max(0, Number.parseInt(process.argv[startArg + 1], 10) || 0);
+const limit = limitArg === -1 ? undefined : Math.max(1, Number.parseInt(process.argv[limitArg + 1], 10) || 1);
+const allFiles = walk(ROOT);
+const files = allFiles.slice(start, limit === undefined ? undefined : start + limit);
 let tot = 0,
     idem = 0,
     textKept = 0,
@@ -74,8 +79,13 @@ for (const f of files) {
     if (once === twice) idem++;
     if (textOnly(once) === textOnly(twice)) textKept++;
     else drift.push(path.basename(f));
+
+    // TipTap/JSDOM leaves large detached document graphs for V8 to collect. Give long corpus
+    // runs a bounded memory profile when Node is started with --expose-gc.
+    if (tot % 25 === 0) global.gc?.();
 }
 console.log(`Total: ${tot}`);
+if (start !== 0 || limit !== undefined) console.log(`Corpus range: ${start}-${start + files.length - 1} of ${allFiles.length}`);
 console.log(`Idempotent (round-trip 2 == round-trip 1): ${idem} (${((idem / tot) * 100).toFixed(1)}%)`);
 console.log(`Text-stable across the second round-trip:  ${textKept} (${((textKept / tot) * 100).toFixed(1)}%)`);
 console.log(`\nNon-text-stable (${drift.length}):\n  ` + drift.slice(0, 20).join('\n  '));

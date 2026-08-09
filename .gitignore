@@ -28,3 +28,10 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Local Gemini API key (never commit)
+.gemini_api_key
+
+# Internal maintainer documentation (ignored by git)
+docs/internal/
+
