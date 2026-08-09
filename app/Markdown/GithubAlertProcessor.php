@@ -25,18 +25,24 @@ class GithubAlertProcessor
                 continue;
             }
 
-            if (! preg_match('/^\[!('.implode('|', self::TYPES).')\]\s*$/i', $marker->getLiteral(), $match)) {
+            if (! preg_match('/^\[!('.implode('|', self::TYPES).')\][ \t]*/i', $marker->getLiteral(), $match)) {
                 continue;
             }
 
             $type = strtolower($match[1]);
-            $next = $marker->next();
-            $marker->detach();
-            if ($next instanceof Newline) {
-                $next->detach();
-            }
-            if (! $paragraph->hasChildren()) {
-                $paragraph->detach();
+            $rest = substr($marker->getLiteral(), strlen($match[0]));
+
+            if ($rest === '') {
+                $next = $marker->next();
+                $marker->detach();
+                if ($next instanceof Newline) {
+                    $next->detach();
+                }
+                if (! $paragraph->hasChildren()) {
+                    $paragraph->detach();
+                }
+            } else {
+                $marker->setLiteral($rest);
             }
 
             $title = new Paragraph;
