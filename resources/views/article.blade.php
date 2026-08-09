@@ -62,14 +62,20 @@
 <link rel="alternate" hreflang="{{ \App\Support\Locales::hreflang($loc) }}" href="{{ $localizedUrl($loc) }}">
 @endforeach
 <link rel="alternate" hreflang="x-default" href="{{ $localizedUrl(\App\Support\Locales::default()) }}">
+@section('og-meta')
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Hondabase">
 <meta property="og:title" content="{{ $art['title'] }} - Honda Knowledgebase">
 <meta property="og:description" content="{{ $art['seo_description'] }}">
 <meta property="og:url" content="{{ $canonical }}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="{{ asset('assets/og-image.png') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $art['title'] }} - Honda Knowledgebase">
 <meta name="twitter:description" content="{{ $art['seo_description'] }}">
+<meta name="twitter:image" content="{{ asset('assets/og-image.png') }}">
+@endsection
 @if ($art['updated'])
 <meta property="article:modified_time" content="{{ $art['updated'] }}">
 @endif

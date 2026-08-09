@@ -7,6 +7,21 @@
     <meta name="description" content="@yield('description', __('Hondabase - a community-driven, GitHub-preserved technical knowledgebase for Honda and Acura vehicles.'))">
     <title>@yield('title', 'Hondabase') - {{ __('Honda Knowledgebase') }}</title>
 
+    @section('og-meta')
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Hondabase">
+    <meta property="og:title" content="@yield('title', 'Hondabase') - {{ __('Honda Knowledgebase') }}">
+    <meta property="og:description" content="@yield('description', __('Hondabase - a community-driven, GitHub-preserved technical knowledgebase for Honda and Acura vehicles.'))">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('assets/og-image.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('title', 'Hondabase') - {{ __('Honda Knowledgebase') }}">
+    <meta name="twitter:description" content="@yield('description', __('Hondabase - a community-driven, GitHub-preserved technical knowledgebase for Honda and Acura vehicles.'))">
+    <meta name="twitter:image" content="{{ asset('assets/og-image.png') }}">
+    @show
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
