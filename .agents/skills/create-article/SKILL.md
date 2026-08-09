@@ -63,11 +63,10 @@ Valid sub-keys under `applies_to`:
 - `models`: Array of model slugs (e.g. `[civic, integra, accord, prelude, crx, del-sol, s2000, nsx, rsx, beat, acty, element, cr-v]`)
 - `chassis`: Array of chassis generation codes (e.g. `[ef, eg, ek, da, dc2, dc5, cb7, cd5, cl9, bb, pp1, ha4, rd1]`)
 - `engines`: Array of engine families or engine codes (e.g. `[d-series, b-series, k-series, h-series, f-series, e07a, d15, d16, b16, b18, b20, k20, k24, f20, f22, f23, h22]`)
-- `ecus`: Array of ECU hardware families (e.g. `[obd1-p28, obd1-p30, obd1-p72, obd2a-p72, obd2b-pr3]`) *(optional)*
 - `trims`: Array of trim designations (e.g. `[si, type-r, gsr, vti]`) *(optional)*
 
-### OBD Tags Rule
-- **OBD terms belong in `tags`, NOT in `applies_to`.** Put terms like `obd0`, `obd1`, `obd2a`, `obd2b` under `tags: [...]`.
+### ECU and OBD Tags Rule
+- **ECU and OBD terms belong in `tags`, NOT in `applies_to`.** The linter rejects `applies_to.ecus` and `applies_to.obd`. Put terms like `obd0`, `obd1`, `obd2a`, `obd2b`, `p28`, `p30`, `p72` under `tags: [...]`.
 
 ---
 
