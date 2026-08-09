@@ -73,7 +73,8 @@ MD);
             ->assertOk()
             ->assertSeeText('LegacyWriter')
             ->assertSeeText('Display Name (@stable_username)')
-            ->assertSeeText('Adapted from pgmfi.org wiki')
+            ->assertSeeText('Adapted from Test Credit')
+            ->assertSeeText('Adapted from Test Credit on pgmfi.org wiki.')
             ->assertSeeText('Licensed under CC BY-NC-SA 1.0.');
     }
 
