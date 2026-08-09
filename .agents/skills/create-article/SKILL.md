@@ -60,17 +60,35 @@ Valid sub-keys under `applies_to`:
 
 1. **No Em Dashes:** Never use em dashes (`—`) or en dashes (`–`) anywhere in titles, headers, prose, notes, or comments. Use plain hyphens (`-`), commas, colons, or parentheses.
 2. **Single `#` Header:** Use a single top-level `#` title matching the frontmatter `title`.
-3. **GFM Callout Alerts:** Use standard GFM alert blocks for notes and warnings:
+3. **No Duplicate Section Headers:** Each section heading must be unique. Never duplicate section headers.
+4. **GFM Callout Alerts (Unescaped):** Use standard unescaped GFM alert blocks for notes and warnings:
    - `> [!NOTE]` — General technical context.
    - `> [!TIP]` — Helpful suggestions.
    - `> [!IMPORTANT]` — Essential technical details.
    - `> [!WARNING]` — Safety or damage precautions.
-4. **Tables:** Present pinout maps, wire colors, electrical specs, and scaling factors using markdown tables.
-5. **Carousels:** Use ````carousel` blocks for multi-slide images (PCB front/back, harness views).
+   *(Never escape callout brackets with backslashes like `\[!TIP\]`.)*
+5. **Image Captions Line Breaks:** Always put a newline between an image tag and its italicized caption:
+   ```markdown
+   ![Descriptive Alt Text](image_name.png)
+   *Italicized caption text describing the photo or schematic.*
+   ```
+6. **Tables:** Present pinout maps, wire colors, electrical specs, and scaling factors using markdown tables.
+7. **Carousels:** Use ````carousel` blocks for multi-slide images (PCB front/back, harness views).
 
 ---
 
-## 3. Creating Draft Articles in Code
+## 3. Image Watermarking & Author Attribution
+
+1. **Author Watermark Overlay:** All community photos, schematics, or illustrations imported from external threads (rusEFI, 4GUK, PGMFI, Honda-Tech) MUST be watermarked with an author attribution overlay (`Photo: {author} • Hondabase Archive`) before publication.
+2. **Caption Credit:** Captions must explicitly credit the original thread poster or photographer:
+   `*D-series coil-on-plug conversion bracket (photo: rtmickelwait).*`
+3. **Mandatory Asset Embedding:** Every image or attachment listed in `$draft->assets` MUST be explicitly embedded in the Markdown body:
+   - Images/Schematics: `![Alt Text](filename.jpg)` or inside a ````carousel` block.
+   - PDFs/Firmware Files: `[Schematic Datasheet PDF](filename.pdf)` download link.
+
+---
+
+## 4. Creating Draft Articles in Code
 
 When instantiating draft articles for a user (`App\Models\ArticleDraft`):
 
@@ -90,7 +108,7 @@ $fm = [
     ],
     'complexity' => 'intermediate',
     'sources' => [
-        ['url' => 'https://...', 'title' => 'Source Title', 'author' => 'AuthorName']
+        ['url' => 'https://...', 'title' => 'Source Title', 'author' => 'AuthorName', 'adapted' => true]
     ]
 ];
 
@@ -117,7 +135,7 @@ if (!is_dir($assetDir)) {
 
 ---
 
-## 4. Verification & Testing Workflow
+## 5. Verification & Testing Workflow
 
 After creating or updating articles/drafts:
 
