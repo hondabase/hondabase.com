@@ -31,6 +31,7 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="DISCORD_BOT_TOKEN" value=""/>
+        <env name="HONDABASE_SSO_SECRET" value="testing-sso-secret-0000000000000000000000000000"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
