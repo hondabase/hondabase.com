@@ -13,7 +13,10 @@
         $crumbItems[] = ['@type' => 'ListItem', 'position' => $pos++, 'name' => $c['name'], 'item' => url($c['url'])];
     }
     $breadcrumbSchema = ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => $crumbItems];
+    $nodeLabel = trim($node->name.($node->yearRange() ? ' ('.$node->yearRange().')' : ''));
 @endphp
+
+@section('description', e(__('Technical articles, wiring guides, ECU references and known issues for the :label, maintained by the Hondabase community.', ['label' => $nodeLabel])))
 
 @push('head')
 <link rel="canonical" href="{{ $canonical }}">
@@ -39,7 +42,7 @@
 
     <section class="hero compact">
         <div class="tag">{{ ucfirst($node->kind) }} &middot; {{ __('Knowledgebase') }}</div>
-        <h2>{{ $node->name }}</h2>
+        <h1>{{ $node->name }}</h1>
         @if ($node->yearRange() || $chassis->isNotEmpty())
             <p class="node-meta">
                 @if ($node->yearRange())<span class="node-years">{{ $node->yearRange() }}</span>@endif

@@ -54,6 +54,9 @@
         'itemListElement' => $crumbItems,
     ];
     $obdTags = array_values(array_filter($art['tags'], fn ($tag) => preg_match('/^obd(?:\d[a-z]?|)$/i', (string) $tag)));
+    // Per-article OG card rendered by hondabase:reindex; the shared site card is the fallback.
+    $ogRel = \App\Services\OgImageGenerator::pathFor($art['type'], $art['category'], $art['slug'], $art['locale']);
+    $ogImage = file_exists(public_path($ogRel)) ? asset($ogRel) : asset('assets/og-image.png');
 @endphp
 
 @push('head')
@@ -68,13 +71,13 @@
 <meta property="og:title" content="{{ $art['title'] }} - Honda Knowledgebase">
 <meta property="og:description" content="{{ $art['seo_description'] }}">
 <meta property="og:url" content="{{ $canonical }}">
-<meta property="og:image" content="{{ asset('assets/og-image.png') }}">
+<meta property="og:image" content="{{ $ogImage }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $art['title'] }} - Honda Knowledgebase">
 <meta name="twitter:description" content="{{ $art['seo_description'] }}">
-<meta name="twitter:image" content="{{ asset('assets/og-image.png') }}">
+<meta name="twitter:image" content="{{ $ogImage }}">
 @endsection
 @if ($art['updated'])
 <meta property="article:modified_time" content="{{ $art['updated'] }}">

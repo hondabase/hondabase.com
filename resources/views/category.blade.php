@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $category_label)
+@section('description', e(__(':category guides and reference for :type on Hondabase, the community-maintained Honda and Acura technical knowledgebase.', ['category' => $category_label, 'type' => __($type_label)])))
 
 @php
     $locale = $locale ?? \App\Support\Locales::default();
@@ -48,7 +49,7 @@
 
     <section class="hero compact">
         <div class="tag">{{ $type_label }} &middot; {{ __('Knowledgebase') }}</div>
-        <h2>{{ $category_label }}</h2>
+        <h1>{{ $category_label }}</h1>
     </section>
 
     <livewire:explorer :type="$type" :category="$category" />

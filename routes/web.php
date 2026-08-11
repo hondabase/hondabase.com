@@ -3,10 +3,11 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ArticleDraftController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FeedController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\ManualFavoriteController;
 use App\Http\Controllers\PushSubscriptionController;
-use App\Models\Article;
+use App\Http\Controllers\SitemapController;
 use App\Models\ArticleDraft;
 use App\Services\ArticleService;
 use App\Support\Locales;
@@ -78,21 +79,8 @@ Route::middleware(['auth', 'can:manage-articles'])->group(function () {
         ->name('article.destroy');
 });
 
-Route::get('/sitemap.xml', function () {
-    $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n"
-        .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n"
-        .'  <url><loc>https://www.hondabase.com/</loc></url>'."\n";
-    foreach (Article::where('is_hidden', false)->orderBy('type')->orderBy('category')->orderBy('slug')->orderBy('locale')->get(['type', 'category', 'slug', 'locale', 'updated_at']) as $a) {
-        $prefix = Locales::isDefault($a->locale) ? '' : '/'.$a->locale;
-        $loc = 'https://www.hondabase.com'.$prefix.'/'.$a->type.'/'.$a->category.'/'.$a->slug;
-        $xml .= '  <url><loc>'.htmlspecialchars($loc).'</loc>'
-            .($a->updated_at ? '<lastmod>'.$a->updated_at->toDateString().'</lastmod>' : '')
-            .'</url>'."\n";
-    }
-    $xml .= '</urlset>'."\n";
-
-    return response($xml, 200, ['Content-Type' => 'application/xml']);
-})->name('sitemap');
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::get('/feed.xml', FeedController::class)->name('feed');
 
 Route::get('/explore', fn () => view('explore'))->name('explore');
 

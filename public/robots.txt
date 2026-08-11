@@ -1,8 +1,9 @@
 User-agent: *
-Disallow: /pgmfi/wiki/
-Disallow: /pgmfi/forum/search.php
-Disallow: /pgmfi/forum/suggest.php
-Disallow: /pgmfi/forum/live.php
-Disallow: /pgmfi-archive/
+Disallow:
+
+# Legacy /pgmfi/ and /pgmfi-archive/ serve X-Robots-Tag: noindex and are
+# intentionally left crawlable so search engines can see the noindex and
+# drop them from the index. Once Search Console shows them gone, they can
+# be Disallowed again to save crawl budget.
 
 Sitemap: https://www.hondabase.com/sitemap.xml

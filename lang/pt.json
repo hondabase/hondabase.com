@@ -12,7 +12,6 @@
     "open & ad-free": "aberto e sem publicidade",
     "Content preserved on :github": "Conteúdo preservado no :github",
     "Language": "Idioma",
-
     "Search the knowledgebase...": "Pesquisar na base de conhecimento...",
     "Search articles": "Pesquisar artigos",
     "{0}:count articles|{1}:count article|[2,*]:count articles": "{0}:count artigos|{1}:count artigo|[2,*]:count artigos",
@@ -32,7 +31,6 @@
     "Sub-categories": "Subcategorias",
     "{0}No articles yet|{1}:count article|[2,*]:count articles": "{0}Ainda sem artigos|{1}:count artigo|[2,*]:count artigos",
     "No articles are filed under this yet. Browse the knowledgebase or suggest one.": "Ainda não há artigos arquivados aqui. Explora a base de conhecimento ou sugere um.",
-
     "Welcome to your Hondabase.": "Bem-vindo à tua Hondabase.",
     "Add your vehicle and we'll tailor your homepage and this dashboard to it: new articles for your engine and chassis show up here automatically.": "Adiciona o teu veículo e personalizamos a tua página inicial e este painel para ele: novos artigos para o teu motor e chassis aparecem aqui automaticamente.",
     "Add your first vehicle": "Adiciona o teu primeiro veículo",
@@ -49,7 +47,6 @@
     "Saved articles": "Artigos guardados",
     "Nothing saved yet. Tap :save on any article to bookmark it here.": "Ainda não guardaste nada. Toca em :save em qualquer artigo para o marcares aqui.",
     "Remove": "Remover",
-
     "My vehicles": "Os meus veículos",
     "Add vehicle": "Adicionar veículo",
     "Nickname": "Alcunha",
@@ -81,7 +78,6 @@
     "Vehicle removed.": "Veículo removido.",
     "Equipment saved.": "Equipamento guardado.",
     "Equipment removed.": "Equipamento removido.",
-
     "Home": "Início",
     "Suggesting an edit": "A sugerir uma edição",
     "Edit the article below with the rich-text editor; its metadata (tags, summary, what it applies to) is set in the fields above the body.": "Edita o artigo abaixo com o editor de texto formatado; os seus metadados (etiquetas, resumo, a que se aplica) definem-se nos campos acima do corpo.",
@@ -103,7 +99,6 @@
     "Discard": "Descartar",
     "Live preview": "Pré-visualização em direto",
     "rendering...": "a processar...",
-
     "Creating a new article": "A criar um novo artigo",
     "{1} Your draft|[2,*] Your drafts": "{1} O teu rascunho|[2,*] Os teus rascunhos",
     "editing": "a editar",
@@ -139,7 +134,6 @@
     "An article already exists at that location. Edit it instead.": "Já existe um artigo nessa localização. Edita-o em vez disso.",
     "Created. Your new article (#:id) was published and committed; it can be reverted from history.": "Criado. O teu novo artigo (#:id) foi publicado e registado; pode ser revertido a partir do histórico.",
     "Thanks. Your new article (#:id) was submitted for review and will go live once approved.": "Obrigado. O teu novo artigo (#:id) foi submetido para revisão e ficará em vigor assim que for aprovado.",
-
     "Summary": "Resumo",
     "one sentence; shows in search and the \"applies to\" panel": "uma frase; aparece na pesquisa e no painel \"aplica-se a\"",
     "What this is and when it matters.": "O que é isto e quando importa.",
@@ -172,7 +166,6 @@
     "Remove source": "Remover fonte",
     "No sources. Add one for any adapted or imported material.": "Sem fontes. Adiciona uma para qualquer material adaptado ou importado.",
     "Add source": "Adicionar fonte",
-
     "Formatting": "Formatação",
     "Heading": "Título",
     "Subheading": "Subtítulo",
@@ -193,18 +186,15 @@
     "Insert image carousel": "Inserir carrossel de imagens",
     "Carousel": "Carrossel",
     "Divider": "Separador",
-
     "Saved to your favorites": "Guardado nos teus favoritos",
     "Save this article": "Guardar este artigo",
     "Saved": "Guardado",
     "Save": "Guardar",
-
     "Notifications": "Notificações",
     "Mark all read": "Marcar tudo como lido",
     "New": "Novo",
     "Updated": "Atualizado",
     "Nothing yet. Follow a category, engine or chassis and new articles will show up here.": "Ainda nada. Segue uma categoria, motor ou chassis e novos artigos aparecerão aqui.",
-
     "This article is not translated yet. Showing the English version.": "Este artigo ainda não está traduzido. A mostrar a versão em inglês.",
     "Adapted from": "Adaptado de",
     "Find in this article": "Procurar neste artigo",
@@ -223,7 +213,6 @@
     "Every change is reviewed before it goes live.": "Todas as alterações são revistas antes de entrarem em vigor.",
     "Sign in to suggest an edit": "Inicia sessão para sugerir uma edição",
     "Spotted an error or have something to add? Sign in with Discord to suggest an edit. Every change is reviewed before it goes live.": "Detetaste um erro ou tens algo a acrescentar? Inicia sessão com o Discord para sugerir uma edição. Todas as alterações são revistas antes de entrarem em vigor.",
-
     "Edit the :language translation": "Editar a tradução em :language",
     "Translate to :language": "Traduzir para :language",
     "Translate": "Traduzir",
@@ -232,7 +221,6 @@
     "Editing the :language translation. Open the :source in another tab to compare.": "A editar a tradução em :language. Abra a :source noutro separador para comparar.",
     "English version": "versão em inglês",
     "No changes to submit. Edit the article first.": "Não há alterações para submeter. Edite primeiro o artigo.",
-
     "Article applicability": "Aplicabilidade do artigo",
     "Knowledgebase": "Base de conhecimento",
     "Brand": "Marca",
@@ -259,5 +247,14 @@
     "You have sent too many requests. Diagnostic port is temporarily throttled.": "Enviou demasiados pedidos. A porta de diagnóstico está temporariamente limitada.",
     "Unauthorized": "Não autorizado",
     "Authentication is required to access this resource.": "É necessária autenticação para aceder a este recurso.",
-    "Error": "Erro"
+    "Error": "Erro",
+    "Hondabase is a community-driven, GitHub-preserved technical knowledgebase for Honda and Acura: find guides for your exact model, generation and engine.": "A Hondabase é uma base de conhecimento técnico para Honda e Acura, comunitária e preservada no GitHub: encontre guias para o seu modelo, geração e motor exatos.",
+    "Search the whole Hondabase catalog: filter Honda and Acura technical articles by category, OBD generation, chassis code, engine family and more.": "Pesquise todo o catálogo da Hondabase: filtre artigos técnicos Honda e Acura por categoria, geração OBD, código de chassis, família de motor e mais.",
+    "Browse the :type section of Hondabase: community-maintained Honda and Acura technical articles, wiring guides and reference material.": "Explore a secção :type da Hondabase: artigos técnicos Honda e Acura mantidos pela comunidade, guias de cablagem e material de referência.",
+    ":category guides and reference for :type on Hondabase, the community-maintained Honda and Acura technical knowledgebase.": "Guias e referência de :category para :type na Hondabase, a base de conhecimento técnico Honda e Acura mantida pela comunidade.",
+    "Technical articles, wiring guides, ECU references and known issues for the :label, maintained by the Hondabase community.": "Artigos técnicos, guias de cablagem, referências de ECU e problemas conhecidos do :label, mantidos pela comunidade Hondabase.",
+    "Cars": "Carros",
+    "Motorcycles": "Motociclos",
+    "Aircraft": "Aeronaves",
+    "Common": "Comum"
 }

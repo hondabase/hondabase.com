@@ -4,7 +4,7 @@
 
 @section('content')
     <section class="page-head">
-        <h2 class="section-head">My Hondabase</h2>
+        <h1 class="section-head">My Hondabase</h1>
         <p class="text-dim mt-1 max-w-[70ch]">Your garage, your feed and your saved articles.</p>
     </section>
 

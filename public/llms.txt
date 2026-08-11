@@ -1,0 +1,18 @@
+# Hondabase
+
+> Hondabase (www.hondabase.com) is a community-driven, GitHub-preserved technical
+> knowledgebase for Honda and Acura vehicles: wiring diagrams, ECU references,
+> engine swaps, diagnostics, maintenance guides and known issues, organized by
+> product line (cars, motorcycles, engines, aircraft) down to model, generation
+> and engine family.
+
+Content is available in English (unprefixed URLs) and Portuguese (/pt/...).
+Articles are reviewed by the community before publication and every revision is
+tracked in a public git repository.
+
+## Key resources
+
+- Sitemap (all indexable pages): https://www.hondabase.com/sitemap.xml
+- Latest articles (Atom): https://www.hondabase.com/feed.xml
+- Source content (Markdown, forkable): https://github.com/hondabase/articles
+- Search: https://www.hondabase.com/explore

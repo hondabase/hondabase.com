@@ -294,8 +294,11 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function typeIndex(Request $request, string $type): View
+    public function typeIndex(Request $request): View
     {
+        // Params are read by name: the localized route is /{locale}/{type}, so a
+        // positional signature would receive the locale segment as $type.
+        $type = $request->route('type');
         $locale = $request->route('locale') ?? Locales::default();
 
         return view('type', compact('type', 'locale'));
